@@ -12,6 +12,7 @@
         "lint:fix": "eslint . --fix"
     },
     "dependencies": {
+        "@microsoft/fetch-event-source": "^2.0.1",
         "@pinia/nuxt": "^0.5.1",
         "@radix-icons/vue": "^1.0.0",
         "@sentry/nuxt": "^8.30.0",
