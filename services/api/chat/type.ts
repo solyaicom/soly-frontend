@@ -4,3 +4,8 @@ export interface IChatMessage {
   content: string;
   completed: boolean;
 }
+
+export interface IConversation {
+  id: string;
+  name: string;
+}
