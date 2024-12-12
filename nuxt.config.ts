@@ -13,19 +13,13 @@ export default defineNuxtConfig({
     "@sentry/nuxt/module",
   ],
   runtimeConfig: {
-    public: {
-
-    },
+    public: {},
   },
 
   app: {
     head: {
       style: [{ children: "body { margin: 0 }" }],
-      script: [
-
-
-
-      ],
+      script: [],
     },
   },
   ssr: false,
@@ -44,9 +38,7 @@ export default defineNuxtConfig({
       },
     },
   },
-  webpack: {
-
-  },
+  webpack: {},
   // @ts-ignore
   pinia: {
     storesDirs: ["./stores/**"],
