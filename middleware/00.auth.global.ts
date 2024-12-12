@@ -1,6 +1,6 @@
 import { getUserInfo } from "~/services/api/auth/api";
 
-const requiredAuthLayouts = ["dashboard", "bottom-tab", "onboard"];
+const requiredAuthLayouts = ["chat"];
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   if (!to.meta.layout || to.meta.guest || !requiredAuthLayouts.includes(to.meta.layout)) return;
@@ -10,5 +10,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (getAccessToken()) {
     const userInfo = await getUserInfo();
     setUser(userInfo);
+  } else {
+    return navigateTo("/auth/login");
   }
 });

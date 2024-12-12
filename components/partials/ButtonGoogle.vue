@@ -1,18 +1,24 @@
 <script setup lang="ts">
 import { getUserInfo, loginWithGoogle } from "~/services/api/auth/api";
 
-const { setUser } = useAuthStore();
+const props = defineProps<{
+  text?: string;
+  onSuccess: (access_token: string) => void;
+}>();
+
+const { setUser, setAccessToken } = useAuthStore();
 
 const handleOnSuccess = async (response: { access_token: string }) => {
   // send code to a backend server to verify it.
-  console.log("Code: ", response);
   const res = await loginWithGoogle({ access_token: response.access_token });
+
   if (res.access_token) {
-    localStorage.setItem("access_token", res.access_token);
+    setAccessToken(res.access_token);
     const newUser = await getUserInfo();
+
     setUser(newUser);
+    props.onSuccess(res.access_token);
   }
-  console.log("res loginWithGoogle", res);
 };
 
 const handleOnError = (errorResponse: any) => {
@@ -27,5 +33,5 @@ const { isReady, login } = useTokenClient({
 </script>
 
 <template>
-  <PartialsButton text="Continue with Google" class="mb-4" @click="login" />
+  <PartialsButton :text="text || 'Continue'" class="mb-4" @click="login" />
 </template>

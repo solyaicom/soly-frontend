@@ -1,14 +1,24 @@
 <script setup lang="ts">
-import { IChatMessage } from "~/services/api/chat/type";
+import { IChatMessage, IConversation } from "~/services/api/chat/type";
 import { toast } from "../ui/toast";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { fetchChatHistory } from "~/services/api/chat/api";
 
 const props = defineProps<{
-  conv: any;
+  conv: IConversation | null;
 }>();
 const messages = ref<any[]>([]);
 const currentMsg = ref<any>("");
 const scrollArea = ref<any>(null);
+
+const route = useRoute();
+
+watch(() => props.conv?.id, fetchListMessage, { immediate: true });
+
+async function fetchListMessage() {
+  if (!props.conv) return;
+  messages.value = await fetchChatHistory(props.conv.id);
+}
 
 async function onSendMessage(content: string) {
   if (!props.conv) {

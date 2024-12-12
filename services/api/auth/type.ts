@@ -5,13 +5,14 @@ export interface IAuthLimit {
   status?: number;
 }
 
+export interface IWalletInfor {
+  address: string;
+}
+
 export interface IUserProfile {
-  name: string;
   id: string;
-  current_session: {
-    data: {
-      session_key: string;
-    };
-  } | null;
+  name: string;
+  email: string;
   username: string;
+  wallet: IWalletInfor;
 }
