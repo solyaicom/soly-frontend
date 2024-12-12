@@ -9,7 +9,6 @@ export default defineNuxtConfig({
     "nuxt-icons",
     "@pinia/nuxt",
     "nuxt-vue3-google-signin",
-    "@wagmi/vue/nuxt",
     "@sentry/nuxt/module",
   ],
   runtimeConfig: {
