@@ -7,6 +7,7 @@ import { createNewConversation, fetchChatHistory } from "~/services/api/chat/api
 const props = defineProps<{
   conv: IConversation | null;
   onChangeConversation: (conv: IConversation, addNew?: boolean) => void;
+  onChat: () => void;
 }>();
 const messages = ref<any[]>([]);
 const currentMsg = ref<any>("");
@@ -63,6 +64,8 @@ async function onSendMessage(content: string) {
     });
   }
   loading.value = true;
+  props.onChat();
+
   await fetchEventSource(`${AppConfig.env.API_BASE_URL}/conversations/${conv?.id || ""}/chat`, {
     method: "POST",
     headers: {
@@ -110,7 +113,8 @@ function onKeyChange(e: any) {
     e.preventDefault();
     if (loading.value) return;
     onSendMessage(e.target.innerHTML);
-    messages.value.push({ type: "user", message: e.target.value });
+    messages.value.push({ type: "user", message: e.target.innerHTML });
+
     e.target.innerHTML = "";
     scrollArea.value.scrollTop = scrollArea.value.scrollHeight;
   }
@@ -123,7 +127,7 @@ function onKeyChange(e: any) {
       <img src="/images/icon-logo-row.svg" />
     </div>
     <div class="flex-1 overflow-hidden flex flex-col items-center">
-      <div class="flex-1 flex flex-col items-center w-full md:w-[90%] overflow-hidden">
+      <div class="flex-1 flex flex-col items-center w-full md:w-[90%] overflow-hidden md:max-w-[640px]">
         <div class="flex-1 flex flex-col justify-center w-full overflow-hidden">
           <div v-if="!messages.length" class="flex-1 flex flex-col items-center justify-center">
             <p class="text-[40px] font-[500]">Soly AI</p>
