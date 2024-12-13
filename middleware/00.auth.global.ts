@@ -1,6 +1,6 @@
 import { getUserInfo } from "~/services/api/auth/api";
 
-const requiredAuthLayouts = ["chat"];
+const requiredAuthLayouts = ["conversation"];
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   if (!to.meta.layout || to.meta.guest || !requiredAuthLayouts.includes(to.meta.layout)) return;

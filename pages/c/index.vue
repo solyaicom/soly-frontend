@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: "chat",
+  layout: "conversation",
 });
 import { createNewConversation, findConversationById } from "~/services/api/chat/api";
 import { IConversation } from "~/services/api/chat/type";
@@ -17,7 +17,7 @@ async function getConversationInfor() {
 function onChangeConversation(con: IConversation) {
   if (!con) return;
   conv.value = con;
-  conv && window.history.replaceState({}, "", `/chat?conv_id=${con.id}`);
+  conv && window.history.replaceState({}, "", `/c?conv_id=${con.id}`);
   document.title = con.name || "New Chat";
 }
 

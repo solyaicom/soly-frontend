@@ -5,7 +5,7 @@ definePageMeta({
 });
 
 function onLoginSuccess() {
-  navigateTo("/chat");
+  navigateTo("/c");
 }
 </script>
 

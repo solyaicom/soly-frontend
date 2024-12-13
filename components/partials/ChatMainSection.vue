@@ -54,7 +54,7 @@ async function onSendMessage(content: string) {
     });
   }
   loading.value = true;
-  await fetchEventSource(`https://s-ai-agent-api.stavax.io/conversations/${conv?.id || ""}/chat`, {
+  await fetchEventSource(`${AppConfig.env.API_BASE_URL}/conversations/${conv?.id || ""}/chat`, {
     method: "POST",
     headers: {
       Authorization: "Bearer " + access_token,
