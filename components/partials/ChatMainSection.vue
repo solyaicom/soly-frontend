@@ -17,7 +17,11 @@ const currentConversation = ref<IConversation | null>(null);
 watch(() => props.conv?.id, fetchListMessage, { immediate: true });
 
 async function fetchListMessage() {
-  if (!props.conv || props.conv.id === currentConversation.value?.id) return;
+  if (!props.conv) {
+    messages.value = [];
+    return;
+  }
+  if (props.conv.id === currentConversation.value?.id) return;
   messages.value = [];
   currentConversation.value = props.conv;
   messages.value = await fetchChatHistory(props.conv.id);
@@ -46,6 +50,11 @@ async function onSendMessage(content: string) {
     currentConversation.value = conv;
     props.onChangeConversation(conv, true);
   }
+  if (!conv)
+    return toast({
+      description: "Failed to create new conversation",
+      duration: 3000,
+    });
   const access_token = localStorage.getItem("access_token");
   if (!access_token) {
     return toast({
@@ -65,6 +74,10 @@ async function onSendMessage(content: string) {
     onmessage(ev) {
       scrollArea.value.scrollTop = scrollArea.value.scrollHeight;
       switch (ev.event) {
+        case "update_title":
+          const newTitle = ev.data;
+          props.onChangeConversation({ ...conv, name: newTitle });
+          break;
         case "message":
           const msg: IChatMessage = JSON.parse(ev.data);
           currentMsg.value = msg;
@@ -86,6 +99,7 @@ async function onSendMessage(content: string) {
           messages.value.push({ ...currentMsg.value });
           currentMsg.value = null;
           loading.value = false;
+          break;
       }
     },
   });
@@ -110,13 +124,10 @@ function onKeyChange(e: any) {
     </div>
     <div class="flex-1 overflow-hidden flex flex-col items-center">
       <div class="flex-1 flex flex-col items-center w-full md:w-[90%] overflow-hidden">
-        <div class="flex-1 w-full overflow-hidden">
+        <div class="flex-1 flex flex-col justify-center w-full overflow-hidden">
           <div v-if="!messages.length" class="flex-1 flex flex-col items-center justify-center">
-            <img src="/images/icon-logo-row.svg" />
-            <p class="mt-10 text-center">
-              Tether IOTA siacoin revain digibyte. Kadena waves gala terra shiba-inu nexo litecoin bancor. Digibyte stacks revain secret solana
-              polygon arweave. Nexo cardano binance tether tether. Neo nexo terraUSD secret litecoin compound revain polygon litecoin THETA.
-            </p>
+            <p class="text-[40px] font-[500]">Soly AI</p>
+            <p class="mt-4 text-center text-[24px] font-[600] text-[#CACACA]">👋 Hi, I'm Soly — Chat with me</p>
           </div>
           <div ref="scrollArea" v-else class="h-full w-full pt-4 pb-10 overflow-y-scroll">
             <ChatListChat :messages="messages" />

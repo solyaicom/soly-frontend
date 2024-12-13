@@ -1,16 +1,17 @@
 <script setup lang="ts">
+import { PopoverClose } from "radix-vue";
 import { createNewConversation, fetchConversations } from "~/services/api/chat/api";
 import { IConversation } from "~/services/api/chat/type";
 
 const props = defineProps<{
   onChangeConversation: (conv: IConversation, addNew?: boolean) => void;
   histories: IConversation[];
+  onDelete: (conv: IConversation) => void;
 }>();
 
 const { getUser } = useAuthStore();
 const app = useAppSetting();
 const loading = ref(false);
-
 async function onNewChat() {
   loading.value = true;
   app.changeLoading(true);
@@ -34,8 +35,8 @@ function onConversationClick(item: IConversation) {
   }, 400);
 }
 
-function onOptionClick() {
-  console.log("option click");
+function onRenameItem() {
+  console.log("rename");
 }
 </script>
 
@@ -49,14 +50,33 @@ function onOptionClick() {
         <div class="h-full overflow-y-scroll">
           <p class="font-[600] px-3">Chat History</p>
           <div
-            v-for="item in histories"
+            v-for="(item, idx) in histories"
             :key="item.id"
-            @click="onConversationClick(item)"
-            class="cursor-pointer group row-center justify-between text-[16px] py-2 pl-3 text-[#CACACA] hover:text-[#FFFFFF]"
+            class="relative cursor-pointer group hover:text-[#FFFFFF] hover:bg-[#323232] rounded-[12px]"
           >
-            <p class="overflow-hidden whitespace-nowrap text-ellipsis">{{ item.name }}</p>
-            <div class="px-2 invisible group-hover:visible" @click.stop="onOptionClick">
-              <img src="/images/icon-option.svg" />
+            <div @click="onConversationClick(item)" class="row-center justify-between text-[16px] py-2 pl-3 pr-10 text-[#CACACA]">
+              <p class="overflow-hidden whitespace-nowrap text-ellipsis flex-1">{{ item.name }}</p>
+            </div>
+            <div class="px-2 absolute top-2 right-0 invisible group-hover:visible z-[1]">
+              <Popover>
+                <PopoverTrigger>
+                  <div>
+                    <img src="/images/icon-option.svg" class="w-[24px]" />
+                  </div>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div class="bg-[#fff] rounded-[12px] p-4">
+                    <PopoverClose>
+                      <div class="row-center text-app-red cursor-pointer" @click="onDelete(item)">
+                        <div class="w-[24px] h-[24px]">
+                          <img src="/images/icon-delete.svg" class="w-[24px] h-[24px]" />
+                        </div>
+                        <p class="ml-2">Delete</p>
+                      </div>
+                    </PopoverClose>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         </div>

@@ -44,3 +44,13 @@ export async function fetchConversations(): Promise<IConversation[]> {
     return [];
   }
 }
+
+export async function deleteConversationById(id: string): Promise<boolean> {
+  try {
+    const { data } = await Fetch.delete<{ data: IConversation }>(`@api/conversations/${id}`);
+    return true;
+  } catch (error: any) {
+    console.error("findConversationById er", error.response.status);
+    return false;
+  }
+}
