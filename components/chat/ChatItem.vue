@@ -29,11 +29,11 @@ watch(
 
 <template>
   <div class="w-full row-center mt-8 px-3" :class="{ 'justify-end ': item.role === 'user' }">
-    <div class="flex flex-row" :class="{ 'py-2 px-4 rounded-[45px] border-[1px] border-[#FFFFFF1A]': item.role === 'user' }">
-      <div v-if="item.role === 'assistant'" class="w-[40px] h-[32px]  mr-2 rounded-full">
-        <img src="/images/icon-logo-mask.svg" class="" />
+    <div class="flex flex-row" :class="{ 'py-2 px-4 rounded-[20px]  bg-[#323232d9]': item.role === 'user' }">
+      <div v-if="item.role === 'assistant'" class="w-[40px] h-[40px] border-[1px] border-app-line1  mr-2 rounded-full">
+        <img src="/images/icon-logo-mask.svg" class="ml-[-2px]" />
       </div>
-      <div ref="contentRef" class="text-[#979797] text-[16px] mt-[2px] flex-1" :class="{ 'text-[#CACACA] mt-0': item.role === 'user' }"></div>
+      <div ref="contentRef" class="text-[#ececec] text-[16px] flex-1" :class="{ 'text-[#efefef] mt-0  ': item.role === 'user', 'mt-[2px]': item.role === 'assistant' }"></div>
      
     </div>
     <div v-if="item.role === 'user' && getUser().email" class="w-[36px] h-[36px]  mr-2 rounded-full overflow-hidden ml-2">
