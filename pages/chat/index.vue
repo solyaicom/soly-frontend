@@ -11,21 +11,24 @@ const route = useRoute();
 async function getConversationInfor() {
   if (route.query.conv_id) {
     conv.value = await findConversationById(route.query.conv_id as string);
-  } else {
-    if (!conv.value) {
-      conv.value = await createNewConversation();
-    }
   }
-  conv.value && window.history.replaceState({}, "", `/chat?conv_id=${conv.value.id}`);
-  document.title = conv.value?.name || "";
 }
 
-watch(() => route.query.conv_id, getConversationInfor, { immediate: true });
+function onChangeConversation(con: IConversation) {
+  if (!con) return;
+  conv.value = con;
+  conv && window.history.replaceState({}, "", `/chat?conv_id=${con.id}`);
+  document.title = con.name || "New Chat";
+}
+
+onMounted(async () => {
+  getConversationInfor();
+});
 </script>
 
 <template>
   <section class="flex flex-row w-full h-full">
-    <PartialsChatLeftSection />
-    <PartialsChatMainSection :conv="conv" />
+    <PartialsChatLeftSection @change-conversation="onChangeConversation" />
+    <PartialsChatMainSection :conv="conv" @change-conversation="onChangeConversation" />
   </section>
 </template>

@@ -2,14 +2,16 @@
 import { IChatMessage, IConversation } from "~/services/api/chat/type";
 import { toast } from "../ui/toast";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
-import { fetchChatHistory } from "~/services/api/chat/api";
+import { createNewConversation, fetchChatHistory } from "~/services/api/chat/api";
 
 const props = defineProps<{
   conv: IConversation | null;
+  onChangeConversation: (conv: IConversation) => void;
 }>();
 const messages = ref<any[]>([]);
 const currentMsg = ref<any>("");
 const scrollArea = ref<any>(null);
+const loading = ref(false);
 
 const route = useRoute();
 
@@ -17,15 +19,32 @@ watch(() => props.conv?.id, fetchListMessage, { immediate: true });
 
 async function fetchListMessage() {
   if (!props.conv) return;
+  console.log("fetchListMessage", props.conv.id);
   messages.value = await fetchChatHistory(props.conv.id);
+  console.log("messages.value", messages.value);
 }
 
+watch(
+  () => messages.value.length,
+  () => {
+    setTimeout(() => {
+      scrollArea.value.scrollTop = scrollArea.value.scrollHeight;
+    }, 100);
+  }
+);
+
 async function onSendMessage(content: string) {
+  if (loading.value) return;
+  let conv = props.conv;
+
   if (!props.conv) {
-    return toast({
-      description: "No conversation exist",
-      duration: 3000,
-    });
+    conv = await createNewConversation();
+    if (!conv)
+      return toast({
+        description: "Failed to create new conversation",
+        duration: 3000,
+      });
+    props.onChangeConversation(conv);
   }
   const access_token = localStorage.getItem("access_token");
   if (!access_token) {
@@ -34,7 +53,8 @@ async function onSendMessage(content: string) {
       duration: 3000,
     });
   }
-  await fetchEventSource(`https://s-ai-agent-api.stavax.io/conversations/${props.conv.id}/chat`, {
+  loading.value = true;
+  await fetchEventSource(`https://s-ai-agent-api.stavax.io/conversations/${conv?.id || ""}/chat`, {
     method: "POST",
     headers: {
       Authorization: "Bearer " + access_token,
@@ -65,7 +85,7 @@ async function onSendMessage(content: string) {
         case "finish":
           messages.value.push({ ...currentMsg.value });
           currentMsg.value = null;
-          scrollArea.value.scrollTop = scrollArea.value.scrollHeight;
+          loading.value = false;
       }
     },
   });
@@ -74,6 +94,7 @@ async function onSendMessage(content: string) {
 function onKeyChange(e: any) {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
+    if (loading.value) return;
     onSendMessage(e.target.innerHTML);
     messages.value.push({ type: "user", message: e.target.value });
     e.target.innerHTML = "";

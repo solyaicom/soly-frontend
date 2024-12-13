@@ -14,8 +14,5 @@ onMounted(async () => {
 </script>
 
 <template>
-  <section class="flex flex-row w-full h-full">
-    <PartialsChatLeftSection />
-    <PartialsChatMainSection :conv="conv" />
-  </section>
+  <section class="flex flex-row w-full h-full"></section>
 </template>

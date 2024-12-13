@@ -33,3 +33,14 @@ export async function fetchChatHistory(conv_id: string): Promise<IChatMessage[]>
     return [];
   }
 }
+
+export async function fetchConversations(): Promise<IConversation[]> {
+  try {
+    const { data } = await Fetch.get<{ data: IConversation[] }>(`@api/conversations`);
+    return data.data;
+  } catch (error: any) {
+    console.error("fetchConversations er", error.response.status);
+
+    return [];
+  }
+}
