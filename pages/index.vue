@@ -3,16 +3,17 @@ definePageMeta({
   layout: "landing",
   guest: true,
 });
-
-function onAboutClick() {
-  window.open("https://x.com/solyai_agent", "_blank");
-}
 </script>
 
 <template>
   <section class="flex flex-col w-full h-full">
     <div class="row-center mt-6 px-10">
       <img src="/images/icon-logo-row.svg" />
+      <NuxtLink
+        to="/fag"
+        class="ml-10 cursor-pointer px-4 py-2 border-[1px] border-[#FFF] rounded-[12px] bg-gradient-to-b from-[#ffffff00] from-0% to-[#ffffff3d] to-100% hover:opacity-[0.8]"
+        >FAGs</NuxtLink
+      >
     </div>
     <div class="flex-1 flex flex-col w-full h-full items-center justify-center">
       <div

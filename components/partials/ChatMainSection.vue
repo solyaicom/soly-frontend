@@ -12,13 +12,14 @@ const messages = ref<any[]>([]);
 const currentMsg = ref<any>("");
 const scrollArea = ref<any>(null);
 const loading = ref(false);
-
-const route = useRoute();
+const currentConversation = ref<IConversation | null>(null);
 
 watch(() => props.conv?.id, fetchListMessage, { immediate: true });
 
 async function fetchListMessage() {
-  if (!props.conv) return;
+  if (!props.conv || props.conv.id === currentConversation.value?.id) return;
+  messages.value = [];
+  currentConversation.value = props.conv;
   messages.value = await fetchChatHistory(props.conv.id);
 }
 
@@ -42,6 +43,7 @@ async function onSendMessage(content: string) {
         description: "Failed to create new conversation",
         duration: 3000,
       });
+    currentConversation.value = conv;
     props.onChangeConversation(conv, true);
   }
   const access_token = localStorage.getItem("access_token");
@@ -107,7 +109,7 @@ function onKeyChange(e: any) {
       <img src="/images/icon-logo-row.svg" />
     </div>
     <div class="flex-1 overflow-hidden flex flex-col items-center">
-      <div class="flex-1 flex flex-col items-center w-full lg:w-[750px] overflow-hidden">
+      <div class="flex-1 flex flex-col items-center w-full md:w-[90%] overflow-hidden">
         <div class="flex-1 w-full overflow-hidden">
           <div v-if="!messages.length" class="flex-1 flex flex-col items-center justify-center">
             <img src="/images/icon-logo-row.svg" />

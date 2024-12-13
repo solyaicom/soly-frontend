@@ -10,7 +10,7 @@ const app = useAppSetting();
     <img src="/images/icon-loading.gif" class="w-[32px] h-[32px]" />
   </div>
   <NuxtLayout>
-    <div class="w-screen h-screen">
+    <div class="w-full h-full">
       <NuxtPage />
     </div>
   </NuxtLayout>

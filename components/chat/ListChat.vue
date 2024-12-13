@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <div>
+  <div class="w-full">
     <ChatItem v-for="item in messages" :key="item.id" :item="item" />
   </div>
 </template>

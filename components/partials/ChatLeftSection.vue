@@ -18,12 +18,20 @@ async function onNewChat() {
   if (conv) {
     props.onChangeConversation(conv, true);
   }
-  app.changeLoading(false);
-  loading.value = false;
+  setTimeout(() => {
+    app.changeLoading(false);
+    loading.value = false;
+  }, 200);
 }
 
 function onConversationClick(item: IConversation) {
+  loading.value = true;
+  app.changeLoading(true);
   props.onChangeConversation(item);
+  setTimeout(() => {
+    app.changeLoading(false);
+    loading.value = false;
+  }, 400);
 }
 
 function onOptionClick() {
