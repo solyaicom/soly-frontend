@@ -3,24 +3,20 @@ import { createNewConversation, fetchConversations } from "~/services/api/chat/a
 import { IConversation } from "~/services/api/chat/type";
 
 const props = defineProps<{
-  onChangeConversation: (conv: IConversation) => void;
+  onChangeConversation: (conv: IConversation, addNew?: boolean) => void;
+  histories: IConversation[];
 }>();
 
 const { getUser } = useAuthStore();
 const app = useAppSetting();
 const loading = ref(false);
-const histories = ref<IConversation[]>([]);
-
-onMounted(async () => {
-  histories.value = await fetchConversations();
-});
 
 async function onNewChat() {
   loading.value = true;
   app.changeLoading(true);
   const conv = await createNewConversation();
   if (conv) {
-    props.onChangeConversation(conv);
+    props.onChangeConversation(conv, true);
   }
   app.changeLoading(false);
   loading.value = false;

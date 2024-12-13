@@ -2,6 +2,7 @@
 definePageMeta({
   guest: true,
   name: "Authorization",
+  layout: "default",
 });
 
 function onLoginSuccess() {

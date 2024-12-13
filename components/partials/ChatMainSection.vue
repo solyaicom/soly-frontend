@@ -6,7 +6,7 @@ import { createNewConversation, fetchChatHistory } from "~/services/api/chat/api
 
 const props = defineProps<{
   conv: IConversation | null;
-  onChangeConversation: (conv: IConversation) => void;
+  onChangeConversation: (conv: IConversation, addNew?: boolean) => void;
 }>();
 const messages = ref<any[]>([]);
 const currentMsg = ref<any>("");
@@ -19,9 +19,7 @@ watch(() => props.conv?.id, fetchListMessage, { immediate: true });
 
 async function fetchListMessage() {
   if (!props.conv) return;
-  console.log("fetchListMessage", props.conv.id);
   messages.value = await fetchChatHistory(props.conv.id);
-  console.log("messages.value", messages.value);
 }
 
 watch(
@@ -44,7 +42,7 @@ async function onSendMessage(content: string) {
         description: "Failed to create new conversation",
         duration: 3000,
       });
-    props.onChangeConversation(conv);
+    props.onChangeConversation(conv, true);
   }
   const access_token = localStorage.getItem("access_token");
   if (!access_token) {
