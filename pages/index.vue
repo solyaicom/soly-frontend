@@ -1,6 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
   layout: "landing",
+  guest: true,
 });
 
 function onAboutClick() {
