@@ -18,11 +18,12 @@ export default defineNuxtConfig({
   app: {
     head: {
       style: [{ children: "body { margin: 0 }" }],
+      link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.png" }],
+
       script: [],
     },
   },
   ssr: false,
-  spaLoadingTemplate: "splash-loading.html",
   googleSignIn: {
     clientId: "320448324963-luc2s6c99ksmhh3viirt2tfcpkjth6jh.apps.googleusercontent.com",
   },

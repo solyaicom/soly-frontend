@@ -14,7 +14,22 @@ const currentConversation = ref<IConversation | null>(null);
 const conversationStore = useConversationStore();
 const openSheet = ref(false);
 
-watch(() => conversationStore.conv?.id, fetchListMessage, { immediate: true });
+watch(
+  () => conversationStore.conv?.id,
+  () => {
+    loading.value = false;
+    fetchListMessage();
+    checkMessageFromStore();
+  },
+  { immediate: true }
+);
+
+function checkMessageFromStore() {
+  if (conversationStore.currentMessage) {
+    sendContent(conversationStore.currentMessage);
+    conversationStore.setCurrentMessage("");
+  }
+}
 
 async function fetchListMessage() {
   if (!conversationStore.conv) {
@@ -39,9 +54,9 @@ watch(
 
 async function onSendMessage(content: string) {
   if (loading.value) return;
+  loading.value = true;
   let conv = conversationStore.conv;
-
-  if (!conversationStore.conv) {
+  if (!conv) {
     conv = await createNewConversation();
     if (!conv)
       return toast({
@@ -49,23 +64,14 @@ async function onSendMessage(content: string) {
         duration: 3000,
       });
     currentConversation.value = conv;
+    conversationStore.setCurrentMessage(content);
     conversationStore.change(conv, true);
+    return;
   }
-  if (!conv)
-    return toast({
-      description: "Failed to create new conversation",
-      duration: 3000,
-    });
-  const access_token = localStorage.getItem("access_token");
-  if (!access_token) {
-    return toast({
-      description: "Please login first",
-      duration: 3000,
-    });
-  }
-  loading.value = true;
+
   conversationStore.updateCurrentChat();
 
+  const access_token = localStorage.getItem("access_token");
   await fetchEventSource(`${AppConfig.env.API_BASE_URL}/conversations/${conv?.id || ""}/chat`, {
     method: "POST",
     headers: {
@@ -75,15 +81,18 @@ async function onSendMessage(content: string) {
       content: content || "What is the weather today?",
     }),
     onmessage(ev) {
-      scrollArea.value.scrollTop = scrollArea.value.scrollHeight;
+      if (scrollArea.value) {
+        scrollArea.value.scrollTop = scrollArea.value.scrollHeight;
+      }
       switch (ev.event) {
         case "update_title":
           const newTitle = ev.data;
-          conversationStore.change({ ...conv, name: newTitle });
+          conversationStore.change({ ...conv!, name: newTitle });
           break;
         case "message":
           const msg: IChatMessage = JSON.parse(ev.data);
           currentMsg.value = msg;
+          if (msg.role === "user") return;
 
           if (msg.completed && msg.id) {
             messages.value.push({ ...currentMsg.value });
@@ -107,10 +116,14 @@ async function onSendMessage(content: string) {
     },
     onclose() {
       // if the server closes the connection unexpectedly, retry:
-      console.log("fetch err");
+      loading.value = false;
+
       return;
     },
     onerror(err) {
+      console.log("err", err);
+      loading.value = false;
+
       throw err; // rethrow to stop the operation
     },
   });
@@ -118,23 +131,31 @@ async function onSendMessage(content: string) {
 
 function sendContent(content: string) {
   onSendMessage(content);
-  messages.value.push({ type: "user", message: content });
-  scrollArea.value.scrollTop = scrollArea.value?.scrollHeight;
+  messages.value.push({ role: "user", content: content });
+  if (scrollArea.value) {
+    scrollArea.value.scrollTop = scrollArea.value?.scrollHeight;
+  }
 }
 
 function onSendClick() {
   const el = document.getElementById("promt-area");
   const content = el?.innerHTML || "";
+  if (el) {
+    el.innerHTML = "";
+  }
   sendContent(content);
 }
 
 function onKeyChange(e: any) {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
-    if (loading.value) return;
-    sendContent(e.target.innerHTML || "");
 
+    if (loading.value) {
+      return;
+    }
+    const content = e.target.innerHTML;
     e.target.innerHTML = "";
+    sendContent(content || "");
   }
 }
 
@@ -173,7 +194,7 @@ function onItemMenuClick() {
           <div class="w-full flex flex-row items-start">
             <div
               contenteditable
-              @keydown="onKeyChange"
+              @keypress="onKeyChange"
               id="promt-area"
               class="border-[1px] border-app-line1 min-h-[52px] flex-1 rounded-[30px] p-4 outline-none break-all"
             ></div>

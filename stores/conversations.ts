@@ -7,8 +7,12 @@ export const useConversationStore = defineStore("conversations", {
   state: () => ({
     histories: [] as IConversation[],
     conv: null as IConversation | null,
+    currentMessage: "",
   }),
   actions: {
+    setCurrentMessage(content: string) {
+      this.currentMessage = content;
+    },
     updateCurrentChat() {
       if (!this.conv) return;
       this.histories = this.histories.filter((item) => item.id !== this.conv?.id);
