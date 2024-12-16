@@ -137,18 +137,22 @@ function onKeyChange(e: any) {
     e.target.innerHTML = "";
   }
 }
+
+function onItemMenuClick() {
+  openSheet.value = false;
+}
 </script>
 
 <template>
   <section class="flex-1 h-full flex flex-col bg-[#131313] rounded-[16px] overflow-hidden">
     <div class="h-[60px] lg:h-[104px] row-center border-b-[1px] border-b-app-line1">
-      <Sheet v-model="openSheet">
+      <Sheet v-model:open="openSheet">
         <SheetTrigger>
           <div class="pl-4 py-2 cursor-pointer lg:hidden">
             <img src="/images/icon-menu.svg" /></div
         ></SheetTrigger>
         <SheetContent side="left" class="p-0">
-          <MenuConversation @click="() => (openSheet = false)" />
+          <MenuConversation @click="onItemMenuClick" />
         </SheetContent>
       </Sheet>
       <img src="/images/icon-logo-row.svg" />
