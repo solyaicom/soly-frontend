@@ -3,7 +3,7 @@ export const AppConfig = {
   env: {
     API_BASE_URL:
       //@ts-ignore
-      import.meta.env.VITE_API_BASE_URL || "https://api.solyai.io",
+      import.meta.env.VITE_API_BASE_URL || "https://api.solyai.com",
   },
   link: {},
 };

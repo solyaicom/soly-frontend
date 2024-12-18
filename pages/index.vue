@@ -25,7 +25,7 @@ definePageMeta({
           <PartialsButton text="Launch App" @click="navigateTo('/c')" />
         </div>
       </div>
-      <a class="row-center mt-6 cursor-pointer" href="https://x.com/solyai_agent" target="_blank">
+      <a class="row-center mt-6 cursor-pointer" href="https://x.com/Soly_AI" target="_blank">
         <p>More about us:</p>
         <img src="/images/icon-twitter.svg" class="ml-2" />
       </a>
