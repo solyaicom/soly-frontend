@@ -13,6 +13,12 @@ const props = defineProps<{
   item: IChatMessage;
 }>();
 const { getUser } = useAuthStore();
+const conversationStore = useConversationStore();
+const app = useAppSetting();
+
+const currentAgent = computed(() => {
+  return conversationStore.conv?.agent || app.agents[0];
+});
 
 watch(
   [() => props.item.content, () => contentRef.value],
@@ -32,11 +38,11 @@ watch(
     <div class="w-[80%] row-center" :class="{ 'justify-end': item.role === 'user' }">
       <div class="flex flex-row" :class="{ 'py-2 px-4 rounded-[20px]  bg-[#323232d9]': item.role === 'user' }">
         <div v-if="item.role === 'assistant'" class="w-[40px] h-[40px] border-[1px] border-app-line1 mr-2 rounded-full">
-          <img src="/images/icon-logo-mask.svg" class="ml-[-2px]" />
+          <img :src="currentAgent?.avatar_url || '/images/icon-logo-mask.svg'" class="w-[40px] h-[40px] ml-[-2px]" />
         </div>
         <div
           ref="contentRef"
-          class="text-[#ececec] text-[16px] flex-1 break-words whitespace-pre-line text-start"
+          class="text-[#ececec] text-[16px] flex-1 break-words text-start"
           :class="{ 'text-[#efefef] mt-0  ': item.role === 'user', 'mt-[2px]': item.role === 'assistant' }"
         ></div>
       </div>

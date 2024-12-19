@@ -8,4 +8,12 @@ export interface IChatMessage {
 export interface IConversation {
   id: string;
   name: string;
+  agent?: IAgent;
+}
+
+export interface IAgent {
+  id: string;
+  name: string;
+  description: string;
+  avatar_url: string;
 }

@@ -1,9 +1,11 @@
 import Fetch from "..";
-import { IChatMessage, IConversation } from "./type";
+import { IAgent, IChatMessage, IConversation } from "./type";
 
-export async function createNewConversation(): Promise<any> {
+export async function createNewConversation(agent_id?: string): Promise<any> {
   try {
-    const { data } = await Fetch.post<{ data: any }>(`@api/conversations/new`, {});
+    const { data } = await Fetch.post<{ data: any }>(`@api/conversations/new`, {
+      agent_id,
+    });
     return data.data;
   } catch (error: any) {
     console.error("createNewConversation er", error.response.status);
@@ -52,5 +54,16 @@ export async function deleteConversationById(id: string): Promise<boolean> {
   } catch (error: any) {
     console.error("findConversationById er", error.response.status);
     return false;
+  }
+}
+
+export async function fetchListAgents(): Promise<IAgent[]> {
+  try {
+    const { data } = await Fetch.get<{ data: IAgent[] }>(`@api/agents`);
+    return data.data;
+  } catch (error: any) {
+    console.error("fetchListAgents er", error.response.status);
+
+    return [];
   }
 }

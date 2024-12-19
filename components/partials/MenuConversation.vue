@@ -8,22 +8,16 @@ const props = defineProps<{
   onClick?: () => void;
 }>();
 
-const { getUser } = useAuthStore();
+const { getUser, logOut } = useAuthStore();
 const conversationStore = useConversationStore();
 
 const app = useAppSetting();
 const loading = ref(false);
+const selectAgentId = ref<string | undefined>(undefined);
+
 async function onNewChat() {
-  loading.value = true;
-  app.changeLoading(true);
-  const conv = await createNewConversation();
-  if (conv) {
-    conversationStore.change(conv, true);
-  }
-  setTimeout(() => {
-    app.changeLoading(false);
-    loading.value = false;
-  }, 200);
+  await conversationStore.newConversation(selectAgentId.value);
+  selectAgentId.value = undefined;
 }
 
 function onConversationClick(item: IConversation) {
@@ -34,6 +28,12 @@ function onConversationClick(item: IConversation) {
     app.changeLoading(false);
     loading.value = false;
   }, 400);
+  props.onClick?.();
+}
+
+function onSelectAgent(agent_id: string) {
+  selectAgentId.value = agent_id;
+  onNewChat();
   props.onClick?.();
 }
 
@@ -50,7 +50,21 @@ function onRenameItem() {
       </div>
       <div class="flex-1 h-full flex flex-col overflow-hidden p-4 border-t-[1px] border-app-line1">
         <div class="h-full overflow-y-scroll pb-[150px]">
-          <p class="font-[600] px-3">Chat History</p>
+          <div>
+            <div
+              v-for="(item, idx) in app.agents"
+              :key="item.id"
+              @click="onSelectAgent(item.id)"
+              class="row-center hover:bg-[#323232] cursor-pointer rounded-[12px] py-2 pl-3 mb-2"
+            >
+              <div class="w-[24px] h-[24px] rounded-full mr-3">
+                <img v-if="!!item.avatar_url" :src="item.avatar_url" class="w-[24px] h-[24px] rounded-full" />
+              </div>
+              <p class="text-[16px] font-[600] text-[#fff]">{{ item.name }}</p>
+              <p v-if="!!item.description" class="ml-2 text-[12px] text-[#979797]">- {{ item.description }}</p>
+            </div>
+          </div>
+          <p class="font-[600] px-3 mt-4">Chat History</p>
           <div
             v-for="(item, idx) in conversationStore.histories"
             :key="item.id"
@@ -90,7 +104,10 @@ function onRenameItem() {
       style="box-shadow: 14px 21px 40px 4px rgba(153, 70, 255, 0.34)"
     >
       <p>Address: {{ shortAddress(getUser().wallet.address) }}</p>
-      <p class="w-full text-[12px] text-[#cacaca] overflow-hidden whitespace-nowrap text-ellipsis">Email: {{ getUser().email }}</p>
+      <div class="row-center" @click="logOut">
+        <img v-if="getUser().avatar_url" :src="getUser().avatar_url" class="w-[20px] h-[20px] mr-1 rounded-full" />
+        <p class="w-full text-[12px] text-[#cacaca] overflow-hidden whitespace-nowrap text-ellipsis">Email: {{ getUser().email }}</p>
+      </div>
     </div>
   </section>
 </template>

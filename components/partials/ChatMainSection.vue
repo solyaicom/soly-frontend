@@ -13,6 +13,12 @@ const loading = ref(false);
 const currentConversation = ref<IConversation | null>(null);
 const conversationStore = useConversationStore();
 const openSheet = ref(false);
+const app = useAppSetting();
+const currentContent = ref<string>("");
+
+const currentAgent = computed(() => {
+  return conversationStore.conv?.agent || app.agents[0];
+});
 
 watch(
   () => conversationStore.conv?.id,
@@ -130,8 +136,8 @@ async function onSendMessage(content: string) {
 }
 
 function sendContent(content: string) {
-  onSendMessage(content);
-  messages.value.push({ role: "user", content: content });
+  onSendMessage(content.trim());
+  messages.value.push({ role: "user", content: content.trim() });
   if (scrollArea.value) {
     scrollArea.value.scrollTop = scrollArea.value?.scrollHeight;
   }
@@ -139,21 +145,26 @@ function sendContent(content: string) {
 
 function onSendClick() {
   const el = document.getElementById("promt-area");
-  const content = el?.innerHTML || "";
+  const content = el?.innerText || "";
   if (el) {
     el.innerHTML = "";
   }
-  sendContent(content);
+  sendContent(content || "");
 }
 
 function onKeyChange(e: any) {
+  const content = e.target.innerText.trim() || "";
+  currentContent.value = content;
+  if (e.target.innerText.trim() === "") {
+    e.target.innerHTML = "";
+  }
+
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
 
     if (loading.value) {
       return;
     }
-    const content = e.target.innerHTML;
     e.target.innerHTML = "";
     sendContent(content || "");
   }
@@ -182,8 +193,10 @@ function onItemMenuClick() {
       <div class="flex-1 flex flex-col items-center w-full md:w-[90%] overflow-hidden md:max-w-[768px]">
         <div class="flex-1 flex flex-col justify-center w-full overflow-hidden">
           <div v-if="!messages.length" class="flex-1 flex flex-col items-center justify-center">
-            <p class="text-[40px] font-[500]">Soly AI</p>
-            <p class="mt-4 text-center text-[24px] font-[600] text-[#CACACA]">👋 Hi, I'm Soly — Chat with me</p>
+            <p class="text-[40px] font-[500]">{{ currentAgent?.name || "Soly AI" }}</p>
+            <p class="mt-4 text-center text-[24px] font-[600] text-[#CACACA]">
+              {{ currentAgent.description || `👋 Hi, I'm ${currentAgent.name} — Chat with me` }}
+            </p>
           </div>
           <div ref="scrollArea" v-else class="h-full w-full pt-4 pb-10 overflow-y-scroll">
             <ChatListChat :messages="messages" />
@@ -191,13 +204,15 @@ function onItemMenuClick() {
           </div>
         </div>
         <div class="w-full px-3 pb-4">
-          <div class="w-full flex flex-row items-start">
+          <div class="w-full flex flex-row items-start relative">
             <div
               contenteditable
-              @keypress="onKeyChange"
+              @keyup="onKeyChange"
               id="promt-area"
-              class="border-[1px] border-app-line1 min-h-[52px] flex-1 rounded-[30px] p-4 outline-none break-all"
+              :placeholder="`Send a message to ${currentAgent?.name || 'SolyAI'}`"
+              class="bg-transparent border-[1px] border-app-line1 min-h-[52px] flex-1 rounded-[30px] p-4 outline-none break-all"
             ></div>
+
             <div class="ml-3 cursor-pointer" @click="onSendClick">
               <img src="/images/icon-send.svg" />
             </div>
@@ -208,3 +223,11 @@ function onItemMenuClick() {
     </div>
   </section>
 </template>
+
+<style scoped>
+[contenteditable][placeholder]:empty::before {
+  color: #9b9b9b;
+  content: attr(placeholder);
+  display: block; /* For Firefox */
+}
+</style>

@@ -7,6 +7,12 @@ export const useAuthStore = defineStore("auth", () => {
 
   const user = ref<IUserProfile>({ name: "" } as IUserProfile);
 
+  function logOut() {
+    setAccessToken("");
+    setUser();
+    window.location.href = "/auth/login";
+  }
+
   function setUser(userInfo?: IUserProfile) {
     user.value = userInfo || ({ name: "" } as IUserProfile);
   }
@@ -26,5 +32,6 @@ export const useAuthStore = defineStore("auth", () => {
       return accessToken.value;
     },
     setAccessToken,
+    logOut,
   };
 });

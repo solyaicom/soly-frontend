@@ -11,6 +11,8 @@ async function getConversationInfor() {
   if (route.params.conv_id) {
     const con = await findConversationById(route.params.conv_id as string);
     con && conversationStore.change(con);
+  } else {
+    conversationStore.resetConv();
   }
 }
 
