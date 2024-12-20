@@ -1,4 +1,5 @@
 const animate = require("tailwindcss-animate");
+const tailwindMdBase = require("@geoffcodesthings/tailwind-md-base");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -7,6 +8,20 @@ module.exports = {
     content: ["./pages/**/*.{ts,tsx,vue}", "./components/**/*.{ts,tsx,vue}", "./app/**/*.{ts,tsx,vue}", "./src/**/*.{ts,tsx,vue}"],
     prefix: "",
     theme: {
+        markdownBase: {
+            wrapperClass: "markdown",
+            h1: {
+                fontSize: "24px",
+            },
+            h2: {
+                fontSize: "18px",
+            },
+            p: {
+                "&:last-child": {
+                    marginBottom: "0px",
+                },
+            },
+        },
         fontSize: {
             base: "14px",
         },
@@ -112,5 +127,5 @@ module.exports = {
             },
         },
     },
-    plugins: [animate],
+    plugins: [animate, tailwindMdBase()],
 };

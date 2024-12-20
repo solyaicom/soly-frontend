@@ -75,10 +75,14 @@ async function onSendMessage(content: string) {
       content: content || "What is the weather today?",
     }),
     onmessage(ev) {
-      if (scrollArea.value) {
-        scrollArea.value.scrollTop = scrollArea.value.scrollHeight;
-      }
       switch (ev.event) {
+        case "error":
+          toast({
+            description: JSON.parse(ev.data).error,
+            duration: 3000,
+          });
+          loading.value = false;
+          break;
         case "update_title":
           const newTitle = ev.data;
           conversationStore.change({ ...conv!, name: newTitle });
@@ -107,6 +111,11 @@ async function onSendMessage(content: string) {
           loading.value = false;
           break;
       }
+      if (scrollArea.value) {
+        setTimeout(() => {
+          scrollArea.value.scrollTop = scrollArea.value.scrollHeight;
+        }, 100);
+      }
     },
     onclose() {
       // if the server closes the connection unexpectedly, retry:
@@ -115,7 +124,10 @@ async function onSendMessage(content: string) {
       return;
     },
     onerror(err) {
-      console.log("err", err);
+      toast({
+        description: err.message,
+        duration: 3000,
+      });
       loading.value = false;
 
       throw err; // rethrow to stop the operation
@@ -144,7 +156,9 @@ async function sendContent(content: string, fromSaved = false) {
 
   onSendMessage(content.trim());
   if (scrollArea.value) {
-    scrollArea.value.scrollTop = scrollArea.value?.scrollHeight;
+    setTimeout(() => {
+      scrollArea.value.scrollTop = scrollArea.value.scrollHeight;
+    }, 100);
   }
 }
 
@@ -175,13 +189,19 @@ function onKeyChange(e: any) {
   }
 }
 
+function onKeyDown(e: any) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+  }
+}
+
 function onItemMenuClick() {
   openSheet.value = false;
 }
 </script>
 
 <template>
-  <section class="flex-1 h-full flex flex-col bg-[#131313] rounded-[16px] overflow-hidden">
+  <section class="flex-1 h-full flex flex-col bg-[#1e1e1e] rounded-[16px] overflow-hidden">
     <div class="h-[60px] lg:h-[104px] row-center border-b-[1px] border-b-app-line1">
       <Sheet v-model:open="openSheet">
         <SheetTrigger>
@@ -198,8 +218,11 @@ function onItemMenuClick() {
       <div class="flex-1 flex flex-col items-center w-full md:w-[90%] overflow-hidden md:max-w-[768px]">
         <div class="flex-1 flex flex-col justify-center w-full overflow-hidden">
           <div v-if="!messages.length" class="flex-1 flex flex-col items-center justify-center">
-            <p class="text-[40px] font-[500]">{{ currentAgent?.name || "Soly AI" }}</p>
-            <p class="mt-4 text-center text-[24px] font-[600] text-[#CACACA]">
+            <div class="row-center">
+              <img :src="currentAgent?.avatar_url" class="w-[40px] h-[40px] mr-2" />
+              <p class="text-[40px] font-[500]">{{ currentAgent?.name || "Soly AI" }}</p>
+            </div>
+            <p class="mt-4 text-center text-[16px] text-[#CACACA]">
               {{ currentAgent.description || `👋 Hi, I'm ${currentAgent.name} — Chat with me` }}
             </p>
           </div>
@@ -213,6 +236,7 @@ function onItemMenuClick() {
             <div
               contenteditable
               @keyup="onKeyChange"
+              @keydown="onKeyDown"
               id="promt-area"
               :placeholder="`Send a message to ${currentAgent?.name || 'SolyAI'}`"
               class="bg-transparent border-[1px] border-app-line1 min-h-[52px] flex-1 rounded-[30px] p-4 outline-none break-all"

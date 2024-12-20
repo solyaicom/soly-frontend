@@ -57,11 +57,10 @@ function onRenameItem() {
               @click="onSelectAgent(item.id)"
               class="row-center hover:bg-[#323232] cursor-pointer rounded-[12px] py-2 pl-3 mb-2"
             >
-              <div class="w-[24px] h-[24px] rounded-full mr-3">
+              <div class="w-[24px] h-[24px] rounded-full mr-3 flex-shrink-0">
                 <img v-if="!!item.avatar_url" :src="item.avatar_url" class="w-[24px] h-[24px] rounded-full" />
               </div>
-              <p class="text-[16px] font-[600] text-[#fff]">{{ item.name }}</p>
-              <p v-if="!!item.description" class="ml-2 text-[12px] text-[#979797]">- {{ item.description }}</p>
+              <p class="text-[16px] font-[600] text-[#fff] flex-1">{{ item.name }}</p>
             </div>
           </div>
           <p class="font-[600] px-3 mt-4">Chat History</p>

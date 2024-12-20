@@ -90,6 +90,9 @@ importers:
       '@antfu/eslint-config':
         specifier: ^2.6.4
         version: 2.21.0(@vue/compiler-sfc@3.4.27)(eslint@8.57.0)(typescript@5.4.5)
+      '@geoffcodesthings/tailwind-md-base':
+        specifier: ^1.1.0
+        version: 1.1.0(tailwindcss@3.4.4)
       '@nuxtjs/google-fonts':
         specifier: ^3.1.3
         version: 3.2.0(rollup@4.18.0)
@@ -646,6 +649,11 @@ packages:
 
   '@floating-ui/vue@1.0.6':
     resolution: {integrity: sha512-EdrOljjkpkkqZnrpqUcPoz9NvHxuTjUtSInh6GMv3+Mcy+giY2cE2pHh9rpacRcZ2eMSCxel9jWkWXTjLmY55w==}
+
+  '@geoffcodesthings/tailwind-md-base@1.1.0':
+    resolution: {integrity: sha512-wk4Si7Vlcn6au2m068tbjYfGdirXdLZ47Cmn7f+5GhjG88M7qblv3n5InLaNK9GSmg2Vo0uV9Flcxp+OUVdySg==}
+    peerDependencies:
+      tailwindcss: ^1.0
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -6189,6 +6197,11 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
+
+  '@geoffcodesthings/tailwind-md-base@1.1.0(tailwindcss@3.4.4)':
+    dependencies:
+      lodash: 4.17.21
+      tailwindcss: 3.4.4
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
