@@ -1,20 +1,23 @@
 import { defineStore } from "pinia";
 import { toast } from "~/components/ui/toast";
-import { createNewConversation, deleteConversationById, fetchConversations } from "~/services/api/chat/api";
-import { IConversation } from "~/services/api/chat/type";
+import { createNewConversation, deleteConversationById, fetchConversations, findConversationById } from "~/services/api/chat/api";
+import { IAgent, IConversation } from "~/services/api/chat/type";
 
 export const useConversationStore = defineStore("conversations", {
   state: () => ({
     histories: [] as IConversation[],
     conv: null as IConversation | null,
     currentMessage: "",
+    currentAgent: undefined as IAgent | undefined,
   }),
   actions: {
+    setCurrentAgent(agent?: IAgent) {
+      this.currentAgent = agent;
+    },
     async newConversation(agent_id?: string) {
       const app = useAppSetting();
-      const route = useRoute();
       app.changeLoading(true);
-      const selectAgent = agent_id || route.query.agent_id?.toString();
+      const selectAgent = agent_id || this.currentAgent?.id || app.agents[0].id;
       const conv = await createNewConversation(selectAgent);
       if (conv) {
         this.change(conv, true);
@@ -35,10 +38,25 @@ export const useConversationStore = defineStore("conversations", {
       this.histories.unshift(this.conv);
     },
     async init() {
-      this.histories = await fetchConversations();
+      const route = useRoute();
+      const params = route.params;
+      const listPromise: any[] = [fetchConversations()];
+      if (params.conv_id) {
+        listPromise.push(findConversationById(params.conv_id as string));
+      }
+
+      const [histories, con] = await Promise.all(listPromise);
+
+      this.histories = histories;
+
+      con && this.change(con);
     },
-    change(con: IConversation, addNew?: boolean) {
-      if (!con) return;
+    change(con?: IConversation, addNew?: boolean) {
+      if (!con) {
+        console.log("this.con", this.currentAgent);
+        this.conv = { agent: this.currentAgent, name: "New Chat" } as any;
+        return window.history.replaceState({}, "", `/c`);
+      }
       if (addNew) this.histories.unshift(con);
       else {
         let existIndex = this.histories.findIndex((item) => item.id === con.id);
@@ -46,11 +64,8 @@ export const useConversationStore = defineStore("conversations", {
       }
 
       this.conv = con;
-      let query = "";
-      if (con.agent) {
-        query = `?agent_id=${con.agent.id}`;
-      }
-      con && window.history.replaceState({}, "", `/c/${con.id}${query}`);
+
+      con && window.history.replaceState({}, "", `/c/${con.id}`);
       document.title = con.name || "New Chat";
     },
     async delete(deleteItem: IConversation) {

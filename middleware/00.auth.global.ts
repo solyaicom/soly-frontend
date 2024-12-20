@@ -6,6 +6,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (!to.meta.layout || to.meta.guest || !requiredAuthLayouts.includes(to.meta.layout)) return;
   const { setAccessToken, getAccessToken, setUser, getUser } = useAuthStore();
   const app = useAppSetting();
+  const conversation = useConversationStore();
 
   if (getAccessToken()) {
     const userInfo = await getUserInfo();
@@ -13,5 +14,5 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   } else {
     return navigateTo("/auth/login");
   }
-  await app.init();
+  await Promise.all([app.init(), conversation.init()]);
 });

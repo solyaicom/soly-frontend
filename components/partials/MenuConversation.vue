@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { PopoverClose } from "radix-vue";
 import { createNewConversation, fetchConversations } from "~/services/api/chat/api";
-import { IConversation } from "~/services/api/chat/type";
+import { IAgent, IConversation } from "~/services/api/chat/type";
 import { useConversationStore } from "~/stores/conversations";
 
 const props = defineProps<{
@@ -31,9 +31,10 @@ function onConversationClick(item: IConversation) {
   props.onClick?.();
 }
 
-function onSelectAgent(agent_id: string) {
-  selectAgentId.value = agent_id;
-  onNewChat();
+function onSelectAgent(agent: IAgent) {
+  selectAgentId.value = agent.id;
+  conversationStore.setCurrentAgent(agent);
+  conversationStore.change(undefined);
   props.onClick?.();
 }
 
@@ -54,7 +55,7 @@ function onRenameItem() {
             <div
               v-for="(item, idx) in app.agents"
               :key="item.id"
-              @click="onSelectAgent(item.id)"
+              @click="onSelectAgent(item)"
               class="row-center hover:bg-[#323232] cursor-pointer rounded-[12px] py-2 pl-3 mb-2"
             >
               <div class="w-[24px] h-[24px] rounded-full mr-3 flex-shrink-0">
@@ -63,6 +64,7 @@ function onRenameItem() {
               <p class="text-[16px] font-[600] text-[#fff] flex-1">{{ item.name }}</p>
             </div>
           </div>
+          <div class="line"></div>
           <p class="font-[600] px-3 mt-4 mb-2">Chat History</p>
           <div
             v-for="(item, idx) in conversationStore.histories"

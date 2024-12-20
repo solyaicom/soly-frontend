@@ -149,8 +149,8 @@ async function sendContent(content: string, fromSaved = false) {
   if (!fromSaved) {
     messages.value.push({ role: "user", content: content.trim() });
   }
-  if (!conv) {
-    conv = await createNewConversation();
+  if (!conv?.id) {
+    conv = await createNewConversation(conversationStore.currentAgent?.id);
     if (!conv)
       return toast({
         description: "Failed to create new conversation",
