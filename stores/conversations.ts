@@ -25,7 +25,6 @@ export const useConversationStore = defineStore("conversations", {
     },
     resetConv() {
       this.conv = null;
-      this.histories = [];
     },
     setCurrentMessage(content: string) {
       this.currentMessage = content;

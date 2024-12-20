@@ -32,7 +32,7 @@ watch(
 
 function checkMessageFromStore() {
   if (conversationStore.currentMessage) {
-    sendContent(conversationStore.currentMessage);
+    sendContent(conversationStore.currentMessage, true);
     conversationStore.setCurrentMessage("");
   }
 }
@@ -62,18 +62,6 @@ async function onSendMessage(content: string) {
   if (loading.value) return;
   loading.value = true;
   let conv = conversationStore.conv;
-  if (!conv) {
-    conv = await createNewConversation();
-    if (!conv)
-      return toast({
-        description: "Failed to create new conversation",
-        duration: 3000,
-      });
-    currentConversation.value = conv;
-    conversationStore.setCurrentMessage(content);
-    conversationStore.change(conv, true);
-    return;
-  }
 
   conversationStore.updateCurrentChat();
 
@@ -135,9 +123,26 @@ async function onSendMessage(content: string) {
   });
 }
 
-function sendContent(content: string) {
+async function sendContent(content: string, fromSaved = false) {
+  if (loading.value) return;
+  let conv = conversationStore.conv;
+  if (!fromSaved) {
+    messages.value.push({ role: "user", content: content.trim() });
+  }
+  if (!conv) {
+    conv = await createNewConversation();
+    if (!conv)
+      return toast({
+        description: "Failed to create new conversation",
+        duration: 3000,
+      });
+    currentConversation.value = conv;
+    conversationStore.setCurrentMessage(content);
+    conversationStore.change(conv, true);
+    return;
+  }
+
   onSendMessage(content.trim());
-  messages.value.push({ role: "user", content: content.trim() });
   if (scrollArea.value) {
     scrollArea.value.scrollTop = scrollArea.value?.scrollHeight;
   }
