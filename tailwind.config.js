@@ -10,6 +10,11 @@ module.exports = {
     theme: {
         markdownBase: {
             wrapperClass: "markdown",
+            code: {
+                background: "#5a5a5a",
+                borderRadius: "4px",
+                padding: "3px 6px ",
+            },
             h1: {
                 fontSize: "24px",
             },
