@@ -16,4 +16,10 @@ export interface IAgent {
   name: string;
   description: string;
   avatar_url: string;
+  metadata?: IAgentMetadata;
+}
+
+export interface IAgentMetadata {
+  capabilities: { sub_title: string; title: string }[];
+  socials: { icon_url: string; title: string; url: string }[];
 }

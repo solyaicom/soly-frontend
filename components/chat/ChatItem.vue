@@ -25,8 +25,8 @@ const currentAgent = computed(() => {
   <div class="w-full row-center mt-8 px-3" :class="{ 'justify-end ': item.role === 'user' }">
     <div class="w-[80%] row-center" :class="{ 'justify-end': item.role === 'user' }">
       <div class="flex flex-row" :class="{ 'py-2 px-4 rounded-[20px]  bg-[#323232d9]': item.role === 'user' }">
-        <div v-if="item.role === 'assistant'" class="w-[40px] h-[40px] border-[1px] border-app-line1 mr-2 rounded-full overflow-hidden flex-shrink-0">
-          <img :src="currentAgent?.avatar_url || '/images/icon-logo-mask.svg'" class="w-[40px] h-[40px] ml-[-2px]" />
+        <div v-if="item.role === 'assistant'" class="w-[40px] h-[40px] mr-2 rounded-full overflow-hidden flex-shrink-0">
+          <img :src="currentAgent?.avatar_url || '/images/icon-logo-mask.svg'" class="w-[40px] h-[40px]" />
         </div>
         <div class="markdown">
           <div

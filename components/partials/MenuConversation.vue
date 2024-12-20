@@ -63,11 +63,12 @@ function onRenameItem() {
               <p class="text-[16px] font-[600] text-[#fff] flex-1">{{ item.name }}</p>
             </div>
           </div>
-          <p class="font-[600] px-3 mt-4">Chat History</p>
+          <p class="font-[600] px-3 mt-4 mb-2">Chat History</p>
           <div
             v-for="(item, idx) in conversationStore.histories"
             :key="item.id"
             class="relative cursor-pointer group hover:text-[#FFFFFF] hover:bg-[#323232] rounded-[12px]"
+            :class="{ 'bg-[#323232]': item.id === conversationStore.conv?.id }"
           >
             <div @click="onConversationClick(item)" class="row-center justify-between text-[16px] py-2 pl-3 pr-10 text-[#CACACA]">
               <p class="overflow-hidden whitespace-nowrap text-ellipsis flex-1">{{ item.name }}</p>

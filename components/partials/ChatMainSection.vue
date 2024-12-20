@@ -5,6 +5,11 @@ import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { createNewConversation, fetchChatHistory } from "~/services/api/chat/api";
 import MenuConversation from "./MenuConversation.vue";
 import { useConversationStore } from "~/stores/conversations";
+import { PopoverClose } from "radix-vue";
+import PopoverContent from "../ui/popover/PopoverContent.vue";
+import PopoverTrigger from "../ui/popover/PopoverTrigger.vue";
+import Popover from "../ui/popover/Popover.vue";
+import BotInformation from "../conversation/BotInformation.vue";
 
 const messages = ref<any[]>([]);
 const currentMsg = ref<any>("");
@@ -15,6 +20,9 @@ const conversationStore = useConversationStore();
 const openSheet = ref(false);
 const app = useAppSetting();
 const currentContent = ref<string>("");
+
+const openBotMenu = ref(false);
+const openBotInformation = ref(false);
 
 const currentAgent = computed(() => {
   return conversationStore.conv?.agent || app.agents[0];
@@ -79,7 +87,7 @@ async function onSendMessage(content: string) {
         case "error":
           toast({
             description: JSON.parse(ev.data).error,
-            duration: 3000,
+            duration: 5000,
           });
           loading.value = false;
           break;
@@ -126,7 +134,7 @@ async function onSendMessage(content: string) {
     onerror(err) {
       toast({
         description: err.message,
-        duration: 3000,
+        duration: 5000,
       });
       loading.value = false;
 
@@ -212,17 +220,44 @@ function onItemMenuClick() {
           <MenuConversation @click="onItemMenuClick" />
         </SheetContent>
       </Sheet>
-      <img src="/images/icon-logo-row.svg" />
+
+      <Popover v-model:open="openBotMenu">
+        <PopoverTrigger>
+          <div class="row-center p-3 bg-[#323232] rounded-[12px] ml-4">
+            <div class="w-[24px] h-[24px] mr-2 rounded-full overflow-hidden">
+              <img :src="currentAgent?.avatar_url" class="w-[24px] h-[24px]" />
+            </div>
+            <p class="text-[16px] font-[600]">{{ currentAgent?.name || "Soly AI" }}</p>
+            <img src="/images/icon-arrow-down.svg" class="ml-2" />
+          </div>
+        </PopoverTrigger>
+        <PopoverContent>
+          <div class="bg-[#323232] rounded-[12px] p-4">
+            <div
+              class="row-center cursor-pointer"
+              @click="
+                () => {
+                  openBotMenu = false;
+                  openBotInformation = true;
+                }
+              "
+            >
+              <img src="/images/icon-about.svg" class="w-[20px] h-[20px]" />
+              <p class="ml-2 text-[16px]">About</p>
+            </div>
+          </div>
+        </PopoverContent>
+      </Popover>
     </div>
     <div class="flex-1 overflow-hidden flex flex-col items-center">
       <div class="flex-1 flex flex-col items-center w-full md:w-[90%] overflow-hidden md:max-w-[768px]">
         <div class="flex-1 flex flex-col justify-center w-full overflow-hidden">
           <div v-if="!messages.length" class="flex-1 flex flex-col items-center justify-center">
             <div class="row-center">
-              <img :src="currentAgent?.avatar_url" class="w-[40px] h-[40px] mr-2" />
+              <img :src="currentAgent?.avatar_url" class="w-[40px] h-[40px] mr-2 rounded-full" />
               <p class="text-[40px] font-[500]">{{ currentAgent?.name || "Soly AI" }}</p>
             </div>
-            <p class="mt-4 text-center text-[16px] text-[#CACACA]">
+            <p class="mt-4 text-center text-[16px] text-[#CACACA] px-4">
               {{ currentAgent.description || `👋 Hi, I'm ${currentAgent.name} — Chat with me` }}
             </p>
           </div>
@@ -250,6 +285,7 @@ function onItemMenuClick() {
         </div>
       </div>
     </div>
+    <BotInformation :open="openBotInformation" @close="openBotInformation = false" />
   </section>
 </template>
 
