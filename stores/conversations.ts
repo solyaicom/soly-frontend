@@ -53,7 +53,6 @@ export const useConversationStore = defineStore("conversations", {
     },
     change(con?: IConversation, addNew?: boolean) {
       if (!con) {
-        console.log("this.con", this.currentAgent);
         this.conv = { agent: this.currentAgent, name: "New Chat" } as any;
         return window.history.replaceState({}, "", `/c`);
       }
