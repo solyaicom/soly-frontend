@@ -10,7 +10,9 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "nuxt-vue3-google-signin",
     "@sentry/nuxt/module",
+    "nuxt-qrcode",
   ],
+
   runtimeConfig: {
     public: {},
   },

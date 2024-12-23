@@ -3,6 +3,7 @@ import { PopoverClose } from "radix-vue";
 import { createNewConversation, fetchConversations } from "~/services/api/chat/api";
 import { IAgent, IConversation } from "~/services/api/chat/type";
 import { useConversationStore } from "~/stores/conversations";
+import UserInfor from "./UserInfor.vue";
 
 const props = defineProps<{
   onClick?: () => void;
@@ -100,16 +101,6 @@ function onRenameItem() {
         </div>
       </div>
     </div>
-    <div
-      v-if="getUser()?.email"
-      class="p-4 font-[600] overflow-hidden border-top-[1px] border-app-line1 italic"
-      style="box-shadow: 14px 21px 40px 4px rgba(153, 70, 255, 0.34)"
-    >
-      <p>Address: {{ shortAddress(getUser().wallet.address) }}</p>
-      <div class="row-center" @click="logOut">
-        <img v-if="getUser().avatar_url" :src="getUser().avatar_url" class="w-[20px] h-[20px] mr-1 rounded-full" />
-        <p class="w-full text-[12px] text-[#cacaca] overflow-hidden whitespace-nowrap text-ellipsis">Email: {{ getUser().email }}</p>
-      </div>
-    </div>
+    <UserInfor />
   </section>
 </template>

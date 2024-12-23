@@ -1,3 +1,5 @@
+import { toast } from "~/components/ui/toast";
+
 export function shortAddress(address?: string, numOfShow = 4) {
   if (!address) return "";
   const tmpAddress = address.trim();
@@ -52,4 +54,33 @@ export function formatSeconds(sec?: number): string {
   return `${Math.floor(sec / 3600)
     .toString()
     .padStart(2, "0")}h${formatSeconds(sec % 3600)}`;
+}
+
+export function copyToClipboard(str: string) {
+  const textarea = document.createElement("textarea");
+  const text = str || "";
+  textarea.textContent = text;
+  textarea.style.position = "fixed"; // Prevent scrolling to bottom of page in Microsoft Edge.
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    document.execCommand("copy"); // Security exception may be thrown by some browsers.
+    try {
+      navigator.clipboard.writeText(str);
+    } catch (error) {}
+
+    toast({
+      title: "Copied to clipboard",
+      duration: 3000,
+    });
+  } catch (ex) {
+    console.warn("Copy to clipboard failed.", ex);
+    toast({
+      title: "Coppy failed",
+      duration: 3000,
+      variant: "destructive",
+    });
+  } finally {
+    document.body.removeChild(textarea);
+  }
 }

@@ -151,4 +151,7 @@
         line-height: 36px;
         color: #f6f6f6;
     }
+    .bg-linear {
+        background: linear-gradient(90deg, #9945ff 8%, #8752f3 30%, #5497d5 50%, #43b4ca 60%, #28e0b9 72%, #19fb9b 100%);
+    }
 }
