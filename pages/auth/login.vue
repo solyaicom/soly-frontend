@@ -4,6 +4,9 @@ definePageMeta({
   name: "Authorization",
   layout: "default",
 });
+useHead({
+  title: "Authorization",
+});
 
 function onLoginSuccess() {
   navigateTo("/c");
