@@ -1,4 +1,5 @@
 import { getUserInfo } from "~/services/api/auth/api";
+import { useSolana } from "~/stores/useSolana";
 
 const requiredAuthLayouts = ["conversation"];
 
@@ -7,6 +8,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const { setAccessToken, getAccessToken, setUser, getUser } = useAuthStore();
   const app = useAppSetting();
   const conversation = useConversationStore();
+  const solana = useSolana();
 
   if (getAccessToken()) {
     const userInfo = await getUserInfo();
@@ -14,5 +16,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   } else {
     return navigateTo("/auth/login");
   }
-  await Promise.all([app.init(), conversation.init()]);
+  const arrPros = [app.init(), conversation.init()];
+  if (to.meta.layout === "conversation") {
+    arrPros.push(app.init(), conversation.init(), solana.init(true));
+  }
+  await Promise.all(arrPros);
 });

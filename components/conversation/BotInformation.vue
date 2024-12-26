@@ -26,7 +26,7 @@ watch(
 
 <template>
   <Dialog v-model:open="openBotInformation">
-    <DialogContent class="bg-[#323232] py-8 px-4 border-none">
+    <DialogContent class="bg-[#323232] py-8 px-4 border-none w-[94vw] md:w-full">
       <div v-if="!!agent" class="flex flex-col items-center">
         <div class="row-center">
           <img :src="agent.avatar_url" class="w-[40px] h-[40px] rounded-full" />

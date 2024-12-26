@@ -3,27 +3,23 @@ import { IChatMessage, IConversation } from "~/services/api/chat/type";
 import { toast } from "../ui/toast";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { createNewConversation, fetchChatHistory } from "~/services/api/chat/api";
-import MenuConversation from "./MenuConversation.vue";
+
 import { useConversationStore } from "~/stores/conversations";
-import { PopoverClose } from "radix-vue";
-import PopoverContent from "../ui/popover/PopoverContent.vue";
-import PopoverTrigger from "../ui/popover/PopoverTrigger.vue";
-import Popover from "../ui/popover/Popover.vue";
 import BotInformation from "../conversation/BotInformation.vue";
+import BotButton from "../conversation/BotButton.vue";
+import BalanceButton from "./BalanceButton.vue";
 
 const messages = ref<any[]>([]);
 const currentMsg = ref<any>("");
 const scrollArea = ref<any>(null);
 const loading = ref(false);
-const currentConversation = ref<IConversation | null>(null);
 const conversationStore = useConversationStore();
-const openSheet = ref(false);
 const app = useAppSetting();
 const currentContent = ref<string>("");
 
-const openBotMenu = ref(false);
 const openBotInformation = ref(false);
 const botThinking = ref(false);
+const currentConversation = ref<IConversation | null>(null);
 
 const currentAgent = computed(() => {
   return conversationStore.conv?.agent || app.agents[0];
@@ -123,7 +119,7 @@ async function onSendMessage(content: string) {
           const data = JSON.parse(ev.data);
           if (rendering) {
             if (data.value) {
-              const _contents = data.value.split("").map((v) => ({ value: v }));
+              const _contents = data.value.split("").map((v: string) => ({ value: v }));
               arrMsg.push(..._contents);
             }
           } else {
@@ -235,53 +231,11 @@ function onKeyDown(e: any) {
     e.preventDefault();
   }
 }
-
-function onItemMenuClick() {
-  openSheet.value = false;
-}
 </script>
 
 <template>
   <section class="flex-1 h-full flex flex-col bg-[#1e1e1e] rounded-[16px] overflow-hidden">
-    <div class="h-[60px] lg:h-[104px] row-center border-b-[1px] border-b-app-line1">
-      <Sheet v-model:open="openSheet">
-        <SheetTrigger>
-          <div class="pl-4 py-2 cursor-pointer lg:hidden">
-            <img src="/images/icon-menu.svg" /></div
-        ></SheetTrigger>
-        <SheetContent side="left" class="p-0">
-          <MenuConversation @click="onItemMenuClick" />
-        </SheetContent>
-      </Sheet>
-
-      <Popover v-model:open="openBotMenu">
-        <PopoverTrigger>
-          <div class="row-center p-3 bg-[#323232] rounded-[12px] ml-4">
-            <div class="w-[24px] h-[24px] mr-2 rounded-full overflow-hidden">
-              <img :src="currentAgent?.avatar_url" class="w-[24px] h-[24px]" />
-            </div>
-            <p class="text-[16px] font-[600]">{{ currentAgent?.name || "Soly AI" }}</p>
-            <img src="/images/icon-arrow-down.svg" class="ml-2" />
-          </div>
-        </PopoverTrigger>
-        <PopoverContent>
-          <div class="bg-[#323232] rounded-[12px] p-4">
-            <div
-              class="row-center cursor-pointer"
-              @click="
-                () => {
-                  openBotMenu = false;
-                  openBotInformation = true;
-                }
-              "
-            >
-              <img src="/images/icon-about.svg" class="w-[20px] h-[20px]" />
-              <p class="ml-2 text-[16px]">About</p>
-            </div>
-          </div>
-        </PopoverContent>
-      </Popover>
-    </div>
+    <BotButton />
     <div class="flex-1 overflow-hidden flex flex-col items-center">
       <div class="flex-1 flex flex-col items-center w-full md:w-[90%] overflow-hidden md:max-w-[768px]">
         <div class="flex-1 flex flex-col justify-center w-full overflow-hidden">
@@ -294,13 +248,14 @@ function onItemMenuClick() {
               {{ currentAgent.description || `👋 Hi, I'm ${currentAgent.name} — Chat with me` }}
             </p>
           </div>
-          <div ref="scrollArea" v-else class="h-full w-full pt-4 pb-10 overflow-y-scroll">
+          <div ref="scrollArea" v-else class="h-full w-full pt-4 pb-10 overflow-y-auto relative">
             <ChatListChat :messages="messages" :thinking="botThinking" />
             <ChatItem v-if="currentMsg" :item="currentMsg" :thinking="botThinking" />
           </div>
         </div>
         <div class="w-full px-3 pb-4">
           <div class="w-full flex flex-row items-start relative">
+            <BalanceButton class="absolute top-[-60px] right-[0px] z-1" />
             <div
               contenteditable
               @keyup="onKeyChange"
@@ -318,7 +273,6 @@ function onItemMenuClick() {
         </div>
       </div>
     </div>
-    <BotInformation :open="openBotInformation" @close="openBotInformation = false" />
   </section>
 </template>
 
