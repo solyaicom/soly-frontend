@@ -23,6 +23,7 @@ const currentContent = ref<string>("");
 
 const openBotMenu = ref(false);
 const openBotInformation = ref(false);
+const botThinking = ref(false);
 
 const currentAgent = computed(() => {
   return conversationStore.conv?.agent || app.agents[0];
@@ -98,7 +99,13 @@ async function onSendMessage(content: string) {
         case "message":
           const msg: IChatMessage = JSON.parse(ev.data);
           currentMsg.value = msg;
+
           if (msg.role === "user") return;
+          if (msg.role === "assistant" && !msg.id) {
+            botThinking.value = true;
+            break;
+          }
+          botThinking.value = false;
 
           if (msg.completed && msg.id) {
             messages.value.push({ ...currentMsg.value });
@@ -263,7 +270,7 @@ function onItemMenuClick() {
           </div>
           <div ref="scrollArea" v-else class="h-full w-full pt-4 pb-10 overflow-y-scroll">
             <ChatListChat :messages="messages" />
-            <ChatItem v-if="currentMsg" :item="currentMsg" />
+            <ChatItem v-if="currentMsg" :item="currentMsg" :thinking="botThinking" />
           </div>
         </div>
         <div class="w-full px-3 pb-4">

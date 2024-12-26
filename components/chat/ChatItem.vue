@@ -11,6 +11,7 @@ const contentRef = ref<any>(null);
 
 const props = defineProps<{
   item: IChatMessage;
+  thinking?: boolean;
 }>();
 const { getUser } = useAuthStore();
 const conversationStore = useConversationStore();
@@ -28,7 +29,14 @@ const currentAgent = computed(() => {
         <div v-if="item.role === 'assistant'" class="w-[40px] h-[40px] mr-2 rounded-full overflow-hidden flex-shrink-0">
           <img :src="currentAgent?.avatar_url || '/images/icon-logo-mask.svg'" class="w-[40px] h-[40px]" />
         </div>
-        <div class="markdown">
+        <div v-if="thinking" class="bg-[#323232d9] p-2 rounded-[8px]">
+          <div className="dots h-6 w-10 rounded-full flex items-center justify-center flex-nowrap">
+            <div className="dot h-2 w-2 mx-0.5 rounded-full bg-slate-600" />
+            <div className="dot h-2 w-2 mx-0.5 rounded-full bg-slate-600" />
+            <div className="dot h-2 w-2 mx-0.5 rounded-full bg-slate-600" />
+          </div>
+        </div>
+        <div v-else class="markdown">
           <div
             ref="contentRef"
             v-html="md.render(item.content)"

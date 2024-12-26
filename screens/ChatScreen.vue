@@ -17,7 +17,6 @@ async function getConversationInfor() {
 }
 
 onMounted(async () => {
-  await conversationStore.init();
   getConversationInfor();
 });
 </script>
