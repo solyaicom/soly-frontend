@@ -37,21 +37,22 @@ export const useConversationStore = defineStore("conversations", {
       this.histories = this.histories.filter((item) => item.id !== this.conv?.id);
       this.histories.unshift(this.conv);
     },
-    async init() {
+    async init(id?: string) {
       const route = useRoute();
+      const app = useAppSetting();
       const params = route.params;
       const listPromise: any[] = [fetchConversations()];
-      if (params.conv_id) {
-        listPromise.push(findConversationById(params.conv_id as string));
+      if (params.conv_id || id) {
+        listPromise.push(findConversationById(id || (params.conv_id as string)));
       }
 
       const [histories, con] = await Promise.all(listPromise);
 
       this.histories = histories;
 
-      con && this.change(con);
+      con && this.change(con || app.agents[0]);
     },
-    change(con?: IConversation, addNew?: boolean) {
+    async change(con?: IConversation, addNew?: boolean) {
       if (!con) {
         this.conv = { agent: this.currentAgent, name: "New Chat" } as any;
         return window.history.replaceState({}, "", `/c`);
@@ -63,7 +64,6 @@ export const useConversationStore = defineStore("conversations", {
       }
 
       this.conv = con;
-
       con && window.history.replaceState({}, "", `/c/${con.id}`);
       document.title = con.name || "New Chat";
     },

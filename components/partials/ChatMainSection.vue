@@ -54,7 +54,7 @@ async function fetchListMessage() {
   if (conversationStore.conv.id === currentConversation.value?.id) return;
   messages.value = [];
   currentConversation.value = conversationStore.conv;
-  messages.value = await fetchChatHistory(conversationStore.conv.id);
+  messages.value = conversationStore.conv.id ? await fetchChatHistory(conversationStore.conv.id) : [];
 }
 
 watch(

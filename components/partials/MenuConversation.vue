@@ -24,7 +24,7 @@ async function onNewChat() {
 function onConversationClick(item: IConversation) {
   loading.value = true;
   app.changeLoading(true);
-  conversationStore.change(item);
+  conversationStore.init(item.id);
   setTimeout(() => {
     app.changeLoading(false);
     loading.value = false;
