@@ -35,7 +35,7 @@ function onBack() {
 </script>
 
 <template>
-  <section class="flex flex-col w-full h-full">
+  <section class="flex flex-col w-full h-full pt-8">
     <div class="row-center mt-6 px-10">
       <div class="cursor-pointer row-center" @click="onBack">
         <img src="/images/icon-arrow-back.svg" />
