@@ -75,6 +75,8 @@ async function onSendMessage(content: string) {
   conversationStore.updateCurrentChat();
 
   const access_token = localStorage.getItem("access_token");
+  const arrMsg: any[] = [];
+  let rendering = false;
   await fetchEventSource(`${AppConfig.env.API_BASE_URL}/conversations/${conv?.id || ""}/chat`, {
     method: "POST",
     headers: {
@@ -107,8 +109,9 @@ async function onSendMessage(content: string) {
           }
           botThinking.value = false;
 
-          if (msg.completed && msg.id) {
-            messages.value.push({ ...currentMsg.value });
+          if (msg.id) {
+            currentMsg.value = null;
+            messages.value.push({ ...msg });
 
             // printMessage(msg);
           } else {
@@ -118,10 +121,31 @@ async function onSendMessage(content: string) {
           break;
         case "delta":
           const data = JSON.parse(ev.data);
-          currentMsg.value.content += data.value;
+          if (rendering) {
+            if (data.value) {
+              const _contents = data.value.split("").map((v) => ({ value: v }));
+              arrMsg.push(..._contents);
+            }
+          } else {
+            rendering = true;
+            const inter = setInterval(() => {
+              const _data = arrMsg.shift();
+              const currentMsg = messages.value[messages.value.length - 1];
+              if (_data) currentMsg.content += _data.value;
+              if (arrMsg.length === 0) {
+                rendering = false;
+                clearInterval(inter);
+              }
+              if (scrollArea.value) {
+                setTimeout(() => {
+                  scrollArea.value.scrollTop = scrollArea.value.scrollHeight;
+                }, 100);
+              }
+            }, 25);
+          }
           break;
         case "finish":
-          messages.value.push({ ...currentMsg.value });
+          // messages.value.push({ ...currentMsg.value });
           currentMsg.value = null;
           loading.value = false;
           break;
@@ -157,7 +181,9 @@ async function sendContent(content: string, fromSaved = false) {
     messages.value.push({ role: "user", content: content.trim() });
   }
   if (!conv?.id) {
+    console.log("111");
     conv = await createNewConversation(conversationStore.currentAgent?.id);
+
     if (!conv)
       return toast({
         description: "Failed to create new conversation",
@@ -269,7 +295,7 @@ function onItemMenuClick() {
             </p>
           </div>
           <div ref="scrollArea" v-else class="h-full w-full pt-4 pb-10 overflow-y-scroll">
-            <ChatListChat :messages="messages" />
+            <ChatListChat :messages="messages" :thinking="botThinking" />
             <ChatItem v-if="currentMsg" :item="currentMsg" :thinking="botThinking" />
           </div>
         </div>
