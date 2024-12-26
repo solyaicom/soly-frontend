@@ -30,7 +30,7 @@ export async function getWalletPortfolio(walletAddress: string): Promise<WalletP
     const solToken = portfolio.tokens.find((token) => token.symbol === "SOL");
     const otherTokens = portfolio.tokens
       .filter((token) => token.symbol !== "SOL")
-      .filter((token) => token.usdPrice > 5)
+      .filter((token) => token.usdPrice > 3)
       .sort((a, b) => b.usdPrice - a.usdPrice);
 
     // Combine SOL with other tokens, ensuring SOL is first
