@@ -3,6 +3,22 @@ export interface IChatMessage {
   role: "user" | "assistant";
   content: string;
   completed: boolean;
+  data: {
+    observations?: IObservation[];
+  };
+}
+
+export interface IObservation {
+  id: string;
+  completed: boolean;
+  tools: ITool[];
+}
+
+export interface ITool {
+  id: string;
+  name: "tokensaddressinfo_get" | "tokensaddressprice_get" | "dataset_";
+  inputs: any;
+  outputs: string; // jsonstringify
 }
 
 export interface IConversation {

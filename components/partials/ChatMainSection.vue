@@ -5,13 +5,12 @@ import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { createNewConversation, fetchChatHistory } from "~/services/api/chat/api";
 
 import { useConversationStore } from "~/stores/conversations";
-import BotInformation from "../conversation/BotInformation.vue";
 import BotButton from "../conversation/BotButton.vue";
 import BalanceButton from "./BalanceButton.vue";
 
-const messages = ref<any[]>([]);
+const messages = ref<IChatMessage[]>([]);
 const currentMsg = ref<any>("");
-const scrollArea = ref<any>(null);
+const scrollArea = ref<HTMLDivElement | null>(null);
 const loading = ref(false);
 const conversationStore = useConversationStore();
 const app = useAppSetting();
@@ -35,6 +34,18 @@ watch(
   { immediate: true }
 );
 
+function scrollToEnd(smooth = false) {
+  setTimeout(() => {
+    if (scrollArea.value) {
+      if (!smooth) {
+        scrollArea.value.scrollTop = scrollArea.value.scrollHeight;
+      } else {
+        scrollArea.value.scrollTo({ top: scrollArea.value.scrollHeight, behavior: "smooth" });
+      }
+    }
+  }, 70);
+}
+
 function checkMessageFromStore() {
   if (conversationStore.currentMessage) {
     sendContent(conversationStore.currentMessage, true);
@@ -56,10 +67,7 @@ async function fetchListMessage() {
 watch(
   () => messages.value.length,
   () => {
-    setTimeout(() => {
-      if (!scrollArea.value) return;
-      scrollArea.value.scrollTop = scrollArea.value?.scrollHeight || 0;
-    }, 100);
+    scrollToEnd();
   }
 );
 
@@ -82,6 +90,8 @@ async function onSendMessage(content: string) {
       content: content || "What is the weather today?",
     }),
     onmessage(ev) {
+      const _currentMsg = messages.value[messages.value.length - 1];
+
       switch (ev.event) {
         case "error":
           toast({
@@ -90,12 +100,25 @@ async function onSendMessage(content: string) {
           });
           loading.value = false;
           break;
+        case "observation":
+          console.log("observation", ev.data);
+          if (!_currentMsg.data.observations) {
+            _currentMsg.data.observations = [];
+          }
+          _currentMsg.data.observations.push(JSON.parse(ev.data));
+          break;
+        case "observation_update":
+          console.log("observation_update", ev.data);
+          _currentMsg.data.observations?.pop();
+          _currentMsg.data.observations?.push(JSON.parse(ev.data));
+          break;
         case "update_title":
           const newTitle = ev.data;
           conversationStore.change({ ...conv!, name: newTitle });
           break;
         case "message":
           const msg: IChatMessage = JSON.parse(ev.data);
+          console.log("msg", msg);
           currentMsg.value = msg;
 
           if (msg.role === "user") return;
@@ -117,28 +140,7 @@ async function onSendMessage(content: string) {
           break;
         case "delta":
           const data = JSON.parse(ev.data);
-          if (rendering) {
-            if (data.value) {
-              const _contents = data.value.split("").map((v: string) => ({ value: v }));
-              arrMsg.push(..._contents);
-            }
-          } else {
-            rendering = true;
-            const inter = setInterval(() => {
-              const _data = arrMsg.shift();
-              const currentMsg = messages.value[messages.value.length - 1];
-              if (_data) currentMsg.content += _data.value;
-              if (arrMsg.length === 0) {
-                rendering = false;
-                clearInterval(inter);
-              }
-              if (scrollArea.value) {
-                setTimeout(() => {
-                  scrollArea.value.scrollTop = scrollArea.value.scrollHeight;
-                }, 100);
-              }
-            }, 25);
-          }
+          if (data) _currentMsg.content += data.value;
           break;
         case "finish":
           // messages.value.push({ ...currentMsg.value });
@@ -146,11 +148,7 @@ async function onSendMessage(content: string) {
           loading.value = false;
           break;
       }
-      if (scrollArea.value) {
-        setTimeout(() => {
-          scrollArea.value.scrollTop = scrollArea.value.scrollHeight;
-        }, 100);
-      }
+      scrollToEnd(true);
     },
     onclose() {
       // if the server closes the connection unexpectedly, retry:
@@ -174,10 +172,9 @@ async function sendContent(content: string, fromSaved = false) {
   if (loading.value) return;
   let conv = conversationStore.conv;
   if (!fromSaved) {
-    messages.value.push({ role: "user", content: content.trim() });
+    messages.value.push({ role: "user", id: "", content: content.trim(), completed: true, data: {} });
   }
   if (!conv?.id) {
-    console.log("111");
     conv = await createNewConversation(conversationStore.currentAgent?.id);
 
     if (!conv)
@@ -192,11 +189,7 @@ async function sendContent(content: string, fromSaved = false) {
   }
 
   onSendMessage(content.trim());
-  if (scrollArea.value) {
-    setTimeout(() => {
-      scrollArea.value.scrollTop = scrollArea.value.scrollHeight;
-    }, 100);
-  }
+  scrollToEnd(true);
 }
 
 function onSendClick() {

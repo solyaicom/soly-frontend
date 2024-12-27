@@ -1,7 +1,7 @@
 import * as anchor from "@coral-xyz/anchor";
 import { PublicKey } from "@solana/web3.js";
 import { CONNECTION_CONFIG } from "~/constants/solana-connection";
-import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token";
+import { getAccount, getAssociatedTokenAddress, getMint, TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { searchWalletAssets } from "./helius-api";
 import { transformToPortfolio, WalletPortfolio } from "./portfolio";
 
@@ -9,6 +9,14 @@ export const connection = new anchor.web3.Connection(CONNECTION_CONFIG.mainnet, 
   commitment: "confirmed",
   disableRetryOnRateLimit: true,
 });
+
+const TOKEN_SOLANA = {
+  symbol: "SOL",
+  decimals: 9,
+  address: "So11111111111111111111111111111111111111112",
+  name: "Solana",
+  imageUrl: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+};
 
 export async function getSolBalance(walletAddress: string) {
   try {
@@ -45,6 +53,24 @@ export async function getWalletPortfolio(walletAddress: string): Promise<WalletP
       address: walletAddress,
       nfts: [],
     };
+  }
+}
+
+export async function getTokenInfor(tokenMintAddress: string) {
+  if (!tokenMintAddress) {
+    return null;
+  }
+  if (tokenMintAddress === TOKEN_SOLANA.address) {
+    return TOKEN_SOLANA;
+  }
+  const mintPublicKey = new PublicKey(tokenMintAddress);
+  try {
+    const tokenAccountInfo = await getMint(connection, mintPublicKey);
+    console.log("tokenAccountInfo", tokenAccountInfo);
+    return tokenAccountInfo;
+  } catch (error) {
+    console.log("getTokenInfor error", error);
+    return null;
   }
 }
 

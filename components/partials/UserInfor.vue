@@ -8,11 +8,7 @@ const { getUser, logOut } = useAuthStore();
 
 const openPopup = ref(false);
 const openQRCode = ref(false);
-const balance = ref(0);
-
-onMounted(async () => {
-  balance.value = await getSolBalance("HiunCfx6f6V6Y3ZzZJT947UDpqDW8kCjapC6jEnd8N5N");
-});
+const solana = useSolana();
 
 function viewScanner() {
   openPopup.value = false;
@@ -45,7 +41,9 @@ function onLogout() {
             <div class="flex-1">
               <p>{{ shortAddress(getUser().wallet.address) }}</p>
               <div class="row-center">
-                <p class="w-full text-[12px] text-[#cacaca] overflow-hidden whitespace-nowrap text-ellipsis">{{ balance }} SOL</p>
+                <p class="w-full text-[12px] text-[#cacaca] overflow-hidden whitespace-nowrap text-ellipsis">
+                  {{ formatNumber(solana.balance, 3) }} SOL
+                </p>
               </div>
             </div>
             <img src="/images/icon-arrow-back.svg" class="rotate-180" />
@@ -70,7 +68,7 @@ function onLogout() {
                       <img src="/images/icon-arrow-up-right.svg" />
                     </div>
                   </div>
-                  <p class="flex-1 text-[#B0B0B0]">{{ balance }} SOL</p>
+                  <p class="flex-1 text-[#B0B0B0]">{{ formatNumber(solana.balance, 3) }} SOL</p>
                 </div>
               </div>
             </div>

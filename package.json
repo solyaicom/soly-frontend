@@ -13,6 +13,7 @@
     },
     "dependencies": {
         "@coral-xyz/anchor": "^0.30.1",
+        "@metaplex-foundation/mpl-token-metadata": "^3.3.0",
         "@microsoft/fetch-event-source": "^2.0.1",
         "@pinia/nuxt": "^0.5.1",
         "@radix-icons/vue": "^1.0.0",

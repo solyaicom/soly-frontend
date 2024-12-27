@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Linear from "./Linear.vue";
+
 const { getUser } = useAuthStore();
 const openQRCode = ref(false);
 

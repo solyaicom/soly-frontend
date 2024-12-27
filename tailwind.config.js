@@ -26,6 +26,11 @@ module.exports = {
                     marginBottom: "0px",
                 },
             },
+            li: {
+                "p:first-child": {
+                    display: "inline",
+                },
+            },
         },
         fontSize: {
             base: "14px",
