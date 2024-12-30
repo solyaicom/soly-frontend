@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { getTokenInfor } from "~/services/solana/utils";
 
-const props = defineProps<{ output: any; inputs: any }>();
+const props = defineProps<{ output: any; inputs: any; token: any }>();
 
-const token = ref<any>(null);
+const token = ref<any>(props.token);
 const usdPrice = computed(() => JSON.parse(props.output)?.data?.usd_price || 0);
 
 onMounted(async () => {
   const tokenAddress = props.inputs?.address;
   if (tokenAddress) {
-    token.value = await getTokenInfor(tokenAddress);
-    console.log(token.value);
   }
 });
 

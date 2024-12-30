@@ -1,24 +1,8 @@
 <script setup lang="ts">
+import { convertTokenOutput } from "~/utils";
+
 const props = defineProps<{ output: string }>();
-const data = computed(() => {
-  const tokensStr = props.output.split("\n");
-  const tokens = tokensStr.map((str) => {
-    const splitItem = str.split("Token ");
-    splitItem.shift();
-    const objToken: any = {};
-    splitItem.forEach((fieldStr) => {
-      const splits = fieldStr.split(":");
-      const fieldName = splits.shift() || "";
-      const fieldValue = splits.join(":").trim();
-      objToken[fieldName.toLocaleLowerCase()] = fieldValue;
-      if (fieldValue[fieldValue.length - 1] === ";") {
-        objToken[fieldName.toLocaleLowerCase()] = fieldValue.trim().slice(0, -1);
-      }
-    });
-    return objToken;
-  });
-  return tokens;
-});
+const data = computed(() => convertTokenOutput(props.output));
 
 function onCopy(address: string) {
   copyToClipboard(address);
