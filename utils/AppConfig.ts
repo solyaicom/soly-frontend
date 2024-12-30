@@ -1,5 +1,5 @@
 export const AppConfig = {
-  name: "Stavax Account",
+  name: "SolyAI",
   env: {
     API_BASE_URL:
       //@ts-ignore
