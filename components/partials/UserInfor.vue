@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { getSolBalance, getTokenBalance, getWalletPortfolio } from "~/services/solana/utils";
-import { Dialog, DialogContent } from "../ui/dialog";
-import Linear from "./Linear.vue";
 import DepositPopup from "./DepositPopup.vue";
 
 const { getUser, logOut } = useAuthStore();

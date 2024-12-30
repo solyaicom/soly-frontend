@@ -9,6 +9,8 @@ const usdPrice = computed(() => JSON.parse(props.output)?.data?.usd_price || 0);
 onMounted(async () => {
   const tokenAddress = props.inputs?.address;
   if (tokenAddress) {
+    const _token = await getTokenInfor(tokenAddress);
+    console.log("_token", _token);
   }
 });
 

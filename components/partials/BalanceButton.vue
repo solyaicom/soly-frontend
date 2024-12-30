@@ -5,6 +5,7 @@ const solana = useSolana();
 const openPortfolio = ref(false);
 const openDeposit = ref(false);
 const { getUser } = useAuthStore();
+const app = useAppSetting();
 
 function viewScanner() {
   window.open("https://solscan.io/address/" + getUser().wallet.address, "_blank");
@@ -13,10 +14,15 @@ function onOpenDeposit() {
   openPortfolio.value = false;
   openDeposit.value = true;
 }
+
+async function onOpenPortfolio() {
+  await solana.refresh();
+  openPortfolio.value = true;
+}
 </script>
 <template>
   <div>
-    <button class="row-center py-[6px] px-3 rounded-full bg-[#141414]" @click="openPortfolio = true">
+    <button class="row-center py-[6px] px-3 rounded-full bg-[#141414]" @click="onOpenPortfolio">
       <img src="/images/icon-wallet.svg" class="mr-2" />
       <p class="text-[16px]">{{ formatNumber(solana.balance, 3) }} SOL</p>
       <NuxtIcon name="icon-arrow-down" class="ml-2" />
@@ -45,6 +51,7 @@ function onOpenDeposit() {
           </div>
           <div class="mt-4">
             <p class="text-[16px] font-[600] text-[#cacaca]">Token ({{ solana.portfolio.tokens.length }})</p>
+
             <div class="min-h-[150px]">
               <div v-for="(token, idx) in solana.portfolio.tokens" :key="idx" class="mt-2">
                 <div class="row-center justify-between">

@@ -5,6 +5,17 @@ export interface ApiResponse {
   items: FungibleToken[];
 }
 
+export interface IFullToken {
+  name: string;
+  symbol: string;
+  imageUrl: string;
+  decimals: number;
+  balance?: number;
+  usd_price?: number;
+  price_per_token?: number;
+  address: string;
+}
+
 export interface FungibleToken {
   interface: string;
   id: string;

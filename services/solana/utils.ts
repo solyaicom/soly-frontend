@@ -38,7 +38,7 @@ export async function getWalletPortfolio(walletAddress: string): Promise<WalletP
     const solToken = portfolio.tokens.find((token) => token.symbol === "SOL");
     const otherTokens = portfolio.tokens
       .filter((token) => token.symbol !== "SOL")
-      .filter((token) => token.usdPrice > 3)
+      .filter((token) => token.usdPrice >= 0.5)
       .sort((a, b) => b.usdPrice - a.usdPrice);
 
     // Combine SOL with other tokens, ensuring SOL is first
@@ -65,7 +65,7 @@ export async function getTokenInfor(tokenMintAddress: string) {
   }
   const mintPublicKey = new PublicKey(tokenMintAddress);
   try {
-    const tokenAccountInfo = await getMint(connection, mintPublicKey);
+    const tokenAccountInfo = await connection.getParsedAccountInfo(mintPublicKey);
     console.log("tokenAccountInfo", tokenAccountInfo);
     return tokenAccountInfo;
   } catch (error) {

@@ -33,7 +33,7 @@ const currentAgent = computed(() => {
         <div>
           <ChatObservation v-if="item.data.observations" :observations="item.data.observations" />
 
-          <div v-if="thinking || !item.content" class="bg-[#323232d9] p-2 rounded-[8px]">
+          <div v-if="(thinking || !item.content) && item.role === 'assistant'" class="bg-[#323232d9] p-2 rounded-[8px] w-min">
             <div className="dots h-6 w-10 rounded-full flex items-center justify-center flex-nowrap">
               <div className="dot h-2 w-2 mx-0.5 rounded-full bg-slate-600" />
               <div className="dot h-2 w-2 mx-0.5 rounded-full bg-slate-600" />

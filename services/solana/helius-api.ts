@@ -1,8 +1,41 @@
 import { CONNECTION_CONFIG } from "~/constants/solana-connection";
-import { FungibleToken, NonFungibleToken } from "./type";
+import { FungibleToken, IFullToken, NonFungibleToken } from "./type";
 
-const HELIUS_URL = process.env.NEXT_PUBLIC_HELIUS_RPC_URL || "https://api.mainnet-beta.solana.com";
 type HeliusMethod = "searchAssets" | "getBalance";
+
+export async function fetchTokenAssets(addresses: string[]) {
+  try {
+    const response = await fetch(CONNECTION_CONFIG.mainnet, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: "text",
+        method: "getAssetBatch",
+        params: { ids: addresses },
+      }),
+    });
+    const data = await response.json();
+    const tokens = data.result.map((item: any, idx: number) => {
+      const token: IFullToken = {
+        decimals: item.token_info.decimals,
+        symbol: item.token_info.symbol,
+        price_per_token: item.token_info.price_info?.price_per_token || 0,
+        imageUrl: item.content.files?.[0]?.uri || item.content.links?.image || "",
+        name: item.content.metadata.name,
+        address: addresses[idx],
+      };
+      return token;
+    });
+
+    return tokens;
+  } catch (error) {
+    console.log("fetchTokenAssets error", error);
+    return [];
+  }
+}
 
 export const fetchHelius = async (method: HeliusMethod, params: any) => {
   try {

@@ -4,7 +4,7 @@ import { convertTokenOutput } from "~/utils";
 const props = defineProps<{ output: string }>();
 const data = computed(() => convertTokenOutput(props.output));
 
-function onCopy(address: string) {
+async function onCopy(address: string) {
   copyToClipboard(address);
 }
 

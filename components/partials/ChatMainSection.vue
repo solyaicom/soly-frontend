@@ -7,6 +7,7 @@ import { createNewConversation, fetchChatHistory } from "~/services/api/chat/api
 import { useConversationStore } from "~/stores/conversations";
 import BotButton from "../conversation/BotButton.vue";
 import BalanceButton from "./BalanceButton.vue";
+import { checkMessageExpired, findQuoteIdFromMessage } from "~/services/api/chat/utils";
 
 const messages = ref<IChatMessage[]>([]);
 const currentMsg = ref<any>("");
@@ -15,13 +16,18 @@ const loading = ref(false);
 const conversationStore = useConversationStore();
 const app = useAppSetting();
 const currentContent = ref<string>("");
+const solana = useSolana();
+const actionExpired = ref(false);
 
-const openBotInformation = ref(false);
 const botThinking = ref(false);
 const currentConversation = ref<IConversation | null>(null);
 
 const currentAgent = computed(() => {
   return conversationStore.conv?.agent || app.agents[0];
+});
+
+const lastMsg = computed(() => {
+  return messages.value[messages.value.length - 1];
 });
 
 watch(
@@ -71,16 +77,16 @@ watch(
   }
 );
 
-async function onSendMessage(content: string) {
+async function onSendMessage(content: string, data?: { action?: "confirm_swap" | "cancel_swap"; params: { quote_id?: string; message_id: string } }) {
   if (loading.value) return;
+  actionExpired.value = false;
   loading.value = true;
   let conv = conversationStore.conv;
 
   conversationStore.updateCurrentChat();
 
   const access_token = localStorage.getItem("access_token");
-  const arrMsg: any[] = [];
-  let rendering = false;
+
   await fetchEventSource(`${AppConfig.env.API_BASE_URL}/conversations/${conv?.id || ""}/chat`, {
     method: "POST",
     headers: {
@@ -88,6 +94,7 @@ async function onSendMessage(content: string) {
     },
     body: JSON.stringify({
       content: content || "What is the weather today?",
+      data,
     }),
     onmessage(ev) {
       const _currentMsg = messages.value[messages.value.length - 1];
@@ -139,13 +146,16 @@ async function onSendMessage(content: string) {
 
           break;
         case "delta":
-          const data = JSON.parse(ev.data);
-          if (data) _currentMsg.content += data.value;
+          const delta = JSON.parse(ev.data);
+          if (delta) _currentMsg.content += delta.value;
           break;
         case "finish":
           // messages.value.push({ ...currentMsg.value });
           currentMsg.value = null;
           loading.value = false;
+          if (data?.action === "confirm_swap") {
+            solana.refresh();
+          }
           break;
       }
       scrollToEnd(true);
@@ -189,7 +199,6 @@ async function sendContent(content: string, fromSaved = false) {
   }
 
   onSendMessage(content.trim());
-  scrollToEnd(true);
 }
 
 function onSendClick() {
@@ -224,6 +233,27 @@ function onKeyDown(e: any) {
     e.preventDefault();
   }
 }
+
+function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
+  if (!lastMsg.value) return;
+  const msg = lastMsg.value;
+  if (checkMessageExpired(msg)) {
+    actionExpired.value = true;
+    return toast({
+      description: "This action expired",
+      duration: 5000,
+    });
+  }
+  const content = action === "confirm_swap" ? "Confirm this action" : "Cancel this action";
+  const quote_id = findQuoteIdFromMessage(msg);
+  const msgId = msg.id;
+
+  messages.value.push({ role: "user", id: "", content, completed: true, data: {} });
+  onSendMessage(content, {
+    action,
+    params: { message_id: msgId || "", quote_id },
+  });
+}
 </script>
 
 <template>
@@ -250,16 +280,39 @@ function onKeyDown(e: any) {
           <div class="w-full flex flex-row items-start relative">
             <BalanceButton class="absolute top-[-60px] right-[0px] z-1" />
             <div
-              contenteditable
-              @keyup="onKeyChange"
-              @keydown="onKeyDown"
-              id="promt-area"
-              :placeholder="`Send a message to ${currentAgent?.name || 'SolyAI'}`"
-              class="bg-transparent border-[1px] border-app-line1 min-h-[52px] flex-1 rounded-[30px] p-4 outline-none break-all"
-            ></div>
+              v-if="lastMsg?.content?.includes('Please confirm:') && !checkMessageExpired(lastMsg) && !actionExpired"
+              class="p-6 w-full bg-[#141414] flex flex-col items-center justify-center"
+            >
+              <p class="text-[#979797] text-[16px]">Do you want {{ currentAgent?.name || "SolyAI" }} make this swap?</p>
+              <div class="row-center mt-3">
+                <div
+                  class="font-[600] text-[16px] py-3 px-10 bg-[#1e1e1e] rounded-[6px] cursor-pointer"
+                  @click="makeTransactionAction('cancel_swap')"
+                >
+                  Cancel
+                </div>
+                <p class="mx-4 font-[600] text-[16px]">/</p>
+                <div
+                  class="font-[600] text-[16px] py-3 px-10 bg-[#fff] rounded-[6px] text-[#131313] cursor-pointer"
+                  @click="makeTransactionAction('confirm_swap')"
+                >
+                  Confirm
+                </div>
+              </div>
+            </div>
+            <div v-else class="w-full flex flex-row items-start relative">
+              <div
+                contenteditable
+                @keyup="onKeyChange"
+                @keydown="onKeyDown"
+                id="promt-area"
+                :placeholder="`Send a message to ${currentAgent?.name || 'SolyAI'}`"
+                class="bg-transparent border-[1px] border-app-line1 min-h-[52px] flex-1 rounded-[30px] p-4 outline-none break-all"
+              ></div>
 
-            <div class="ml-3 cursor-pointer" @click="onSendClick">
-              <img src="/images/icon-send.svg" />
+              <div class="ml-3 cursor-pointer" @click="onSendClick">
+                <img src="/images/icon-send.svg" />
+              </div>
             </div>
           </div>
           <p class="mt-5 text-center text-[#CDCDCD] text-[12px]">Please consider checking important information! This is not investment advice.</p>

@@ -13,7 +13,7 @@ useSeoMeta({
 
 <template>
   <section class="flex flex-col w-full h-full pt-8">
-    <div class="row-center mt-6 px-10">
+    <div class="row-center mt-3 px-10">
       <img src="/images/icon-logo-row.svg" />
       <NuxtLink
         to="/faq"
@@ -31,7 +31,7 @@ useSeoMeta({
           <PartialsButton text="Launch App" @click="navigateTo('/c')" />
         </div>
       </div>
-      <a class="row-center mt-6 cursor-pointer" href="https://x.com/Soly_AI" target="_blank">
+      <a class="row-center mt-6 mb-3 cursor-pointer" href="https://x.com/Soly_AI" target="_blank">
         <p>More about us:</p>
         <img src="/images/icon-twitter.svg" class="ml-2" />
       </a>

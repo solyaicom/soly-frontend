@@ -24,6 +24,6 @@ const token = computed(() => {
 
 <template>
   <div v-for="(obs, idx1) in props.observations" :key="idx1" class="w-[370px] md:w-[450px]">
-    <ItemTool :tools="obs.tools" :token="token?.[0]" />
+    <ItemTool :tools="obs.tools" :token="token?.[0]" :completed="obs.completed" />
   </div>
 </template>
