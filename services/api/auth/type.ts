@@ -16,4 +16,12 @@ export interface IUserProfile {
   username: string;
   wallet: IWalletInfor;
   avatar_url: string;
+  subscription: {
+    expire_at: string;
+    data?: {
+      payment_id: string;
+      tx_signature: string;
+    };
+    status: "not_subscribed" | "active" | "pending";
+  };
 }

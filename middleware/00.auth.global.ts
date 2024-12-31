@@ -1,7 +1,7 @@
 import { getUserInfo } from "~/services/api/auth/api";
 import { useSolana } from "~/stores/useSolana";
 
-const requiredAuthLayouts = ["conversation"];
+const requiredAuthLayouts = ["conversation", "default"];
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   if (!to.meta.layout || to.meta.guest || !requiredAuthLayouts.includes(to.meta.layout)) return;
@@ -9,16 +9,21 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const app = useAppSetting();
   const conversation = useConversationStore();
   const solana = useSolana();
-
+  let userInfo = getUser();
   if (getAccessToken()) {
-    const userInfo = await getUserInfo();
+    userInfo = await getUserInfo();
     setUser(userInfo);
   } else {
     return navigateTo("/auth/login");
   }
-  const arrPros = [app.init(), conversation.init()];
+  if (userInfo.subscription.status !== "active" && to.path !== "/payment") {
+    return navigateTo("/payment");
+  }
+
+  const arrPros = [app.init()];
   if (to.meta.layout === "conversation") {
-    arrPros.push(app.init(), conversation.init(), solana.init(true));
+    arrPros.push(conversation.init(), solana.init(true));
   }
   await Promise.all(arrPros);
+  if (to.path === "/payment") return navigateTo("/c");
 });

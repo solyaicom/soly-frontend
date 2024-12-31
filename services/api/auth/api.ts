@@ -25,3 +25,25 @@ export async function getUserInfo(): Promise<IUserProfile> {
     return { name: "" } as IUserProfile;
   }
 }
+
+export async function getSubscriptionPrice() {
+  try {
+    const { data } = await Fetch.get<{ data: { extra_balance: number; price: number } }>(`@api/subscriptions/price`);
+
+    return data.data;
+  } catch (error) {
+    console.log("getSubscriptionPrice er", error);
+    return { price: 0, extra_balance: 0 };
+  }
+}
+
+export async function payToJoinSubscription() {
+  try {
+    const { data } = await Fetch.post<{ data: { status: "pending"; tx_signature: string } }>(`@api/subscriptions/buy`, {});
+    return true;
+  } catch (error: any) {
+    console.error("payToJoinSubscription er", error.response.status);
+
+    return null;
+  }
+}

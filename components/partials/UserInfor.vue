@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getSolBalance } from "~/services/solana/utils";
 import DepositPopup from "./DepositPopup.vue";
 
 const { getUser, logOut } = useAuthStore();
@@ -6,6 +7,13 @@ const { getUser, logOut } = useAuthStore();
 const openPopup = ref(false);
 const openQRCode = ref(false);
 const solana = useSolana();
+
+const balance = ref(0);
+
+onMounted(async () => {
+  const _balance = await getSolBalance(getUser().wallet.address);
+  balance.value = _balance;
+});
 
 function viewScanner() {
   openPopup.value = false;
@@ -35,7 +43,7 @@ function onLogout() {
               <p>{{ shortAddress(getUser().wallet.address) }}</p>
               <div class="row-center">
                 <p class="w-full text-[12px] text-[#cacaca] overflow-hidden whitespace-nowrap text-ellipsis">
-                  {{ formatNumber(solana.balance, 3) }} SOL
+                  {{ formatNumber(solana.balance || balance, 3) }} SOL
                 </p>
               </div>
             </div>
@@ -58,7 +66,7 @@ function onLogout() {
                       <img src="/images/icon-arrow-up-right.svg" />
                     </div>
                   </div>
-                  <p class="flex-1 text-[#B0B0B0]">{{ formatNumber(solana.balance, 3) }} SOL</p>
+                  <p class="flex-1 text-[#B0B0B0]">{{ formatNumber(solana.balance || balance, 3) }} SOL</p>
                 </div>
               </div>
             </div>

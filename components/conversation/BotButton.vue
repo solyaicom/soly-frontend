@@ -23,7 +23,7 @@ function onItemMenuClick() {
 </script>
 
 <template>
-  <div class="h-[60px] lg:h-[104px] row-center border-b-[1px] border-b-app-line1">
+  <div class="h-[68px] row-center border-b-[1px] border-b-app-line1">
     <Sheet v-model:open="openSheet">
       <SheetTrigger>
         <div class="pl-4 py-2 cursor-pointer lg:hidden">

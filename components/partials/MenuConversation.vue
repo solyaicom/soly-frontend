@@ -9,7 +9,6 @@ const props = defineProps<{
   onClick?: () => void;
 }>();
 
-const { getUser, logOut } = useAuthStore();
 const conversationStore = useConversationStore();
 
 const app = useAppSetting();
@@ -38,21 +37,21 @@ function onSelectAgent(agent: IAgent) {
   conversationStore.change(undefined);
   props.onClick?.();
 }
-
-function onRenameItem() {
-  console.log("rename");
-}
 </script>
 
 <template>
-  <section class="bg-[#131313] h-full w-full flex-col flex overflow-hidden">
+  <section class="bg-[#171717] h-full w-full flex-col flex overflow-hidden">
     <div class="flex-1 overflow-hidden">
-      <div class="p-6">
-        <PartialsButton text="New Chat" :loading="loading" icon="/images/icon-add.svg" @click="onNewChat" />
+      <div class="p-4">
+        <div class="row-center justify-center">
+          <img src="/images/icon-logo-black.svg" />
+          <span class="text-[24px] font-[600] ml-2">Soly AI</span>
+        </div>
       </div>
       <div class="flex-1 h-full flex flex-col overflow-hidden p-4 border-t-[1px] border-app-line1">
         <div class="h-full overflow-y-scroll pb-[150px]">
-          <div>
+          <div v-if="app.agents.length > 0">
+            <p class="text-[#cacaca] px-3 mb-2">Explore</p>
             <div
               v-for="(item, idx) in app.agents"
               :key="item.id"
@@ -62,18 +61,19 @@ function onRenameItem() {
               <div class="w-[24px] h-[24px] rounded-full mr-3 flex-shrink-0">
                 <img v-if="!!item.avatar_url" :src="item.avatar_url" class="w-[24px] h-[24px] rounded-full" />
               </div>
-              <p class="text-[16px] font-[600] text-[#fff] flex-1">{{ item.name }}</p>
+              <p class="text-[16px] text-[#fff] flex-1">{{ item.name }}</p>
             </div>
+            <div class="line mb-4"></div>
           </div>
-          <div class="line"></div>
-          <p class="font-[600] px-3 mt-4 mb-2">Chat History</p>
+
+          <p class="text-[#cacaca] px-3 mb-2">Conversations</p>
           <div
             v-for="(item, idx) in conversationStore.histories"
             :key="item.id"
             class="relative cursor-pointer group hover:text-[#FFFFFF] hover:bg-[#323232] rounded-[12px]"
             :class="{ 'bg-[#323232]': item.id === conversationStore.conv?.id }"
           >
-            <div @click="onConversationClick(item)" class="row-center justify-between text-[16px] py-2 pl-3 pr-10 text-[#CACACA]">
+            <div @click="onConversationClick(item)" class="row-center justify-between text-[16px] py-2 pl-3 pr-10">
               <p class="overflow-hidden whitespace-nowrap text-ellipsis flex-1">{{ item.name }}</p>
             </div>
             <div class="px-2 absolute top-2 right-0 invisible group-hover:visible z-[1]">

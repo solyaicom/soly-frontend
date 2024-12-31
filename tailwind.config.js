@@ -82,6 +82,7 @@ module.exports = {
                 },
                 app: {
                     background: "#090909",
+                    green: "#24c33d",
                     black70: "rgba(23, 24, 24, 0.70)",
                     dark2: "#282828",
                     dark3: "#3C3C3C",
@@ -94,7 +95,7 @@ module.exports = {
                     line3: "#3d3d3d",
                     text2: "rgba(255, 255, 255, 0.80)",
                     visualGrape: "#8D5AF2",
-                    red: "#FF2323",
+                    red: "#FF4D4F",
                     red2: "#FF5757",
                     text1: "#f6f6f6",
                     text3: "#888888",
