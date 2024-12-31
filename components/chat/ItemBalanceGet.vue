@@ -40,7 +40,9 @@ onMounted(async () => {
       <div class="line mt-3 bg-[#2c2c2c]"></div>
       <div v-if="!!token" class="mt-3 space-y-3">
         <div class="row-center">
-          <img :src="token?.imageUrl" class="w-[48px] h-[48px]" />
+          <div class="w-[48px] h-[48px] rounded-full overflow-hidden">
+            <img :src="token?.imageUrl" class="w-full h-full" />
+          </div>
           <div class="flex-1 ml-2">
             <p class="text-[#cacaca] font-[600]">
               {{ token?.name }} <span class="text-[12px] text-[#656565] font-[400]">{{ token?.symbol }}</span>
