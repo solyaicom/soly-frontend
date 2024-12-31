@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DepositPopup from "~/components/partials/DepositPopup.vue";
 import MenuConversation from "~/components/partials/MenuConversation.vue";
+import { toast } from "~/components/ui/toast";
 import { getSubscriptionPrice, getUserInfo, payToJoinSubscription } from "~/services/api/auth/api";
 import { getSolBalance } from "~/services/solana/utils";
 
@@ -58,6 +59,10 @@ async function onButtonClick() {
     if (rs) {
       processed.value = true;
       checkActive();
+      toast({
+        description: "Payment transaction is success, please wait for processing...",
+        duration: 4000,
+      });
     }
   }
 }
