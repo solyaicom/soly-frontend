@@ -38,9 +38,9 @@ onMounted(async () => {
         <NuxtIcon name="icon-copy" class="text-[20px] text-[#979797]" />
       </div>
       <div class="line mt-3 bg-[#2c2c2c]"></div>
-      <div class="mt-3 space-y-3">
+      <div v-if="!!token" class="mt-3 space-y-3">
         <div class="row-center">
-          <img src="/images/icon-logo-mask.svg" class="w-[48px] h-[48px]" />
+          <img :src="token?.imageUrl" class="w-[48px] h-[48px]" />
           <div class="flex-1 ml-2">
             <p class="text-[#cacaca] font-[600]">
               {{ token?.name }} <span class="text-[12px] text-[#656565] font-[400]">{{ token?.symbol }}</span>
@@ -48,7 +48,7 @@ onMounted(async () => {
             <p class="text-[#979797]">{{ shortAddress(token?.address) }}</p>
           </div>
           <div class="text-end">
-            <p class="text-[#cacaca] font-[600]">{{ amount }} SOL</p>
+            <p class="text-[#cacaca] font-[600]">{{ formatNumber(amount) }} SOL</p>
             <p class="text-[12px] text-[#656565] font-[400]">${{ formatNumber(amount * (token?.price_per_token || 0), 2) }}</p>
           </div>
         </div>

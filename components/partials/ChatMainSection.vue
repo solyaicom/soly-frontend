@@ -271,7 +271,7 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
               {{ currentAgent.description || `👋 Hi, I'm ${currentAgent.name} — Chat with me` }}
             </p>
           </div>
-          <div ref="scrollArea" v-else class="h-full w-full pt-4 pb-10 overflow-y-auto relative">
+          <div ref="scrollArea" v-else class="h-full w-full pt-4 pb-[100px] overflow-y-auto relative">
             <ChatListChat :messages="messages" :thinking="botThinking" />
             <ChatItem v-if="currentMsg" :item="currentMsg" :thinking="botThinking" />
           </div>
@@ -279,6 +279,7 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
         <div class="w-full px-3 pb-4">
           <div class="w-full flex flex-row items-start relative">
             <BalanceButton class="absolute top-[-60px] right-[0px] z-1" />
+
             <div
               v-if="lastMsg?.content?.includes('Please confirm:') && !checkMessageExpired(lastMsg) && !actionExpired"
               class="p-6 w-full bg-[#141414] flex flex-col items-center justify-center"

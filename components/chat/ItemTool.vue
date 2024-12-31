@@ -32,7 +32,7 @@ function getTaskName(name: TToolName) {
       <div class="row-center p-2">
         <div class="w-[10px] h-[10px] mr-2">
           <img v-if="completed" :src="checkError(item.outputs) ? '/images/icon-task-failer.svg' : '/images/icon-task.svg'" class="w-full h-full" />
-          <img v-else src="/images/icon-loading.gif" class="w-[14px] h-[14px]" />
+          <img v-else src="/images/icon-loading.gif" class="w-[14px]" />
         </div>
         <p class="font-[600] text-[#cacaca]">{{ getTaskName(item.name) }}</p>
       </div>
