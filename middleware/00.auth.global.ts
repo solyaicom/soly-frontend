@@ -12,12 +12,14 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   let userInfo = getUser();
   if (getAccessToken()) {
     userInfo = await getUserInfo();
+
     setUser(userInfo);
   } else {
     return navigateTo("/auth/login");
   }
-  if (userInfo.subscription.status !== "active" && to.path !== "/payment") {
-    return navigateTo("/payment");
+
+  if (userInfo.subscription.status !== "active") {
+    if (to.path !== "/payment") return navigateTo("/payment");
   }
 
   const arrPros = [app.init()];
@@ -25,5 +27,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     arrPros.push(conversation.init(), solana.init(true));
   }
   await Promise.all(arrPros);
-  if (to.path === "/payment") return navigateTo("/c");
+
+  if (userInfo.subscription.status === "active" && to.path === "/payment") return navigateTo("/c");
 });
