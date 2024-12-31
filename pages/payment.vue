@@ -63,6 +63,11 @@ async function onButtonClick() {
         description: "Payment transaction is success, please wait for processing...",
         duration: 4000,
       });
+    } else {
+      toast({
+        description: "Payment transaction is failed, please try again.",
+        duration: 4000,
+      });
     }
   }
 }
