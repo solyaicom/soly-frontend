@@ -21,6 +21,7 @@ const loading = ref(false);
 const readed = ref(false);
 const processed = ref(getUser().subscription.status === "pending");
 const openLeftMenu = ref(false);
+const txhash = ref(getUser().subscription.data?.tx_signature || "");
 onMounted(() => {
   checkActive();
 });
@@ -28,6 +29,7 @@ onMounted(() => {
 function checkActive() {
   if (getUser().subscription.status === "active") return navigateTo("/c");
   if (getUser().subscription.status === "pending") {
+    txhash.value = getUser().subscription.data?.tx_signature || "";
     useIntervalFn(async () => {
       const newUser = await getUserInfo();
       if (newUser.subscription.status === "active") {
@@ -60,6 +62,8 @@ async function onButtonClick() {
     }, 1000);
     if (rs) {
       processed.value = true;
+      txhash.value = rs.data.tx_signature || "";
+
       checkActive();
       toast({
         description: "Payment transaction is success, please wait for processing...",
@@ -75,7 +79,8 @@ async function onButtonClick() {
 }
 
 function viewScanner() {
-  if (getUser().subscription.data) window.open("https://solscan.io/tx/" + getUser().subscription.data?.tx_signature, "_blank");
+  console.log(getUser());
+  if (txhash.value) window.open("https://solscan.io/tx/" + txhash.value, "_blank");
 }
 </script>
 
@@ -177,8 +182,8 @@ function viewScanner() {
           <div v-else class="px-6 py-4 space-y-3">
             <div class="row-center cursor-pointer" @click="viewScanner">
               <img src="/images/icon-checked.svg" class="w-[20px]" />
-              <p class="ml-2 text-[#979797]">Transaction successful. View on Solscan.</p>
-              <NuxtIcon name="icon-scanner" class="text-[20px] ml-2 text-[#979797]" />
+              <p class="ml-2 text-[#979797]">Transaction successful. <span class="underline text-blue-500">View on Solscan.</span></p>
+              <NuxtIcon name="icon-scanner" class="text-[18px] ml-1 text-blue-500" />
             </div>
             <div class="row-center">
               <img src="/images/icon-loading.gif" class="w-[20px]" />

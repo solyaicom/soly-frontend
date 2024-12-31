@@ -40,7 +40,7 @@ export async function getSubscriptionPrice() {
 export async function payToJoinSubscription() {
   try {
     const { data } = await Fetch.post<{ data: { status: "pending"; tx_signature: string } }>(`@api/subscriptions/buy`, {});
-    return true;
+    return data;
   } catch (error: any) {
     console.error("payToJoinSubscription er", error.response.status);
 
