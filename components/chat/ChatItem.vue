@@ -25,33 +25,33 @@ const currentAgent = computed(() => {
 
 <template>
   <div class="w-full row-center mt-8 px-3" :class="{ 'justify-end ': item.role === 'user' }">
-    <div class="w-[86%] row-center overflow-hidden" :class="{ 'justify-end': item.role === 'user' }">
-      <div class="flex flex-row max-w-full" :class="{ 'py-2 px-4 rounded-[20px]  bg-[#323232d9]': item.role === 'user' }">
-        <div v-if="item.role === 'assistant'" class="w-[40px] h-[40px] mr-2 rounded-full overflow-hidden flex-shrink-0">
-          <img :src="currentAgent?.avatar_url || '/images/icon-logo-mask.svg'" class="w-[40px] h-[40px]" />
+    <div class="w-[94%] row-center overflow-hidden" :class="{ 'justify-end': item.role === 'user' }">
+      <div
+        class="flex flex-row max-w-full items-start"
+        :class="{ 'py-2 px-4 rounded-[20px]  bg-[#323232d9]': item.role === 'user', 'w-full': item.role === 'assistant' }"
+      >
+        <div v-if="item.role === 'assistant'" class="w-[30px] h-[30px] md:w-[40px] md:h-[40px] mr-2 rounded-full overflow-hidden flex-shrink-0">
+          <img :src="currentAgent?.avatar_url || '/images/icon-logo-mask.svg'" class="w-full" />
         </div>
-        <div>
+        <div class="flex-1 flex flex-col items-start" :style="{ maxWidth: item.role === 'assistant' ? 'calc(100% - 38px)' : 'none' }">
           <ChatObservation v-if="item.data.observations" :observations="item.data.observations" />
 
-          <div v-if="(thinking || !item.content) && item.role === 'assistant'" class="bg-[#323232d9] p-2 rounded-[8px] w-min">
+          <div v-if="(thinking || !item.content) && item.role === 'assistant'" class="bg-[#323232d9] p-2 rounded-[8px]">
             <div className="dots h-6 w-10 rounded-full flex items-center justify-center flex-nowrap">
               <div className="dot h-2 w-2 mx-0.5 rounded-full bg-slate-600" />
               <div className="dot h-2 w-2 mx-0.5 rounded-full bg-slate-600" />
               <div className="dot h-2 w-2 mx-0.5 rounded-full bg-slate-600" />
             </div>
           </div>
-          <div v-else class="markdown">
+          <div v-else class="markdown" :style="{ maxWidth: item.role === 'assistant' ? 'calc(100% - 38px)' : 'none' }">
             <div
               ref="contentRef"
               v-html="md.render(item.content)"
-              class="text-[#ececec] text-[16px] flex-1 break-words text-start"
+              class="text-[#ececec] text-[16px] break-words text-start w-full"
               :class="{ 'text-[#efefef] mt-0  ': item.role === 'user', 'mt-[2px]': item.role === 'assistant' }"
             ></div>
           </div>
         </div>
-      </div>
-      <div v-if="item.role === 'user' && getUser().email" class="w-[36px] h-[36px] flex-shrink-0 mr-2 rounded-full overflow-hidden ml-2">
-        <img :src="getUser().avatar_url" class="w-full h-full" />
       </div>
     </div>
   </div>

@@ -38,14 +38,14 @@ onMounted(async () => {
     <div v-else class="bg-[#141414] p-3 rounded-[6px] w-full">
       <div class="flex flex-col items-center justify-center">
         <div class="row-center bg-[#1a1a1a] p-4 rounded-[12px] w-full justify-between">
-          <p class="text-[24px] font-[600]">{{ plans[0].in_amount_float }} {{ inputToken?.symbol }}</p>
-          <div class="w-[40px] h-[40px] rounded-full overflow-hidden">
+          <p class="text-[20px] md:text-[24px] font-[600]">{{ plans[0].in_amount_float }} {{ inputToken?.symbol }}</p>
+          <div class="w-[30px] md:w-[40px] rounded-full overflow-hidden">
             <img :src="inputToken?.imageUrl" class="h-full w-full" />
           </div>
         </div>
         <div class="row-center bg-[#1a1a1a] p-4 mt-3 rounded-[12px] w-full justify-between">
-          <p class="text-[24px] font-[600]">{{ formatNumber(plans[plans.length - 1].out_amount_float) }} {{ outputToken?.symbol }}</p>
-          <div class="w-[40px] h-[40px] rounded-full overflow-hidden">
+          <p class="text-[20px] md:text-[24px] font-[600]">{{ formatNumber(plans[plans.length - 1].out_amount_float) }} {{ outputToken?.symbol }}</p>
+          <div class="w-[30px] md:w-[40px] rounded-full overflow-hidden">
             <img :src="outputToken?.imageUrl" class="h-full w-full" />
           </div>
         </div>

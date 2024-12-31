@@ -1,18 +1,8 @@
 <script setup lang="ts">
-import { getTokenInfor } from "~/services/solana/utils";
-
 const props = defineProps<{ output: any; inputs: any; token: any }>();
 
 const token = ref<any>(props.token);
 const usdPrice = computed(() => JSON.parse(props.output)?.data?.usd_price || 0);
-
-onMounted(async () => {
-  const tokenAddress = props.inputs?.address;
-  if (tokenAddress) {
-    const _token = await getTokenInfor(tokenAddress);
-    console.log("_token", _token);
-  }
-});
 
 function viewScanner(address: string) {
   window.open("https://solscan.io/address/" + address, "_blank");

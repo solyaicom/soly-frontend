@@ -21,6 +21,7 @@ const actionExpired = ref(false);
 
 const botThinking = ref(false);
 const currentConversation = ref<IConversation | null>(null);
+const route = useRoute();
 
 const currentAgent = computed(() => {
   return conversationStore.conv?.agent || app.agents[0];
@@ -44,12 +45,12 @@ function scrollToEnd(smooth = false) {
   setTimeout(() => {
     if (scrollArea.value) {
       if (!smooth) {
-        scrollArea.value.scrollTop = scrollArea.value.scrollHeight;
+        scrollArea.value.scrollTop = scrollArea.value.scrollHeight + 300;
       } else {
         scrollArea.value.scrollTo({ top: scrollArea.value.scrollHeight, behavior: "smooth" });
       }
     }
-  }, 70);
+  }, 150);
 }
 
 function checkMessageFromStore() {
@@ -60,14 +61,15 @@ function checkMessageFromStore() {
 }
 
 async function fetchListMessage() {
-  if (!conversationStore.conv) {
+  const convId = conversationStore.conv?.id;
+  if (!convId) {
     messages.value = [];
     return;
   }
-  if (conversationStore.conv.id === currentConversation.value?.id) return;
+  // if (convId === currentConversation.value?.id) return;
   messages.value = [];
   currentConversation.value = conversationStore.conv;
-  messages.value = conversationStore.conv.id ? await fetchChatHistory(conversationStore.conv.id) : [];
+  messages.value = convId ? await fetchChatHistory(convId) : [];
 }
 
 watch(
@@ -203,7 +205,8 @@ async function sendContent(content: string, fromSaved = false) {
 
 function onSendClick() {
   const el = document.getElementById("promt-area");
-  const content = el?.innerText || "";
+  const content = (el?.innerText || "").trim();
+  if (!content) return;
   if (el) {
     el.innerHTML = "";
   }
@@ -257,10 +260,10 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
 </script>
 
 <template>
-  <section class="flex-1 h-full flex flex-col bg-[#1e1e1e] rounded-[16px] overflow-hidden">
+  <section class="flex-1 h-full flex flex-col bg-[#1e1e1e] overflow-hidden">
     <BotButton />
     <div class="flex-1 overflow-hidden flex flex-col items-center">
-      <div class="flex-1 flex flex-col items-center w-full md:w-[90%] overflow-hidden md:max-w-[768px]">
+      <div class="flex-1 flex flex-col items-center w-full md:w-[90%] overflow-hidden md:max-w-[768px] 2xl:max-w-[900px]">
         <div class="flex-1 flex flex-col justify-center w-full overflow-hidden">
           <div v-if="!messages.length" class="flex-1 flex flex-col items-center justify-center">
             <div class="row-center">
@@ -311,7 +314,7 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
                 class="bg-transparent border-[1px] border-app-line1 min-h-[52px] flex-1 rounded-[30px] p-4 outline-none break-all"
               ></div>
 
-              <div class="ml-3 cursor-pointer" @click="onSendClick">
+              <div class="absolute bottom-4 right-4 cursor-pointer z-1" @click="onSendClick">
                 <img src="/images/icon-send.svg" />
               </div>
             </div>

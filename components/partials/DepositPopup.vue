@@ -30,17 +30,17 @@ function onCopy() {
 
 <template>
   <Dialog v-model:open="openQRCode">
-    <DialogContent class="bg-[#1e1f38] py-8 px-4 border-none flex flex-col items-center">
+    <DialogContent class="bg-[#141418] py-8 px-4 border-none flex flex-col items-center">
       <DialogTitle class="text-center text-[28px] font-[600] mt-2">Deposit</DialogTitle>
       <p class="text-[#CACACA] mt-[-8px]">Scan QR code to deposit SOL</p>
       <div class="line" />
-      <Linear class="rounded-[12px] mt-2">
-        <div class="p-6 rounded-[12px]">
+      <div class="rounded-[12px] border-[1px] border-[#ffffff33] mt-2">
+        <div class="p-4 rounded-[12px]">
           <div class="rounded-[8px] overflow-hidden">
             <Qrcode :value="getUser()?.wallet.address" variant="pixelated" class="w-[150px]" />
           </div>
         </div>
-      </Linear>
+      </div>
       <div class="row-center cursor-pointer w-full px-4 py-2 bg-[#ffffff11] rounded-[6px] mt-2" @click="onCopy">
         <p class="flex-1 text-[16px]">Solana Address: {{ shortAddress(getUser()?.wallet.address) }}</p>
         <img src="/images/icon-copy.svg" class="ml-2" />

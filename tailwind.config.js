@@ -26,10 +26,14 @@ module.exports = {
                     marginBottom: "0px",
                 },
             },
+
             li: {
                 "p:first-child": {
                     display: "inline",
                 },
+            },
+            img: {
+                "max-width": "200px",
             },
         },
         fontSize: {

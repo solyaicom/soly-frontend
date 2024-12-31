@@ -18,5 +18,5 @@ function onClose() {
       <NuxtIcon name="icon-close" />
     </div>
   </div>
-  <div v-else class="py-0 md:py-2"></div>
+  <div v-else></div>
 </template>

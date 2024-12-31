@@ -26,12 +26,8 @@ function onLogout() {
   <div class="w-full">
     <Popover v-model:open="openPopup">
       <PopoverTrigger class="w-full">
-        <div class="flex flex-col items-center px-4 pb-4 border-top-[1px] border-app-line1">
-          <div
-            v-if="getUser()?.email"
-            class="w-full rounded-full text-start px-4 py-2 font-[600] overflow-hidden row-center cursor-pointer"
-            style="box-shadow: 14px 21px 40px 4px rgba(153, 70, 255, 0.34)"
-          >
+        <div class="flex flex-col justify-center items-center px-4 py-3 border-t-[1px] border-t-app-line1">
+          <div v-if="getUser()?.email" class="w-full rounded-full text-start px-4 py-2 font-[600] overflow-hidden row-center cursor-pointer">
             <div class="w-[40px] h-[40px] rounded-full overflow-hidden mr-2">
               <img :src="getUser().avatar_url" class="w-full h-full" />
             </div>
@@ -49,10 +45,7 @@ function onLogout() {
       </PopoverTrigger>
       <PopoverContent>
         <div class="py-4 px-6 w-[75vw] max-w-[384px] lg:w-64 bg-[#131313]">
-          <section
-            class="text-[#CACACA] rounded-[20px] overflow-hidden border-[1px] border-[#ffffff33]"
-            style="box-shadow: 4px -8px 40px 4px rgba(153, 70, 255, 0.34)"
-          >
+          <section class="text-[#CACACA] rounded-[20px] overflow-hidden border-[1px] border-[#ffffff33]">
             <div class="p-3">
               <p class="font-[300] line-clamp-1 italic">{{ getUser()?.email }}</p>
 

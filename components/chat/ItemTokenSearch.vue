@@ -22,7 +22,7 @@ function viewScanner(address: string) {
       :class="{ 'border-t-[#FFFFFF1A]': idx !== 0 }"
       @click="onCopy(token.address)"
     >
-      <div v-if="token.icon" class="w-[48px] h-[48px] mr-2">
+      <div v-if="token.icon" class="w-[30px] h-[30px] md:w-[40px] md:h-[40px] mr-2">
         <img :src="token.icon" class="w-full h-full rounded-full" />
       </div>
       <div class="flex-1 flex flex-col items-start">

@@ -28,7 +28,7 @@ function getTaskName(name: TToolName) {
 
 <template>
   <div v-for="(item, idx) in props.tools" :key="idx">
-    <div class="bg-[#141414] rounded-[6px] mb-2 w-[80%]">
+    <div class="bg-[#141414] rounded-[6px] mb-2 w-[83%]">
       <div class="row-center p-2">
         <div class="w-[10px] h-[10px] mr-2">
           <img v-if="completed" :src="checkError(item.outputs) ? '/images/icon-task-failer.svg' : '/images/icon-task.svg'" class="w-full h-full" />
