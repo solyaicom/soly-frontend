@@ -27,12 +27,14 @@ onMounted(() => {
 
 function checkActive() {
   if (getUser().subscription.status === "active") return navigateTo("/c");
-  useIntervalFn(async () => {
-    const newUser = await getUserInfo();
-    if (newUser.subscription.status === "active") {
-      navigateTo("/c");
-    }
-  }, 5000);
+  if (getUser().subscription.status === "pending") {
+    useIntervalFn(async () => {
+      const newUser = await getUserInfo();
+      if (newUser.subscription.status === "active") {
+        navigateTo("/c");
+      }
+    }, 5000);
+  }
 }
 
 const insufficient = computed(() => {
@@ -94,7 +96,7 @@ function viewScanner() {
         <div class="md:p-4 lg:p-6 w-[95vw] md:w-[750px] 2xl:w-[900px]">
           <div class="px-6 py-4">
             <div class="row-center justify-center">
-              <p class="text-[28px] font-[600]">Early Access Program</p>
+              <p class="text-[18px] md:text-[28px] font-[600]">Early Access Program</p>
               <img src="/images/icon-beta.svg" class="ml-2" />
             </div>
             <p class="text-[16px] mt-4 text-[#CACACA] text-center">
@@ -114,7 +116,7 @@ function viewScanner() {
           </div>
           <div class="line" />
           <div class="px-6 py-4">
-            <p>Benefits</p>
+            <p class="text-[16px] font-[600]">Benefits</p>
             <div class="mt-3 space-y-3">
               <div class="row-center">
                 <img src="/images/icon-checked.svg" class="w-[20px]" />
