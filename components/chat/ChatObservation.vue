@@ -23,7 +23,7 @@ const token = computed(() => {
 </script>
 
 <template>
-  <div v-for="(obs, idx1) in props.observations" :key="idx1" class="w-full min-w-[300px] max-w-[340px] md:max-w-[450px]">
+  <div v-for="(obs, idx1) in props.observations" :key="idx1" class="w-full min-w-[300px] max-w-full md:max-w-[550px] lg:max-w-[700px]">
     <ItemTool :tools="obs.tools" :token="token?.[0]" :completed="obs.completed" />
   </div>
 </template>

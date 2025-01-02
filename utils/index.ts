@@ -8,6 +8,24 @@ export function shortAddress(address?: string, numOfShow = 4) {
   return `${tmpAddress.substring(0, numOfShow)}...${tmpAddress.substring(tmpAddress.length - numOfShow, tmpAddress.length)}`;
 }
 
+export const formatNotationNumber = (number?: string | number, customBehind?: number) => {
+  let behind = 1;
+  if (typeof number === "string" && number.length === 0) return "--";
+  if (typeof number === "undefined") return "--";
+  if (number === null) return "--";
+  if (!number) return "0";
+  if (!/[0-9]+/g.test(number.toString())) return number.toString();
+  if (Number.isNaN(Number(number))) return number.toString();
+  if (Math.abs(Number(number)) < 1000) behind = 2;
+  if (Math.abs(Number(number)) < 100) behind = 3;
+  if (Math.abs(Number(number)) < 10) behind = 4;
+  if (customBehind) behind = customBehind;
+
+  const num = Number(number.toString().replace(/[,]/g, ""));
+  const formatter = Intl.NumberFormat("en", { notation: "compact" });
+  return Math.abs(num) > 9999 ? `${num < 0 ? "-" : ""}${formatter.format(Math.abs(num))}` : formatNumber(num, behind);
+};
+
 export const formatNumber = (number?: string | number, behind = 5) => {
   if (number === undefined) return "";
   if (number === "0" || Number(number) === 0) {

@@ -8,6 +8,9 @@ import ItemSwapPreview from "./ItemSwapPreview.vue";
 import ItemBalanceGet from "./ItemBalanceGet.vue";
 import { MAPPING_TOOL_NAME } from "~/constants/chat-tool-mapping";
 import ItemSwapResult from "./ItemSwapResult.vue";
+import ItemTopHolder from "./ItemTopHolder.vue";
+import ItemDevCheck from "./ItemDevCheck.vue";
+import ItemTokenHoldingByHolder from "./ItemTokenHoldingByHolder.vue";
 
 const props = defineProps<{ tools: ITool[]; token?: any; completed?: boolean }>();
 
@@ -29,7 +32,7 @@ function getTaskName(id: TToolID) {
 
 <template>
   <div v-for="(item, idx) in props.tools" :key="idx">
-    <div v-if="!!getTaskName(item.id)" class="bg-[#141414] rounded-[6px] mb-2 w-[83%]">
+    <div v-if="!!getTaskName(item.id)" class="bg-[#141414] rounded-[6px] mb-2 w-full md:w-[90%] lg:w-[84%]">
       <div class="row-center p-2">
         <div class="w-[10px] h-[10px] mr-2">
           <img v-if="completed" :src="checkError(item.outputs) ? '/images/icon-task-failer.svg' : '/images/icon-task.svg'" class="w-full h-full" />
@@ -45,14 +48,30 @@ function getTaskName(id: TToolID) {
           <p class="text-[#CACACA] font-[600] ml-2">Error</p>
         </div>
         <div v-else>
-          <ItemTokenSearch v-if="item.name.includes('dataset_') && !!item.outputs" :output="item.outputs" />
-          <ItemTokenPrice v-if="item.name === 'tokensaddressprice_get'" :token="token" :output="item.outputs" :inputs="item.inputs" />
-          <ItemTokenInformation v-if="item.name === 'tokensaddressinfo_get' && !!item.outputs" :token="token" :output="item.outputs" />
-          <ItemSwapPreview v-if="item.name === 'solyAiTradingQuoteAPIPost' && !!item.outputs" :output="item.outputs" />
-          <ItemBalanceGet v-if="item.name === 'solyAiTradingBalanceGet' && !!item.outputs" :item="item" />
-          <ItemSwapResult v-if="item.name === 'solyAiTradingQuoteExecutePost' && !!item.outputs" :output="item.outputs" />
+          <ItemTokenSearch v-if="item.id.includes('dataset_') && !!item.outputs" :output="item.outputs" />
+          <ItemTokenPrice v-if="item.id === 'tokensaddressprice_get'" :token="token" :output="item.outputs" :inputs="item.inputs" />
+          <ItemTokenInformation v-if="item.id === 'tokensaddressinfo_get' && !!item.outputs" :token="token" :output="item.outputs" />
+          <ItemSwapPreview v-if="item.id === 'solyAiTradingQuoteAPIPost' && !!item.outputs" :output="item.outputs" />
+          <ItemBalanceGet v-if="item.id === 'solyAiTradingBalanceGet' && !!item.outputs" :item="item" />
+          <ItemSwapResult v-if="item.id === 'solyAiTradingQuoteExecutePost' && !!item.outputs" :output="item.outputs" />
+          <ItemTopHolder v-if="item.id === 'tokensaddressaggtop-holders_get' && !!item.outputs" :output="item.outputs" />
+          <ItemDevCheck v-if="item.id === 'tokensaddressaggdev-check_get' && !!item.outputs" :output="item.outputs" />
+          <ItemTokenHoldingByHolder v-if="item.id === 'tokensaddressaggtop-holdersportfolio_get' && !!item.outputs" :output="item.outputs" />
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style>
+thead td {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+tbody td {
+  border-top-width: 1px;
+  border-top-color: rgba(255, 255, 255, 0.1);
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+</style>
