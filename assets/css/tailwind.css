@@ -170,6 +170,28 @@
         animation-delay: 0.4s;
     }
 
+    .home-container {
+        @apply max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8;
+    }
+    .home-container-secondary {
+        @apply max-w-[1024px] mx-auto px-4 sm:px-6 lg:px-8;
+    }
+    .home__gap-section {
+        @apply py-10 sm:py-16 xl:py-20;
+    }
+    .home__title {
+        @apply text-center text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-[40px] font-semibold text-white mb-3;
+    }
+    .home__subtitle {
+        @apply text-center text-sm sm:text-base font-light text-home-neutral-400;
+    }
+    .btn__solid {
+        @apply h-11 px-4 inline-flex items-center justify-center text-center text-base rounded-full outline-none hover:opacity-90 whitespace-nowrap;
+    }
+    .btn__solid-white {
+        @apply text-black bg-white;
+    }
+
     @keyframes blink {
         0% {
             opacity: 0.1;

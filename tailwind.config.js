@@ -36,9 +36,6 @@ module.exports = {
                 "max-width": "200px",
             },
         },
-        fontSize: {
-            base: "14px",
-        },
         container: {
             center: true,
             screens: {
@@ -109,6 +106,11 @@ module.exports = {
                     purple: "#5F48F2",
                     orange: "#EE5910",
                     orange2: "#E9850D",
+                },
+                home: {
+                    neutral: {
+                        400: "#979797",
+                    },
                 },
             },
             borderRadius: {

@@ -1,7 +1,7 @@
 import { getUserInfo } from "~/services/api/auth/api";
 import { useSolana } from "~/stores/useSolana";
 
-const requiredAuthLayouts = ["conversation", "default"];
+const requiredAuthLayouts = ["conversation", "default", "home"];
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   if (!to.meta.layout || to.meta.guest || !requiredAuthLayouts.includes(to.meta.layout)) return;
@@ -14,7 +14,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     userInfo = await getUserInfo();
 
     setUser(userInfo);
-  } else {
+  } else if (to.name !== "index") {
     return navigateTo("/auth/login");
   }
 
