@@ -20,7 +20,8 @@ export type TToolName =
   | "dataset_"
   | "solyAiTradingQuoteAPIPost"
   | "solyAiTradingBalanceGet"
-  | "solyAiTradingQuoteExecutePost";
+  | "solyAiTradingQuoteExecutePost"
+  | "tokensaddresstop-traders_get";
 
 export interface ITool {
   id: string;

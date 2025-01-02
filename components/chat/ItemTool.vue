@@ -22,13 +22,14 @@ function checkError(output: string) {
 function getTaskName(name: TToolName) {
   const taskName = MAPPING_TOOL_NAME[name];
   if (taskName) return taskName;
-  return "Search Token Information";
+  if (name.includes("dataset_")) return "Search Token Address";
+  return "";
 }
 </script>
 
 <template>
   <div v-for="(item, idx) in props.tools" :key="idx">
-    <div class="bg-[#141414] rounded-[6px] mb-2 w-[83%]">
+    <div v-if="!!getTaskName(item.name)" class="bg-[#141414] rounded-[6px] mb-2 w-[83%]">
       <div class="row-center p-2">
         <div class="w-[10px] h-[10px] mr-2">
           <img v-if="completed" :src="checkError(item.outputs) ? '/images/icon-task-failer.svg' : '/images/icon-task.svg'" class="w-full h-full" />
