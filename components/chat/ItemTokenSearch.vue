@@ -9,7 +9,7 @@ async function onCopy(address: string) {
 }
 
 function viewScanner(address: string) {
-  window.open("https://solscan.io/address/" + address, "_blank");
+  window.open("https://gmgn.ai/sol/token/" + address, "_blank");
 }
 </script>
 

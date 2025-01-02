@@ -5,7 +5,7 @@ const token = ref<any>(props.token);
 const usdPrice = computed(() => JSON.parse(props.output)?.data?.usd_price || 0);
 
 function viewScanner(address: string) {
-  window.open("https://solscan.io/address/" + address, "_blank");
+  window.open("https://gmgn.ai/sol/token/" + address, "_blank");
 }
 </script>
 

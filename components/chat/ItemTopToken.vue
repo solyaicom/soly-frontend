@@ -3,7 +3,7 @@ const props = defineProps<{ output: string }>();
 const data = JSON.parse(props.output).data;
 
 function viewScanner(address: string) {
-  window.open("https://solscan.io/address/" + address, "_blank");
+  window.open("https://gmgn.ai/sol/token/" + address, "_blank");
 }
 </script>
 
