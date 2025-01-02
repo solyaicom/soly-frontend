@@ -14,7 +14,7 @@ const faqs = ref([
   },
   { title: "What types of actions can Soly take?", content: [] },
   {
-    title: "Upcoming feature:",
+    title: "Upcoming feature",
     content: [
       "Memecoin Automation — Autonomously create a memecoin on Pump.fun every time choosen KOL tweets.",
       `KOL-driven Trades — Automatically buy every memecoin a KOL tweets about.`,

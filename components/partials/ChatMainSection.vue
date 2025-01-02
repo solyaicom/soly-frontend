@@ -24,7 +24,7 @@ const currentConversation = ref<IConversation | null>(null);
 const route = useRoute();
 
 const currentAgent = computed(() => {
-  return conversationStore.conv?.agent || app.agents[0];
+  return conversationStore.conv?.agent || app.agents[0] || {};
 });
 
 const lastMsg = computed(() => {

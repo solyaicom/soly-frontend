@@ -17,7 +17,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   } else if (to.name !== "index") {
     return navigateTo("/auth/login");
   }
-
+  if (to.meta.layout === "home") return;
   if (userInfo.subscription.status !== "active") {
     if (to.path !== "/payment") return navigateTo("/payment");
   }
@@ -26,7 +26,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (to.meta.layout === "conversation") {
     arrPros.push(conversation.init(), solana.init(true));
   }
-  await Promise.all(arrPros);
+  Promise.all(arrPros);
 
   if (userInfo.subscription.status === "active" && to.path === "/payment") return navigateTo("/c");
 });
