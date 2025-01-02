@@ -80,6 +80,7 @@ module.exports = {
                 app: {
                     background: "#141414",
                     green: "#24c33d",
+                    green2: "#73D13D",
                     black70: "rgba(23, 24, 24, 0.70)",
                     dark2: "#282828",
                     dark3: "#3C3C3C",
