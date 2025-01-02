@@ -10,4 +10,5 @@ export const MAPPING_TOOL_NAME: { [key in TToolID]: string } = {
   "tokensaddressaggtop-holders_get": "Search Top Holders Portfolio",
   "tokensaddressaggdev-check_get": "Check Developer Profile",
   "tokensaddressaggtop-holdersportfolio_get": "Search Top Holders Portfolio",
+  tokenstop_get: "Search Top Tokens",
 };

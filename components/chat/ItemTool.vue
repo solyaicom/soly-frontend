@@ -11,6 +11,7 @@ import ItemSwapResult from "./ItemSwapResult.vue";
 import ItemTopHolder from "./ItemTopHolder.vue";
 import ItemDevCheck from "./ItemDevCheck.vue";
 import ItemTokenHoldingByHolder from "./ItemTokenHoldingByHolder.vue";
+import ItemTopToken from "./ItemTopToken.vue";
 
 const props = defineProps<{ tools: ITool[]; token?: any; completed?: boolean }>();
 
@@ -57,6 +58,7 @@ function getTaskName(id: TToolID) {
           <ItemTopHolder v-if="item.id === 'tokensaddressaggtop-holders_get' && !!item.outputs" :output="item.outputs" />
           <ItemDevCheck v-if="item.id === 'tokensaddressaggdev-check_get' && !!item.outputs" :output="item.outputs" />
           <ItemTokenHoldingByHolder v-if="item.id === 'tokensaddressaggtop-holdersportfolio_get' && !!item.outputs" :output="item.outputs" />
+          <ItemTopToken v-if="item.id === 'tokenstop_get' && !!item.outputs" :output="item.outputs" />
         </div>
       </div>
     </div>

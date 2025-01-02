@@ -23,6 +23,7 @@ export type TToolID =
   | "solyAiTradingQuoteExecutePost"
   | "tokensaddressaggdev-check_get"
   | "tokensaddressaggtop-holdersportfolio_get"
+  | "tokenstop_get"
   | "tokensaddressaggtop-holders_get";
 
 export interface ITool {
