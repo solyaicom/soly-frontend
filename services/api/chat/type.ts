@@ -14,18 +14,18 @@ export interface IObservation {
   tools: ITool[];
 }
 
-export type TToolName =
+export type TToolID =
   | "tokensaddressinfo_get"
   | "tokensaddressprice_get"
   | "dataset_"
   | "solyAiTradingQuoteAPIPost"
   | "solyAiTradingBalanceGet"
   | "solyAiTradingQuoteExecutePost"
-  | "tokensaddresstop-traders_get";
+  | "tokensaddressaggtop-holders_get";
 
 export interface ITool {
-  id: string;
-  name: TToolName;
+  id: TToolID;
+  name: string;
   inputs: any;
   outputs: string; // jsonstringify
 }
