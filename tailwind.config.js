@@ -88,6 +88,7 @@ module.exports = {
                     basic11: "#252525",
                     card1: "#242424",
                     card2: "#2f2f2f",
+                    card3: "#656565",
                     line1: "#2b2b2b",
                     line2: "rgba(255,255,255,0.2)",
                     line3: "#3d3d3d",

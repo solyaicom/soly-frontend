@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import { WalletReadyState } from "@solana/wallet-adapter-base";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 
-defineProps({
-  className: { type: String, default: "" },
-});
+const props = defineProps<{ onChange: (address?: string) => void }>();
 
-const { connected, wallets, address, readyState, getSolBalance, selectWallet, disconnect } = useSolConnect();
+const { connected, wallets, address, readyState, selectWallet, disconnect } = useSolConnect();
 
-const solBalance = ref(0);
 const walletPhantom = computed(() => {
   return wallets.value[0];
 });
@@ -31,9 +27,7 @@ async function toggleSOLConnectWallet() {
 watch(
   address,
   async (add) => {
-    if (add) {
-      solBalance.value = await getSolBalance(add);
-    }
+    props.onChange(add);
   },
   { immediate: true }
 );
@@ -41,9 +35,8 @@ watch(
 
 <template>
   <div>
-    <button variant="white" class="btn__solid btn__solid-white h-9 px-4 flex flex-col" :class="className" @click="toggleSOLConnectWallet">
-      <span>{{ address ? shortAddress(address) : "Connect Wallet" }}</span>
-      <span v-if="address" class="text-xs">{{ formatNumber(solBalance / LAMPORTS_PER_SOL, 3) }} SOL</span>
+    <button @click="toggleSOLConnectWallet">
+      {{ address ? "Disconnect" : "Connect" }}
     </button>
   </div>
 </template>
