@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import {formatDate}     from "@vueuse/shared";
+import {useMarkdownIt}  from "~/composables/useMarkdownIt";
 import { IChatMessage } from "~/services/api/chat/type";
-import markdownit       from "markdown-it";
 import ChatObservation  from "./ChatObservation.vue";
 import ItemActions      from "./ItemActions.vue";
-const md = markdownit("commonmark", {
-  html: true,
-  breaks: true,
-  linkify: true,
-});
+const md = useMarkdownIt()
 
 const openPreview = ref(false);
 
@@ -26,10 +22,17 @@ const isChannel = computed(() => !!currentConversation.value?.is_readonly)
 const currentAgent = computed(() => {
   return conversationStore.conv?.agent || app.agents[0];
 });
+
+function getMessageTime(item: IChatMessage): string {
+  if (!isChannel.value) {
+    return ''
+  }
+  return `<p data-message-time title="${formatDate(new Date(item.created_at), 'YYYY-MM-DD HH:mm')}">${formatDate(new Date(item.created_at), 'HH:mm')}</p>`
+}
 </script>
 
 <template>
-  <div v-if="showPreDate" class="flex justify-center">
+  <div v-if="isChannel && showPreDate" class="flex justify-center">
     <div  class="mt-3 rounded-2xl bg-app-card2 inline-block px-3 py-1">{{ formatDate(new Date(item.created_at), 'YYYY-MM-DD') }}</div>
   </div>
   <div class="w-full row-center px-3" :class="{ 'justify-end ': item.role === 'user', 'mt-6': !showPreDate, 'mt-3': showPreDate }">
@@ -82,7 +85,7 @@ const currentAgent = computed(() => {
               </button>
             </div>
             <div
-              v-html="md.render(item.content) + (isChannel ? `<p data-message-time title='${formatDate(new Date(item.created_at), 'YYYY-MM-DD HH:mm')}'>${formatDate(new Date(item.created_at), 'HH:mm')}</p>` : '')"
+              v-html="md.render(item.content) + getMessageTime(item)"
               class="text-[#ececec] text-[16px] break-words text-start"
               :class="{
                 'text-[#efefef] mt-0  ': item.role === 'user',
