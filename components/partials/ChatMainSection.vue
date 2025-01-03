@@ -284,7 +284,7 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
             <BalanceButton class="absolute top-[-60px] right-[0px] z-1" />
 
             <div
-              v-if="lastMsg?.content?.includes('Please confirm:') && !checkMessageExpired(lastMsg) && !actionExpired"
+              v-if="!!findQuoteIdFromMessage(lastMsg) && !checkMessageExpired(lastMsg) && !actionExpired"
               class="p-6 w-full bg-[#141414] flex flex-col items-center justify-center"
             >
               <p class="text-[#979797] text-[16px]">Do you want {{ currentAgent?.name || "SolyAI" }} make this swap?</p>
