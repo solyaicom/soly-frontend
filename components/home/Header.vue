@@ -37,6 +37,9 @@ const user = computed(() => authStore.user);
           </div>
         </NuxtLink>
       </li>
+      <li>
+        <PartialsBtnSolConnect />
+      </li>
     </ul>
   </header>
 </template>

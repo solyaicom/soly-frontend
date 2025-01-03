@@ -123,3 +123,7 @@ export function convertTokenOutput(output: string): any[] {
   });
   return tokens;
 }
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

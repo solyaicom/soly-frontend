@@ -3,6 +3,7 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 
 export default defineNuxtConfig({
   devtools: { enabled: false },
+
   modules: [
     "@nuxtjs/tailwindcss",
     "shadcn-nuxt",
@@ -14,6 +15,7 @@ export default defineNuxtConfig({
     "@sentry/nuxt/module",
     "nuxt-qrcode",
   ],
+
   vite: {
     plugins: [
       nodePolyfills({
@@ -32,6 +34,7 @@ export default defineNuxtConfig({
       }),
     ],
   },
+
   runtimeConfig: {
     public: {},
   },
@@ -44,10 +47,13 @@ export default defineNuxtConfig({
       script: [],
     },
   },
+
   ssr: false,
+
   googleSignIn: {
     clientId: "320448324963-luc2s6c99ksmhh3viirt2tfcpkjth6jh.apps.googleusercontent.com",
   },
+
   nitro: {
     prerender: {
       ignore: [(path) => path !== "/"],
@@ -59,7 +65,9 @@ export default defineNuxtConfig({
       },
     },
   },
+
   webpack: {},
+
   // @ts-ignore
   pinia: {
     storesDirs: ["./stores/**"],
@@ -76,15 +84,19 @@ export default defineNuxtConfig({
      */
     componentDir: "./components/ui",
   },
+
   googleFonts: {
     families: {
       Inter: [200, 300, 400, 500, 600, 700, 800, 900],
     },
   },
+
   components: [
     {
       path: "~/components",
       pathPrefix: true,
     },
   ],
+
+  compatibilityDate: "2025-01-03",
 });
