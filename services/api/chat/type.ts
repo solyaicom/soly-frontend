@@ -17,7 +17,7 @@ export interface IObservation {
 export type TToolID =
   | "tokensaddressinfo_get"
   | "tokensaddressprice_get"
-  | "dataset_"
+  | "dataset_4f7c1e48-f62d-4f75-bf3b-80d4167a50a9"
   | "solyAiTradingQuoteAPIPost"
   | "solyAiTradingBalanceGet"
   | "solyAiTradingQuoteExecutePost"

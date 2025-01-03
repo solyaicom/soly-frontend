@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{ output: string }>();
 const data = JSON.parse(props.output).data;
-
+console.log(data);
 function viewScanner(address: string) {
   window.open("https://gmgn.ai/sol/token/" + address, "_blank");
 }
@@ -18,27 +18,29 @@ function viewScanner(address: string) {
               <span class="text-app-text1 font-[600]">{{ token.name }}</span>
               <span class="ml-1 text-app-text3 text-[12px]">{{ token.symbol }}</span>
             </div>
-            <div class="row-center text-app-text2 cursor-pointer" @click="viewScanner(token.address)">
-              <p>{{ shortAddress(token.address) }}</p>
+            <a :href="`https://gmgn.ai/sol/token/${token.address}`" target="_blank" class="row-center text-app-text2">
+              <p>{{ token.price ? `$${formatNotationNumber(token.price.usd)}` : shortAddress(token.address) }}</p>
               <NuxtIcon name="icon-scanner" class="text-[14px] ml-1" />
-            </div>
+            </a>
           </div>
-          <!-- <div class="row-center">
-            <img src="/images/icon-up.svg" />
-            <span class="text-app-green2">{{ formatNotationNumber("120") }}%</span>
-          </div> -->
+          <div v-if="!!token.price" class="row-center">
+            <img :src="token.price.usd_24h_change > 0 ? '/images/icon-up.svg' : '/images/icon-down.svg'" />
+            <span :class="token.price.usd_24h_change > 0 ? 'text-app-green' : 'text-app-red'"
+              >{{ formatNotationNumber(token.price.usd_24h_change, 2) }}%</span
+            >
+          </div>
         </div>
-        <!-- <div class="row-center grid grid-cols-2 mt-3 px-4 py-3 bg-app-background">
+        <div v-if="!!token.price" class="row-center grid grid-cols-2 mt-3 px-4 py-3 bg-app-background">
           <div class="text-center">
             <p class="text-app-text3 text-[12px]">Market Cap</p>
-            <p class="mt-1 text-app-text1 font-[600]">$3.43M</p>
+            <p class="mt-1 text-app-text1 font-[600]">${{ formatNotationNumber(token.price.usd_market_cap) }}</p>
           </div>
           <div class="text-center border-l-[1px] border-l-app-line1">
             <p class="text-app-text3 text-[12px]">24h Volume</p>
-            <p class="mt-1 text-app-text1 font-[600]">$3.43M</p>
+            <p class="mt-1 text-app-text1 font-[600]">${{ formatNotationNumber(token.price.usd_24h_vol) }}</p>
           </div>
         </div>
-        <div class="row-center grid grid-cols-3 mt-3">
+        <!-- <div class="row-center grid grid-cols-3 mt-3">
           <div class="text-center text-[12px]">
             <p class="text-app-text3">Holders</p>
             <p class="mt-1 text-app-text2">$3.43M</p>

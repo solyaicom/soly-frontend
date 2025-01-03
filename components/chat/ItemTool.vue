@@ -25,9 +25,7 @@ function checkError(output: string) {
 
 function getTaskName(id: TToolID) {
   const taskName = MAPPING_TOOL_NAME[id];
-  if (taskName) return taskName;
-  if (id.includes("dataset_")) return "Search Token Address";
-  return "";
+  return taskName || "";
 }
 </script>
 
@@ -49,7 +47,7 @@ function getTaskName(id: TToolID) {
           <p class="text-[#CACACA] font-[600] ml-2">Error</p>
         </div>
         <div v-else>
-          <ItemTokenSearch v-if="item.id.includes('dataset_') && !!item.outputs" :output="item.outputs" />
+          <ItemTokenSearch v-if="item.id === 'dataset_4f7c1e48-f62d-4f75-bf3b-80d4167a50a9' && !!item.outputs" :output="item.outputs" />
           <ItemTokenPrice v-if="item.id === 'tokensaddressprice_get'" :token="token" :output="item.outputs" :inputs="item.inputs" />
           <ItemTokenInformation v-if="item.id === 'tokensaddressinfo_get' && !!item.outputs" :token="token" :output="item.outputs" />
           <ItemSwapPreview v-if="item.id === 'solyAiTradingQuoteAPIPost' && !!item.outputs" :output="item.outputs" />

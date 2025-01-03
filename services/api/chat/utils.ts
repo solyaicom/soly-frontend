@@ -2,20 +2,21 @@ import { IChatMessage } from "./type";
 
 export function getQuote(message: IChatMessage) {
   try {
-    const { data } = message;
-    if (!data) return "";
+    if (!message) return {};
+    const data = message.data;
+    if (!data) return {};
 
-    if (!data.observations) return "";
+    if (!data.observations) return {};
 
     const lastObservation = data.observations[data.observations.length - 1];
-    if (!lastObservation) return "";
+    if (!lastObservation) return {};
 
     const tools = lastObservation.tools;
-    if (!tools) return "";
+    if (!tools) return {};
     const lastTool = tools[tools.length - 1];
-    if (!lastTool) return "";
+    if (!lastTool) return {};
     const findTradingQuote = tools.find((tool) => tool.name === "solyAiTradingQuoteAPIPost");
-    if (!findTradingQuote) return "";
+    if (!findTradingQuote) return {};
     const realOutput = findTradingQuote.outputs.split("tool response: ")[0];
     return JSON.parse(realOutput).output;
   } catch (error) {
