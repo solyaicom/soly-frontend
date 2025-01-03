@@ -5,7 +5,16 @@ export interface IChatMessage {
   completed: boolean;
   data: {
     observations?: IObservation[];
+    actions?: any;
   };
+}
+
+export type TAction = "agent_chat" | "url";
+
+export interface IAction {
+  label: string;
+  type: TAction;
+  params: any;
 }
 
 export interface IObservation {

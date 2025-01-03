@@ -9,11 +9,10 @@ import BotButton from "../conversation/BotButton.vue";
 import BalanceButton from "./BalanceButton.vue";
 import { checkMessageExpired, findQuoteIdFromMessage } from "~/services/api/chat/utils";
 
-const messages = ref<IChatMessage[]>([]);
 const currentMsg = ref<any>("");
 const scrollArea = ref<HTMLDivElement | null>(null);
 const loading = ref(false);
-const fetching = ref(false);
+const fetching = ref(true);
 const conversationStore = useConversationStore();
 const app = useAppSetting();
 const currentContent = ref<string>("");
@@ -22,11 +21,12 @@ const actionExpired = ref(false);
 
 const botThinking = ref(false);
 const currentConversation = ref<IConversation | null>(null);
-const route = useRoute();
 
 const currentAgent = computed(() => {
   return conversationStore.conv?.agent || app.agents[0] || {};
 });
+
+const messages = computed(() => conversationStore.messages);
 
 const lastMsg = computed(() => {
   return messages.value[messages.value.length - 1];
@@ -36,7 +36,6 @@ watch(
   () => conversationStore.conv?.id,
   () => {
     loading.value = false;
-
     fetchListMessage();
     checkMessageFromStore();
   },
@@ -65,14 +64,20 @@ function checkMessageFromStore() {
 async function fetchListMessage() {
   const convId = conversationStore.conv?.id;
   if (!convId) {
-    messages.value = [];
+    conversationStore.setMessages([]);
     return;
   }
+
   if (convId === currentConversation.value?.id) return;
-  messages.value = [];
+
   currentConversation.value = conversationStore.conv;
-  if (convId) fetching.value = true;
-  messages.value = convId ? await fetchChatHistory(convId) : [];
+  if (convId && !conversationStore.currentMessage) {
+    fetching.value = true;
+    conversationStore.setMessages([]);
+
+    const msgs = convId ? await fetchChatHistory(convId) : [];
+    conversationStore.setMessages(msgs);
+  }
   fetching.value = false;
 }
 

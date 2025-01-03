@@ -15,15 +15,10 @@ const app = useAppSetting();
 const loading = ref(false);
 const selectAgentId = ref<string | undefined>(undefined);
 
-async function onNewChat() {
-  await conversationStore.newConversation(selectAgentId.value);
-  selectAgentId.value = undefined;
-}
-
-async function onConversationClick(item: IConversation) {
+async function onConversationClick(conv_id: string) {
   loading.value = true;
   app.changeLoading(true);
-  await conversationStore.init(item.id);
+  await conversationStore.init(conv_id);
   setTimeout(() => {
     app.changeLoading(false);
     loading.value = false;
@@ -66,6 +61,17 @@ function onSelectAgent(agent: IAgent) {
             <div class="line mb-4"></div>
           </div>
 
+          <div>
+            <p class="text-[#cacaca] px-3 mb-2">Channel</p>
+            <div class="row-center hover:bg-[#323232] cursor-pointer rounded-[12px] py-2 pl-3 mb-2" @click="onConversationClick('ai-alert-channel')">
+              <div class="w-[24px] h-[24px] rounded-full mr-3 flex-shrink-0">
+                <img src="/images/icon-announcement.png" class="rounded-full" />
+              </div>
+              <p class="text-[16px] text-[#fff] flex-1">AI Alert Channel</p>
+            </div>
+            <div class="line mb-4"></div>
+          </div>
+
           <p class="text-[#cacaca] px-3 mb-2">Conversations</p>
           <div
             v-for="(item, idx) in conversationStore.histories"
@@ -73,7 +79,7 @@ function onSelectAgent(agent: IAgent) {
             class="relative cursor-pointer group hover:text-[#FFFFFF] hover:bg-[#323232] rounded-[12px]"
             :class="{ 'bg-[#323232]': item.id === conversationStore.conv?.id }"
           >
-            <div @click="onConversationClick(item)" class="row-center justify-between text-[16px] py-2 pl-3 pr-10">
+            <div @click="onConversationClick(item.id)" class="row-center justify-between text-[16px] py-2 pl-3 pr-10">
               <p class="overflow-hidden whitespace-nowrap text-ellipsis flex-1">{{ item.name }}</p>
             </div>
             <div class="px-2 absolute top-2 right-0 invisible group-hover:visible z-[1]">

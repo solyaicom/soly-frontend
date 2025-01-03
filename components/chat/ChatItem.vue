@@ -2,6 +2,7 @@
 import { IChatMessage } from "~/services/api/chat/type";
 import markdownit from "markdown-it";
 import ChatObservation from "./ChatObservation.vue";
+import ItemActions from "./ItemActions.vue";
 const md = markdownit("commonmark", {
   html: true,
   breaks: true,
@@ -14,6 +15,7 @@ const props = defineProps<{
   item: IChatMessage;
   thinking?: boolean;
 }>();
+console.log(props.item);
 const { getUser } = useAuthStore();
 const conversationStore = useConversationStore();
 const app = useAppSetting();
@@ -43,14 +45,25 @@ const currentAgent = computed(() => {
               <div className="dot h-2 w-2 mx-0.5 rounded-full bg-slate-600" />
             </div>
           </div>
-          <div v-else class="markdown" :style="{ maxWidth: item.role === 'assistant' ? 'calc(100% - 38px)' : 'none' }">
+          <div
+            v-else
+            class="markdown"
+            :class="{
+              'bg-app-card2 p-3 rounded-[8px] w-full': conversationStore.conv?.is_readonly,
+            }"
+            :style="{ maxWidth: item.role === 'assistant' ? 'calc(100% - 38px)' : 'none' }"
+          >
             <div
               ref="contentRef"
               v-html="md.render(item.content)"
               class="text-[#ececec] text-[16px] break-words text-start w-full"
-              :class="{ 'text-[#efefef] mt-0  ': item.role === 'user', 'mt-[2px]': item.role === 'assistant' }"
+              :class="{
+                'text-[#efefef] mt-0  ': item.role === 'user',
+                'mt-[2px]': item.role === 'assistant',
+              }"
             ></div>
           </div>
+          <ItemActions v-if="item.role === 'assistant' && item.data?.actions" :actions="item.data.actions" />
         </div>
       </div>
     </div>

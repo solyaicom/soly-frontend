@@ -1,16 +1,23 @@
 import { defineStore } from "pinia";
 import { toast } from "~/components/ui/toast";
 import { createNewConversation, deleteConversationById, fetchConversations, findConversationById } from "~/services/api/chat/api";
-import { IAgent, IConversation } from "~/services/api/chat/type";
+import { IAgent, IChatMessage, IConversation } from "~/services/api/chat/type";
 
 export const useConversationStore = defineStore("conversations", {
   state: () => ({
     histories: [] as IConversation[],
     conv: null as IConversation | null,
     currentMessage: "",
+    messages: [] as IChatMessage[],
     currentAgent: undefined as IAgent | undefined,
   }),
   actions: {
+    setMessages(messages: IChatMessage[]) {
+      this.messages = messages;
+    },
+    addMessage(message: IChatMessage) {
+      this.messages.push(message);
+    },
     setCurrentAgent(agent?: IAgent) {
       this.currentAgent = agent;
     },
@@ -64,8 +71,8 @@ export const useConversationStore = defineStore("conversations", {
       }
 
       this.conv = con;
+
       con && window.history.replaceState({}, "", `/c/${con.id}`);
-      document.title = con.name || "New Chat";
     },
     async delete(deleteItem: IConversation) {
       const app = useAppSetting();
@@ -74,7 +81,6 @@ export const useConversationStore = defineStore("conversations", {
       if (rs) {
         this.histories = this.histories.filter((item) => item.id !== deleteItem.id);
         if (deleteItem.id === this.conv?.id) {
-          document.title = "New Chat";
           this.conv && window.history.replaceState({}, "", `/c`);
           this.conv = null;
         }
