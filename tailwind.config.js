@@ -25,6 +25,20 @@ module.exports = {
                 "&:last-child": {
                     marginBottom: "0px",
                 },
+                "&:has(+ p[data-message-time])": {
+                    marginBottom: "0px",
+                    display: "inline",
+                },
+                "&[data-message-time]": {
+                    textAlign: "right",
+                    color: "#888",
+                    display: "inline-block",
+                    float: "right",
+                    position: "relative",
+                    bottom: "-6px",
+                    right: "-3px",
+                    fontSize: "14px",
+                }
             },
 
             li: {

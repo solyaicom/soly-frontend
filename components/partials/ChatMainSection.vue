@@ -20,7 +20,7 @@ const solana = useSolana();
 const actionExpired = ref(false);
 
 const botThinking = ref(false);
-const currentConversation = ref<IConversation | null>(null);
+const currentConversation = computed(() => conversationStore.conv);
 
 const currentAgent = computed(() => {
   return conversationStore.conv?.agent || app.agents[0] || {};
@@ -62,23 +62,23 @@ function checkMessageFromStore() {
 }
 
 async function fetchListMessage() {
-  const convId = conversationStore.conv?.id;
-  if (!convId) {
-    conversationStore.setMessages([]);
-    return;
+  try {
+    const convId = currentConversation.value?.id;
+    if (!convId) {
+      conversationStore.setMessages([]);
+      return;
+    }
+
+    if (convId && !conversationStore.currentMessage) {
+      fetching.value = true;
+      conversationStore.setMessages([]);
+
+      const msgs = convId ? await fetchChatHistory(convId) : [];
+      conversationStore.setMessages(msgs);
+    }
+  } finally {
+    fetching.value = false;
   }
-
-  if (convId === currentConversation.value?.id) return;
-
-  currentConversation.value = conversationStore.conv;
-  if (convId && !conversationStore.currentMessage) {
-    fetching.value = true;
-    conversationStore.setMessages([]);
-
-    const msgs = convId ? await fetchChatHistory(convId) : [];
-    conversationStore.setMessages(msgs);
-  }
-  fetching.value = false;
 }
 
 watch(
@@ -203,13 +203,11 @@ async function sendContent(content: string, fromSaved = false) {
         description: "Failed to create new conversation",
         duration: 3000,
       });
-    currentConversation.value = conv;
     conversationStore.setCurrentMessage(content);
-    conversationStore.change(conv, true);
-    return;
+    return conversationStore.change(conv, true);
   }
 
-  onSendMessage(content.trim());
+  return onSendMessage(content.trim());
 }
 
 function onSendClick() {

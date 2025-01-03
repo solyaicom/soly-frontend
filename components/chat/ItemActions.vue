@@ -48,12 +48,10 @@ function onActionClick(action: IAction) {
 </script>
 
 <template>
-  <div class="mt-3">
-    <div class="row-center">
-      <button v-for="(action, idx) in actions" :key="idx" @click="onActionClick(action)" class="row-center py-2 px-6 bg-app-card2 rounded-[6px] mr-3">
-        {{ action.label }}
-        <img src="/images/icon-arrow-link.svg" class="ml-2" />
-      </button>
-    </div>
+  <div class="row-center gap-2 md:gap-3 max-w-[calc(100%-38px)] mt-2 md:mt-3 flex-wrap w-full">
+    <button v-for="(action, idx) in actions" :key="idx" @click="onActionClick(action)" class="flex-1 min-w-fit sm:flex-none row-center py-2 px-3 md:px-6 bg-app-card2 rounded-[6px] justify-center">
+      {{ action.label }}
+      <img src="/images/icon-arrow-link.svg" class="ml-2" />
+    </button>
   </div>
 </template>

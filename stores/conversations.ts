@@ -44,22 +44,22 @@ export const useConversationStore = defineStore("conversations", {
       this.histories = this.histories.filter((item) => item.id !== this.conv?.id);
       this.histories.unshift(this.conv);
     },
-    async init(id?: string) {
+    async init(conv?: IConversation) {
       const route = useRoute();
       const params = route.params;
 
-      const listPromise: any[] = [!this.histories.length ? fetchConversations() : this.histories];
-      const _id = id || (params.conv_id as string);
-      if (_id) {
-        const existedConv = this.histories.find((item) => item.id === _id);
-        listPromise.push(existedConv ? existedConv : findConversationById(id || (params.conv_id as string)));
+      if (!this.histories.length) {
+        this.histories = await fetchConversations()
       }
 
-      const [histories, con] = await Promise.all(listPromise);
+      const id = params.conv_id as string;
+      if (!conv && id) {
+        conv = await findConversationById(id)
+      }
 
-      this.histories = histories;
-
-      con && this.change(con);
+      if (conv) {
+        return this.change(conv)
+      }
     },
     async change(con?: IConversation, addNew?: boolean) {
       if (!con) {

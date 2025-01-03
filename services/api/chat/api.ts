@@ -14,14 +14,14 @@ export async function createNewConversation(agent_id?: string): Promise<any> {
   }
 }
 
-export async function findConversationById(id: string): Promise<IConversation | null> {
+export async function findConversationById(id: string): Promise<IConversation | undefined> {
   try {
     const { data } = await Fetch.get<{ data: IConversation }>(`@api/conversations/${id}`);
     return data.data;
   } catch (error: any) {
     console.error("findConversationById er", error.response.status);
 
-    return null;
+    return undefined;
   }
 }
 

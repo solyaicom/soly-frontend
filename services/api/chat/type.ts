@@ -8,6 +8,7 @@ export interface IChatMessage {
     actions?: any;
     reply_message?: IChatMessage;
   };
+  created_at: string;
 }
 
 export type TAction = "agent_chat" | "url";
