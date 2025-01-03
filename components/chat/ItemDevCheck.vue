@@ -48,7 +48,7 @@ console.log("item dev check", data);
               </td>
               <td class="text-start font-[600]">${{ formatNotationNumber(item.usd_market_cap, 2) }}</td>
               <td>
-                <div v-if="item.rugged" class="row-center">
+                <div v-if="item.is_rugged" class="row-center">
                   <img src="/images/icon-error.svg" class="w-[14px]" />
                   <span class="text-app-red text-[12px] ml-1">Rugged</span>
                 </div>

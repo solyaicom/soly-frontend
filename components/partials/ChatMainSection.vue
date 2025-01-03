@@ -13,6 +13,7 @@ const messages = ref<IChatMessage[]>([]);
 const currentMsg = ref<any>("");
 const scrollArea = ref<HTMLDivElement | null>(null);
 const loading = ref(false);
+const fetching = ref(false);
 const conversationStore = useConversationStore();
 const app = useAppSetting();
 const currentContent = ref<string>("");
@@ -35,6 +36,7 @@ watch(
   () => conversationStore.conv?.id,
   () => {
     loading.value = false;
+
     fetchListMessage();
     checkMessageFromStore();
   },
@@ -69,7 +71,9 @@ async function fetchListMessage() {
   if (convId === currentConversation.value?.id) return;
   messages.value = [];
   currentConversation.value = conversationStore.conv;
+  if (convId) fetching.value = true;
   messages.value = convId ? await fetchChatHistory(convId) : [];
+  fetching.value = false;
 }
 
 watch(
@@ -265,7 +269,7 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
     <div class="flex-1 overflow-hidden flex flex-col items-center">
       <div class="flex-1 flex flex-col items-center w-full md:w-[90%] overflow-hidden md:max-w-[768px] 2xl:max-w-[900px]">
         <div class="flex-1 flex flex-col justify-center w-full overflow-hidden">
-          <div v-if="!messages.length" class="flex-1 flex flex-col items-center justify-center">
+          <div v-if="!messages.length && !fetching" class="flex-1 flex flex-col items-center justify-center">
             <div class="row-center">
               <img :src="currentAgent?.avatar_url" class="w-[40px] h-[40px] mr-2 rounded-full" />
               <p class="text-[40px] font-[500]">{{ currentAgent?.name || "Soly AI" }}</p>
@@ -273,6 +277,9 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
             <p class="mt-4 text-center text-[16px] text-[#CACACA] px-4">
               {{ currentAgent.description || `👋 Hi, I'm ${currentAgent.name} — Chat with me` }}
             </p>
+          </div>
+          <div v-else-if="fetching" class="flex-1 flex flex-col items-center justify-center">
+            <img src="/images/icon-loading.gif" class="w-[24px]" />
           </div>
           <div ref="scrollArea" v-else class="h-full w-full pt-4 pb-[100px] overflow-y-auto relative">
             <ChatListChat :messages="messages" :thinking="botThinking" />
