@@ -193,7 +193,7 @@ async function sendContent(content: string, fromSaved = false) {
   if (loading.value) return;
   let conv = conversationStore.conv;
   if (!fromSaved) {
-    messages.value.push({ role: "user", id: "", content: content.trim(), completed: true, data: {} });
+    messages.value.push({ role: "user", id: "", content: content.trim(), completed: true, data: {}, created_at: new Date().toISOString() });
   }
   if (!conv?.id) {
     conv = await createNewConversation(conversationStore.currentAgent?.id);
