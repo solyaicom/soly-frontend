@@ -28,5 +28,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   }
   Promise.all(arrPros);
 
-  if (userInfo.subscription.status === "active" && to.path === "/payment") return navigateTo("/c");
+  if (userInfo.subscription?.status === "active" && to.path === "/payment") return navigateTo("/c");
+  if (userInfo.subscription?.status === "active" && to.path === "/auth/login") return navigateTo("/c");
 });
