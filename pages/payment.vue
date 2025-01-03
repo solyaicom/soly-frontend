@@ -33,15 +33,16 @@ onMounted(() => {
 
 function checkActive() {
   if (getUser().subscription.status === "active") return navigateTo("/c");
-  if (getUser().subscription.status === "pending") {
-    txhash.value = getUser().subscription.data?.tx_signature || "";
-    useIntervalFn(async () => {
-      const newUser = await getUserInfo();
-      if (newUser.subscription.status === "active") {
-        navigateTo("/c");
-      }
-    }, 5000);
-  }
+  txhash.value = getUser().subscription.data?.tx_signature || "";
+  useIntervalFn(async () => {
+    if (!processed.value) {
+      return
+    }
+    const newUser = await getUserInfo();
+    if (newUser.subscription.status === "active") {
+      navigateTo("/c");
+    }
+  }, 5000);
 }
 
 const insufficient = computed(() => {
@@ -69,7 +70,6 @@ async function onButtonClick() {
       processed.value = true;
       txhash.value = rs.data.tx_signature || "";
 
-      checkActive();
       toast({
         description: "Payment transaction is success, please wait for processing...",
         duration: 4000,
