@@ -6,6 +6,7 @@ export interface IChatMessage {
   data: {
     observations?: IObservation[];
     actions?: any;
+    reply_message?: IChatMessage;
   };
 }
 

@@ -10,6 +10,7 @@ const md = markdownit("commonmark", {
 });
 
 const contentRef = ref<any>(null);
+const openPreview = ref(false);
 
 const props = defineProps<{
   item: IChatMessage;
@@ -44,6 +45,7 @@ const currentAgent = computed(() => {
               <div className="dot h-2 w-2 mx-0.5 rounded-full bg-slate-600" />
             </div>
           </div>
+
           <div
             v-else
             class="markdown"
@@ -52,6 +54,30 @@ const currentAgent = computed(() => {
             }"
             :style="{ maxWidth: item.role === 'assistant' ? 'calc(100% - 38px)' : 'none' }"
           >
+            <div
+              v-if="item.data.reply_message"
+              class="row-center bg-[#404040] px-3 pr-1 py-1 rounded-[6px] mb-2 border-l-[3px] border-l-[#fff]"
+              @click="openPreview = true"
+            >
+              <div class="markdown flex-1 overflow-hidden line-clamp-2">
+                <div
+                  v-html="
+                    md.render(
+                      `${item.data.reply_message.content}${item.data.reply_message.content} ${item.data.reply_message.content} ${item.data.reply_message.content} ${item.data.reply_message.content} ${item.data.reply_message.content}`
+                    )
+                  "
+                  class="text-[#ececec] text-[16px] break-words text-start w-full"
+                  :class="{
+                    'text-[#efefef] mt-0  ': item.role === 'user',
+                    'mt-[2px]': item.role === 'assistant',
+                  }"
+                ></div>
+              </div>
+              <button class="row-center ml-6">
+                SEE MORE
+                <img src="/images/icon-chevron-right-light.svg" class="ml-1" />
+              </button>
+            </div>
             <div
               ref="contentRef"
               v-html="md.render(item.content)"
@@ -66,5 +92,33 @@ const currentAgent = computed(() => {
         </div>
       </div>
     </div>
+    <Dialog v-if="item.data.reply_message" v-model:open="openPreview">
+      <DialogContent class="bg-[#141414] py-3 px-3 border-none max-h-[calc(100vh-100px)] overflow-scroll">
+        <div class="flex-1 flex flex-col items-start" :style="{ maxWidth: item.role === 'assistant' ? 'calc(100% - 38px)' : 'none' }">
+          <ChatObservation v-if="item.data.reply_message.data.observations" :observations="item.data.reply_message.data.observations" />
+
+          <div v-if="(thinking || !item.content) && item.role === 'assistant'" class="bg-[#323232d9] p-2 rounded-[8px]">
+            <div className="dots h-6 w-10 rounded-full flex items-center justify-center flex-nowrap">
+              <div className="dot h-2 w-2 mx-0.5 rounded-full bg-slate-600" />
+              <div className="dot h-2 w-2 mx-0.5 rounded-full bg-slate-600" />
+              <div className="dot h-2 w-2 mx-0.5 rounded-full bg-slate-600" />
+            </div>
+          </div>
+
+          <div v-else class="markdown" :style="{ maxWidth: item.role === 'assistant' ? 'calc(100%-38px)' : 'none' }">
+            <div
+              ref="contentRef"
+              v-html="md.render(item.data.reply_message.content)"
+              class="text-[#ececec] text-[16px] break-words text-start w-full"
+              :class="{
+                'text-[#efefef] mt-0  ': item.role === 'user',
+                'mt-[2px]': item.role === 'assistant',
+              }"
+            ></div>
+          </div>
+          <ItemActions v-if="item.role === 'assistant' && item.data.reply_message.data?.actions" :actions="item.data.reply_message.data.actions" />
+        </div>
+      </DialogContent>
+    </Dialog>
   </div>
 </template>
