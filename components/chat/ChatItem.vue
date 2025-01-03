@@ -15,7 +15,6 @@ const props = defineProps<{
   item: IChatMessage;
   thinking?: boolean;
 }>();
-console.log(props.item);
 const { getUser } = useAuthStore();
 const conversationStore = useConversationStore();
 const app = useAppSetting();

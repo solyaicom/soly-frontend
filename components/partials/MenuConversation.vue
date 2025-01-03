@@ -70,7 +70,7 @@ function onSelectAgent(agent: IAgent) {
               @click="onConversationClick(item.id)"
             >
               <div class="w-[24px] h-[24px] rounded-full mr-3 flex-shrink-0">
-                <img src="/images/icon-announcement.png" class="rounded-full" />
+                <img :src="item.agent?.avatar_url || '/images/icon-announcement.png'" class="rounded-full" />
               </div>
               <p class="text-[16px] text-[#fff] flex-1">{{ item.name }}</p>
             </div>
