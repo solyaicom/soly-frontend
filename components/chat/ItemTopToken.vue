@@ -1,10 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{ output: string }>();
 const data = JSON.parse(props.output).data;
-console.log(data);
-function viewScanner(address: string) {
-  window.open("https://gmgn.ai/sol/token/" + address, "_blank");
-}
 </script>
 
 <template>

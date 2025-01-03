@@ -33,5 +33,5 @@ const { isReady, login } = useTokenClient({
 </script>
 
 <template>
-  <PartialsButton :text="text || 'Continue'" class="mb-4" @click="login" />
+  <PartialsButton :text="text || 'Continue'" class="mb-4 w-full" @click="login" />
 </template>

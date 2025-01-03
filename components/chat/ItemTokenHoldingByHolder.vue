@@ -5,7 +5,12 @@ const data = JSON.parse(props.output).data;
 
 <template>
   <div class="p-3 bg-[#2f2f2f] rounded-b-[6px]">
-    <p class="text-app-text1 font-[600]">Other Token Holdings by Top Holders ($USD)</p>
+    <ul class="list-disc pl-6 space-y-3 text-app-text1 font-[600]">
+      <li>{{ formatNumber(data.noteworthy_count) }}/{{ formatNumber(data.items.length) }} top holders are noteworthy</li>
+      <li>KOL: {{ formatNumber(data.kol_count) }}</li>
+    </ul>
+    <div class="line mt-3" />
+    <p class="text-app-text1 font-[600] mt-3">Other Token Holdings by Top Holders ($USD)</p>
     <div class="mt-3 max-h-[350px] overflow-scroll relative">
       <table class="w-full bg-app-card1 border-separate py-3 px-2 text-center rounded-[6px]">
         <thead class="sticky top-0 bg-app-card1">

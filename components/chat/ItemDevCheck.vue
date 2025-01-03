@@ -1,8 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{ output: string }>();
 const data = JSON.parse(props.output).data;
-
-console.log("item dev check", data);
 </script>
 
 <template>

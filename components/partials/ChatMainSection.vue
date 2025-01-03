@@ -311,7 +311,7 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
                 </div>
               </div>
             </div>
-            <div v-else class="w-full flex flex-row items-start relative">
+            <div v-else-if="!currentConversation?.is_readonly" class="w-full flex flex-row items-start relative">
               <div
                 contenteditable
                 @keyup="onKeyChange"

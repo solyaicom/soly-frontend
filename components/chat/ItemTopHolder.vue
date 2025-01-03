@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { sum } from "lodash";
-
 const props = defineProps<{ output: string }>();
 const data = JSON.parse(props.output).data;
 const totalPercent = (data.items as { amount_percentage: number }[]).reduce((total, item) => item.amount_percentage + total, 0);
@@ -9,12 +7,14 @@ const totalPercent = (data.items as { amount_percentage: number }[]).reduce((tot
 <template>
   <div class="p-3 bg-[#2f2f2f] rounded-b-[6px]">
     <ul class="list-disc pl-6 space-y-3 text-app-text1 font-[600]">
-      <li>Holders: {{ formatNotationNumber(data.token_info.holder_count) }}</li>
+      <li>In Profit: {{ data.profit_count }}/{{ data.items.length }}</li>
+      <li>In Loss: {{ data.loss_count }}/{{ data.items.length }}</li>
+      <li>Holders: {{ formatNotationNumber(data.holder_count || 0) }}</li>
       <li>Top {{ data.items.length }} holding: {{ formatNumber(totalPercent * 100, 2) }}%</li>
     </ul>
     <div class="line mt-3" />
     <div class="py-3">
-      <p class="text-app-text1 font-[600]">Top Holders Entry Points</p>
+      <p class="text-app-text1 font-[600]">Top {{ data.items.length }} Holders Entry Points</p>
       <div class="mt-3 max-h-[350px] overflow-scroll relative">
         <table class="w-full min-w-[400px] bg-app-card1 border-separate py-3 px-2 text-center rounded-[6px]">
           <thead class="sticky top-0 bg-app-card1">

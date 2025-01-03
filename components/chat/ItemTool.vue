@@ -2,7 +2,6 @@
 import { IObservation, ITool, TToolID } from "~/services/api/chat/type";
 import ItemTokenSearch from "./ItemTokenSearch.vue";
 import ItemTokenPrice from "./ItemTokenPrice.vue";
-import ItemTokenInformation from "./ItemTokenInformation.vue";
 import { convertTokenOutput } from "~/utils";
 import ItemSwapPreview from "./ItemSwapPreview.vue";
 import ItemBalanceGet from "./ItemBalanceGet.vue";
@@ -49,7 +48,6 @@ function getTaskName(id: TToolID) {
         <div v-else>
           <ItemTokenSearch v-if="item.id === 'dataset_4f7c1e48-f62d-4f75-bf3b-80d4167a50a9' && !!item.outputs" :output="item.outputs" />
           <ItemTokenPrice v-if="item.id === 'tokensaddressprice_get'" :token="token" :output="item.outputs" :inputs="item.inputs" />
-          <ItemTokenInformation v-if="item.id === 'tokensaddressinfo_get' && !!item.outputs" :token="token" :output="item.outputs" />
           <ItemSwapPreview v-if="item.id === 'solyAiTradingQuoteAPIPost' && !!item.outputs" :output="item.outputs" />
           <ItemBalanceGet v-if="item.id === 'solyAiTradingBalanceGet' && !!item.outputs" :item="item" />
           <ItemSwapResult v-if="item.id === 'solyAiTradingQuoteExecutePost' && !!item.outputs" :output="item.outputs" />

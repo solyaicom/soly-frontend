@@ -37,6 +37,7 @@ export interface IConversation {
   id: string;
   name: string;
   agent?: IAgent;
+  is_readonly?: boolean;
 }
 
 export interface IAgent {
