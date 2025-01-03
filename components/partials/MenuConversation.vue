@@ -63,11 +63,16 @@ function onSelectAgent(agent: IAgent) {
 
           <div>
             <p class="text-[#cacaca] px-3 mb-2">Channel</p>
-            <div class="row-center hover:bg-[#323232] cursor-pointer rounded-[12px] py-2 pl-3 mb-2" @click="onConversationClick('ai-alert-channel')">
+            <div
+              v-for="(item, idx) in app.channels"
+              :key="item.id"
+              class="row-center hover:bg-[#323232] cursor-pointer rounded-[12px] py-2 pl-3 mb-2"
+              @click="onConversationClick(item.id)"
+            >
               <div class="w-[24px] h-[24px] rounded-full mr-3 flex-shrink-0">
                 <img src="/images/icon-announcement.png" class="rounded-full" />
               </div>
-              <p class="text-[16px] text-[#fff] flex-1">AI Alert Channel</p>
+              <p class="text-[16px] text-[#fff] flex-1">{{ item.name }}</p>
             </div>
             <div class="line mb-4"></div>
           </div>

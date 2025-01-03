@@ -62,7 +62,18 @@ export async function fetchListAgents(): Promise<IAgent[]> {
     const { data } = await Fetch.get<{ data: IAgent[] }>(`@api/agents`);
     return data.data;
   } catch (error: any) {
-    console.error("fetchListAgents er", error.response.status);
+    console.error("fetchListAgents er", error);
+
+    return [];
+  }
+}
+
+export async function fetchListChannel(): Promise<IConversation[]> {
+  try {
+    const { data } = await Fetch.get<{ data: IConversation[] }>(`@api/channels`);
+    return data.data;
+  } catch (error: any) {
+    console.error("fetchListChannel er", error);
 
     return [];
   }

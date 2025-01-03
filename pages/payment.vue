@@ -9,6 +9,11 @@ definePageMeta({
   layout: "default",
 });
 
+useSeoMeta({
+  title: "Soly AI",
+  description: "Chat with Soly AI",
+});
+
 const { getUser } = useAuthStore();
 
 const balance = ref(0);

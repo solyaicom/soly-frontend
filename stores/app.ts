@@ -1,12 +1,13 @@
 import { defineStore } from "pinia";
-import { fetchListAgents } from "~/services/api/chat/api";
-import { IAgent } from "~/services/api/chat/type";
+import { fetchListAgents, fetchListChannel } from "~/services/api/chat/api";
+import { IAgent, IConversation } from "~/services/api/chat/type";
 
 export const useAppSetting = defineStore("appSetting", {
   state: () => ({
     showLoading: false,
     loadAppDone: false,
     agents: [] as IAgent[],
+    channels: [] as IConversation[],
   }),
   actions: {
     saveLoadApp() {
@@ -18,6 +19,7 @@ export const useAppSetting = defineStore("appSetting", {
     async init() {
       if (this.agents.length) return;
       this.agents = await fetchListAgents();
+      this.channels = await fetchListChannel();
     },
   },
 });

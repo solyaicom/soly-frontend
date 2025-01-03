@@ -11,7 +11,7 @@ const solana = useSolana();
 const balance = ref(0);
 
 onMounted(async () => {
-  const _balance = await getSolBalance(getUser().wallet.address);
+  const _balance = solana.balance ? solana.balance : await getSolBalance(getUser().wallet.address);
   balance.value = _balance;
 });
 
