@@ -28,12 +28,14 @@ function onSelectAgent(agent: IAgent) {
 <template>
   <section class="bg-[#171717] h-full w-full flex-col flex overflow-hidden">
     <div class="flex flex-col flex-1 overflow-hidden">
-      <div class="p-4">
-        <div class="row-center justify-center">
-          <img src="/images/icon-logo-black.svg" />
-          <span class="text-[24px] font-[600] ml-2">Soly AI</span>
+      <NuxtLink :to="'/'">
+        <div class="p-4">
+          <div class="row-center justify-center">
+            <img src="/images/icon-logo-black.svg" />
+            <span class="text-[24px] font-[600] ml-2">Soly AI</span>
+          </div>
         </div>
-      </div>
+      </NuxtLink>
       <div class="flex-1 flex flex-col overflow-hidden p-4 border-t-[1px] border-app-line1">
         <div class="h-full overflow-y-scroll pb-[60px]">
           <div>

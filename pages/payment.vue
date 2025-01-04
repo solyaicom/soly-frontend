@@ -11,7 +11,7 @@ definePageMeta({
 
 useSeoMeta({
   title: "Soly AI",
-  description: "Chat with Soly AI",
+  description: "The First Personalized DeFAI Agent Platform On Solana",
 });
 
 const { getUser } = useAuthStore();
@@ -28,21 +28,22 @@ const processed = ref(getUser().subscription.status === "pending");
 const openLeftMenu = ref(false);
 const txhash = ref(getUser().subscription.data?.tx_signature || "");
 onMounted(() => {
-  checkActive();
+  // checkActive();
+  console.log("2");
 });
 
 function checkActive() {
-  if (getUser().subscription.status === "active") return navigateTo("/c");
+  // if (getUser().subscription.status === "active") return navigateTo("/c");
   txhash.value = getUser().subscription.data?.tx_signature || "";
-  useIntervalFn(async () => {
-    if (!processed.value) {
-      return
-    }
-    const newUser = await getUserInfo();
-    if (newUser.subscription.status === "active") {
-      navigateTo("/c");
-    }
-  }, 5000);
+  // useIntervalFn(async () => {
+  //   if (!processed.value) {
+  //     return;
+  //   }
+  //   const newUser = await getUserInfo();
+  //   if (newUser.subscription.status === "active") {
+  //     navigateTo("/c");
+  //   }
+  // }, 5000);
 }
 
 const insufficient = computed(() => {
@@ -145,15 +146,24 @@ function viewScanner() {
           <div class="line" />
           <div class="px-6 py-4">
             <div class="row-center justify-between text-[16px] font-[600]">
-              <span>Your Balance</span>
+              <span>Your Soly Wallet</span>
               <span>{{ balance ? formatNumber(balance, 3) : "---" }} SOL</span>
             </div>
             <div v-if="insufficient">
               <p class="text-app-red text-end">Insufficient Balance</p>
-              <p class="text-app-red text-end">
-                Required total {{ subscription.price ? formatNumber(subscription.price + subscription.extra_balance) : "---" }} SOL to pay and cover
-                network fee
-              </p>
+              <div class="row-center w-full mt-3 p-3 rounded-[6px] border-[1px] border-blue-400">
+                <NuxtIcon name="icon-about" class="text-blue-400 text-[24px]" />
+                <div class="ml-3">
+                  <p class="text-app-text1 font-[600]">Two steps needed</p>
+                  <ul class="list-disc ml-3 text-app-text2">
+                    <li>
+                      Deposit at least {{ formatNumber(subscription.price + subscription.extra_balance) }} SOL to your Soly wallet to cover payment
+                      and network fee
+                    </li>
+                    <li>Pay {{ formatNumber(subscription.price) }} SOL for Early Access</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
           <div class="line" />
@@ -172,7 +182,7 @@ function viewScanner() {
               class="w-[168px] py-2 bg-[#fff] text-center text-[#131313] font-[600] rounded-[6px] cursor-pointer"
               @click="onButtonClick"
             >
-              <span>Quick Deposit</span>
+              <span>Deposit Funds</span>
             </div>
             <div
               v-else

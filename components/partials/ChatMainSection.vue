@@ -108,6 +108,7 @@ async function onSendMessage(content: string, data?: { action?: "confirm_swap" |
       content: content || "What is the weather today?",
       data,
     }),
+    openWhenHidden: true,
     onmessage(ev) {
       const _currentMsg = messages.value[messages.value.length - 1];
 

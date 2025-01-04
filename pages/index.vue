@@ -5,7 +5,7 @@ definePageMeta({
 
 useSeoMeta({
   title: "Soly AI",
-  description: "Chat with Soly AI",
+  description: "The First Personalized DeFAI Agent Platform On Solana",
 });
 </script>
 

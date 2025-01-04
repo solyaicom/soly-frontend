@@ -22,13 +22,15 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   }
 
   if (to.meta.layout === "conversation") {
-    app.init().then(() => console.log('app.init completed'))
+    app.init().then(() => console.log("app.init completed"));
     const route = useRoute();
-    conversation.setConvID(route.params.conv_id as string)
-    conversation.init().then(() => console.log('conversation.init completed'))
-    useSolana().init(true).then(() => console.log('solana.init completed'))
+    conversation.setConvID(route.params.conv_id as string);
+    conversation.init().then(() => console.log("conversation.init completed"));
+    useSolana()
+      .init(true)
+      .then(() => console.log("solana.init completed"));
   }
-
-  if (userInfo.subscription?.status === "active" && to.path === "/payment") return navigateTo("/c");
+  console.log("111");
+  // if (userInfo.subscription?.status === "active" && to.path === "/payment") return navigateTo("/c");
   if (userInfo.subscription?.status === "active" && to.path === "/auth/login") return navigateTo("/c");
 });

@@ -2,7 +2,7 @@
   <section id="intro" class="sm:min-h-[78svh] flex items-center justify-center">
     <div class="home-container w-full h-full flex flex-col-reverse sm:flex-row flex-wrap items-center justify-center home__gap-section gap-y-4">
       <div class="w-full md:w-3/5 text-center sm:text-left">
-        <h1 class="font-semibold text-2xl sm:text-4xl lg:text-6xl whitespace-pre">{{ `GM 👋 I'm Soly \nYour Personal AI Agent \non Solana` }}</h1>
+        <h1 class="w-full font-semibold text-2xl sm:text-4xl lg:text-6xl">{{ `The First Personalized\nDeFAI Agent Platform On Solana` }}</h1>
         <p class="mt-4 mb-6 text-lg sm:text-2xl font-light text-home-neutral-400">Empowering Decisions with On-Chain Intelligence</p>
         <NuxtLink to="/c" class="btn__solid btn__solid-white rounded-lg">Launch App</NuxtLink>
       </div>
