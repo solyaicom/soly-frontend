@@ -1,31 +1,14 @@
 <script setup lang="ts">
-import Dialog from "../ui/dialog/Dialog.vue";
-import DialogContent from "../ui/dialog/DialogContent.vue";
-
-const props = defineProps<{
-  open: boolean;
-  onClose: () => void;
-}>();
+const open = defineModel<boolean>("open")
 
 const conversationStore = useConversationStore();
 const app = useAppSetting();
 
 const agent = computed(() => conversationStore.conv?.agent || app.agents[0]);
-
-const openBotInformation = ref(false);
-watch([() => props.open], () => {
-  openBotInformation.value = props.open;
-});
-watch(
-  () => openBotInformation.value,
-  () => {
-    if (!openBotInformation.value) props.onClose();
-  }
-);
 </script>
 
 <template>
-  <Dialog v-model:open="openBotInformation">
+  <Dialog v-model:open="open">
     <DialogContent class="bg-[#323232] py-8 px-4 border-none w-[94vw] md:w-full">
       <div v-if="!!agent" class="flex flex-col items-center">
         <div class="row-center">

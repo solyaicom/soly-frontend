@@ -36,7 +36,7 @@ function onItemMenuClick() {
 
     <Popover v-model:open="openBotMenu">
       <PopoverTrigger>
-        <div class="row-center p-3 bg-[#323232] rounded-[12px] ml-4">
+        <div v-if="currentAgent" class="row-center p-3 bg-[#323232] rounded-[12px] ml-4">
           <div class="w-[24px] h-[24px] mr-2 rounded-full overflow-hidden">
             <img :src="currentAgent?.avatar_url" class="w-[24px] h-[24px]" />
           </div>
@@ -61,6 +61,6 @@ function onItemMenuClick() {
         </div>
       </PopoverContent>
     </Popover>
-    <BotInformation :open="openBotInformation" @close="openBotInformation = false" />
+    <BotInformation v-model:open="openBotInformation" />
   </div>
 </template>
