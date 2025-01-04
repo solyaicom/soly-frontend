@@ -3,13 +3,23 @@ import { toast } from "~/components/ui/toast";
 import { createNewConversation, deleteConversationById, fetchConversations, findConversationById } from "~/services/api/chat/api";
 import { IAgent, IChatMessage, IConversation } from "~/services/api/chat/type";
 
+type ConversationState = {
+  histories: IConversation[],
+  conv?: IConversation,
+  convID?: string,
+  currentMessage: string,
+  messages: IChatMessage[],
+  currentAgent?: IAgent,
+};
+
 export const useConversationStore = defineStore("conversations", {
-  state: () => ({
-    histories: [] as IConversation[],
-    conv: null as IConversation | null,
+  state: ():ConversationState => ({
+    histories: [],
+    conv: undefined,
+    convID: undefined,
     currentMessage: "",
-    messages: [] as IChatMessage[],
-    currentAgent: undefined as IAgent | undefined,
+    messages: [] ,
+    currentAgent: undefined,
   }),
   actions: {
     setMessages(messages: IChatMessage[]) {
@@ -34,7 +44,7 @@ export const useConversationStore = defineStore("conversations", {
       }, 200);
     },
     resetConv() {
-      this.conv = null;
+      this.conv = undefined;
     },
     setCurrentMessage(content: string) {
       this.currentMessage = content;
@@ -44,37 +54,39 @@ export const useConversationStore = defineStore("conversations", {
       this.histories = this.histories.filter((item) => item.id !== this.conv?.id);
       this.histories.unshift(this.conv);
     },
+    setConvID(id: string) {
+      this.convID = id;
+    },
     async init(conv?: IConversation) {
-      const route = useRoute();
-      const params = route.params;
-
       if (!this.histories.length) {
         this.histories = await fetchConversations()
       }
 
-      const id = params.conv_id as string;
-      if (!conv && id) {
-        conv = await findConversationById(id)
+
+      if (!conv && this.convID) {
+        conv = await findConversationById(this.convID)
       }
 
       if (conv) {
         return this.change(conv)
       }
     },
-    async change(con?: IConversation, addNew?: boolean) {
-      if (!con) {
+    async change(conv?: IConversation, addNew?: boolean) {
+      if (!conv) {
+        this.convID = '';
         this.conv = { agent: this.currentAgent, name: "New Chat" } as any;
         return window.history.replaceState({}, "", `/c`);
       }
-      if (addNew) this.histories.unshift(con);
+      if (addNew) this.histories.unshift(conv);
       else {
-        let existIndex = this.histories.findIndex((item) => item.id === con.id);
-        if (existIndex > -1) this.histories[existIndex] = con;
+        let existIndex = this.histories.findIndex((item) => item.id === conv.id);
+        if (existIndex > -1) this.histories[existIndex] = conv;
       }
 
-      this.conv = con;
+      this.conv = conv;
+      this.convID = conv.id
 
-      con && window.history.replaceState({}, "", `/c/${con.id}`);
+      conv && window.history.replaceState({}, "", `/c/${conv.id}`);
     },
     async delete(deleteItem: IConversation) {
       const app = useAppSetting();
@@ -84,7 +96,7 @@ export const useConversationStore = defineStore("conversations", {
         this.histories = this.histories.filter((item) => item.id !== deleteItem.id);
         if (deleteItem.id === this.conv?.id) {
           this.conv && window.history.replaceState({}, "", `/c`);
-          this.conv = null;
+          this.conv = undefined;
         }
       } else {
         toast({

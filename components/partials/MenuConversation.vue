@@ -36,7 +36,7 @@ function onSelectAgent(agent: IAgent) {
       </div>
       <div class="flex-1 flex flex-col overflow-hidden p-4 border-t-[1px] border-app-line1">
         <div class="h-full overflow-y-scroll pb-[60px]">
-          <div v-if="app.agents.length > 0">
+          <div>
             <p class="text-[#cacaca] px-3 mb-2">Explore</p>
             <div
               v-for="(item, idx) in app.agents"
@@ -53,7 +53,7 @@ function onSelectAgent(agent: IAgent) {
           </div>
 
           <div>
-            <p class="text-[#cacaca] px-3 mb-2">Channel</p>
+            <p class="text-[#cacaca] px-3 mb-2">Channels</p>
             <div
               v-for="(item, idx) in app.channels"
               :key="item.id"

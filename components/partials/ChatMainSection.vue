@@ -20,6 +20,7 @@ const solana = useSolana();
 const actionExpired = ref(false);
 
 const botThinking = ref(false);
+const currentConversationID = computed(() => conversationStore.convID);
 const currentConversation = computed(() => conversationStore.conv);
 
 const currentAgent = computed(() => {
@@ -33,7 +34,7 @@ const lastMsg = computed(() => {
 });
 
 watch(
-  () => conversationStore.conv?.id,
+  currentConversationID,
   () => {
     loading.value = false;
     fetchListMessage();
@@ -63,7 +64,7 @@ function checkMessageFromStore() {
 
 async function fetchListMessage() {
   try {
-    const convId = currentConversation.value?.id;
+    const convId = currentConversationID.value;
     if (!convId) {
       conversationStore.setMessages([]);
       return;
@@ -258,7 +259,7 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
   const quote_id = findQuoteIdFromMessage(msg);
   const msgId = msg.id;
 
-  messages.value.push({ role: "user", id: "", content, completed: true, data: {} });
+  messages.value.push({ role: "user", id: "", content, completed: true, data: {}, created_at: new Date().toISOString() });
   onSendMessage(content, {
     action,
     params: { message_id: msgId || "", quote_id },
@@ -272,7 +273,14 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
     <div class="flex-1 overflow-hidden flex flex-col items-center">
       <div class="flex-1 flex flex-col items-center w-full md:w-[90%] overflow-hidden md:max-w-[768px] 2xl:max-w-[900px]">
         <div class="flex-1 flex flex-col justify-center w-full overflow-hidden">
-          <div v-if="!messages.length && !fetching" class="flex-1 flex flex-col items-center justify-center">
+          <div v-if="fetching || !currentAgent.id" class="flex-1 flex flex-col items-center justify-center">
+            <img src="/images/icon-loading.gif" class="w-[24px]" />
+          </div>
+          <div ref="scrollArea" v-else-if="messages.length > 0" class="h-full w-full pt-4 pb-[100px] overflow-y-auto relative">
+            <ChatListChat :messages="messages" :thinking="botThinking" />
+            <ChatItem v-if="currentMsg" :item="currentMsg" :thinking="botThinking" />
+          </div>
+          <div v-else class="flex-1 flex flex-col items-center justify-center">
             <div class="row-center">
               <img :src="currentAgent?.avatar_url" class="w-[40px] h-[40px] mr-2 rounded-full" />
               <p class="text-[40px] font-[500]">{{ currentAgent?.name || "Soly AI" }}</p>
@@ -280,13 +288,6 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
             <p class="mt-4 text-center text-[16px] text-[#CACACA] px-4">
               {{ currentAgent.description || `👋 Hi, I'm ${currentAgent.name} — Chat with me` }}
             </p>
-          </div>
-          <div v-else-if="fetching" class="flex-1 flex flex-col items-center justify-center">
-            <img src="/images/icon-loading.gif" class="w-[24px]" />
-          </div>
-          <div ref="scrollArea" v-else class="h-full w-full pt-4 pb-[100px] overflow-y-auto relative">
-            <ChatListChat :messages="messages" :thinking="botThinking" />
-            <ChatItem v-if="currentMsg" :item="currentMsg" :thinking="botThinking" />
           </div>
         </div>
         <div class="w-full px-3 pb-4">
@@ -320,7 +321,7 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
                 @keyup="onKeyChange"
                 @keydown="onKeyDown"
                 id="promt-area"
-                :placeholder="`Send a message to ${currentAgent?.name || 'SolyAI'}`"
+                :data-placeholder="`Send a message to ${currentAgent?.name || 'SolyAI'}`"
                 class="bg-transparent border-[1px] border-app-line1 min-h-[52px] flex-1 rounded-[30px] p-4 outline-none break-all"
               ></div>
 
@@ -337,9 +338,9 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
 </template>
 
 <style scoped>
-[contenteditable][placeholder]:empty::before {
+[contenteditable][data-placeholder]:empty::before {
   color: #9b9b9b;
-  content: attr(placeholder);
+  content: attr(data-placeholder);
   display: block; /* For Firefox */
 }
 </style>
