@@ -28,22 +28,21 @@ const processed = ref(getUser().subscription.status === "pending");
 const openLeftMenu = ref(false);
 const txhash = ref(getUser().subscription.data?.tx_signature || "");
 onMounted(() => {
-  // checkActive();
-  console.log("2");
+  checkActive();
 });
 
 function checkActive() {
-  // if (getUser().subscription.status === "active") return navigateTo("/c");
+  if (getUser().subscription.status === "active") return navigateTo("/c");
   txhash.value = getUser().subscription.data?.tx_signature || "";
-  // useIntervalFn(async () => {
-  //   if (!processed.value) {
-  //     return;
-  //   }
-  //   const newUser = await getUserInfo();
-  //   if (newUser.subscription.status === "active") {
-  //     navigateTo("/c");
-  //   }
-  // }, 5000);
+  useIntervalFn(async () => {
+    if (!processed.value) {
+      return;
+    }
+    const newUser = await getUserInfo();
+    if (newUser.subscription.status === "active") {
+      navigateTo("/c");
+    }
+  }, 5000);
 }
 
 const insufficient = computed(() => {

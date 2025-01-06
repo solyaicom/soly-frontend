@@ -30,7 +30,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       .init(true)
       .then(() => console.log("solana.init completed"));
   }
-  console.log("111");
-  // if (userInfo.subscription?.status === "active" && to.path === "/payment") return navigateTo("/c");
+  if (userInfo.subscription?.status === "active" && to.path === "/payment") return navigateTo("/c");
   if (userInfo.subscription?.status === "active" && to.path === "/auth/login") return navigateTo("/c");
 });
