@@ -131,11 +131,7 @@ export function sleep(ms: number) {
 export function getTimeLabel(time: number, format = "DD/MM, HH:mm") {
   const diff = Math.abs(moment(time).diff(moment(), "minutes"));
   const otherDay = time < moment().startOf("day").toDate().getTime();
-  if (!otherDay) {
-    if (diff < 1) return "Just now";
-    if (diff < 60) return diff + "m";
-    return moment(time).format("HH:mm");
-  }
+  if (!otherDay) return moment(time).format("HH:mm");
 
   if (diff < 24 * 60) return `Yesterday, ${moment(time).format("HH:mm")}`;
 

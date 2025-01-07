@@ -141,6 +141,7 @@ async function fetchListMessage() {
       conversationStore.setMessages([]);
       fetching.value = true;
       const msgs = convId ? await fetchChatHistory(convId) : [];
+      msgs.length < 20 && (finish.value = true);
       conversationStore.setMessages(msgs);
     }
   } finally {

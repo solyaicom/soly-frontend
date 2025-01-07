@@ -2,7 +2,7 @@
 import { IObservation } from "~/services/api/chat/type";
 import ItemTool from "./ItemTool.vue";
 
-const props = defineProps<{ observations: IObservation[]; created_at: string }>();
+const props = defineProps<{ observations: IObservation[]; created_at: string; isPreview?: boolean }>();
 
 const token = computed(() => {
   let findOutputToken = "";
@@ -23,7 +23,7 @@ const token = computed(() => {
 </script>
 
 <template>
-  <div v-for="(obs, idx1) in props.observations" :key="idx1" class="w-full min-w-[250px]">
-    <ItemTool :tools="obs.tools" :token="token?.[0]" :completed="obs.completed" :created_at="created_at" />
+  <div v-for="(obs, idx1) in props.observations" :key="idx1" class="w-full space-y-2" :class="{ 'min-w-[250px]': !isPreview }">
+    <ItemTool :tools="obs.tools" :token="token?.[0]" :completed="obs.completed" :created_at="created_at" :is-preview="isPreview" />
   </div>
 </template>

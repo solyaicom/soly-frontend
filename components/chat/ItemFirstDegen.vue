@@ -2,16 +2,17 @@
 const props = defineProps<{
   input: any;
   created_at: any;
+  isPreview?: boolean;
 }>();
 </script>
 
 <template>
-  <div class="bg-app-card2 p-2 rounded-[8px] w-full">
+  <div class="p-1 rounded-[8px] w-full">
     <div class="row-center justify-between">
       <img src="/images/icon-pump.svg" />
-      <span class="text-app-text2">{{ getTimeLabel(new Date(created_at).getTime()) }}</span>
+      <span v-if="!isPreview" class="text-app-text2">{{ getTimeLabel(new Date(created_at).getTime()) }}</span>
     </div>
-    <p class="mt-2 text-app-text1">
+    <p class="mt-1 text-app-text1" :class="{ 'line-clamp-1': isPreview }">
       ${{ input.token_info?.symbol }} just pumped to <strong>{{ formatNotationNumber(input.token_info?.usd_market_cap, 0) }}</strong> USD market cap,
       with <strong>{{ input.token_info?.trackers?.total_buy }} SOL</strong> volume from
       <strong>{{ input.token_info?.trackers?.count_buy }}</strong> buyers.

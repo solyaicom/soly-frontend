@@ -14,8 +14,7 @@ import ItemTopToken from "./ItemTopToken.vue";
 import ItemFirstDegen from "./ItemFirstDegen.vue";
 import ItemSecondDegen from "./ItemSecondDegen.vue";
 
-const props = defineProps<{ tools: ITool[]; token?: any; completed?: boolean; created_at: string }>();
-
+const props = defineProps<{ tools: ITool[]; token?: any; completed?: boolean; created_at: string; isPreview?: boolean }>();
 function checkError(output: string) {
   if (!props.completed) return false;
   if (!output || output?.includes("error:")) return true;
@@ -37,7 +36,7 @@ function getTaskName(id: TToolID) {
 
 <template>
   <template v-for="(item, idx) in props.tools" :key="idx">
-    <div v-if="!!getTaskName(item.id)" class="bg-[#141414] rounded-[6px] w-full">
+    <div v-if="!!getTaskName(item.id)" class="rounded-[6px] w-full" :class="{ 'bg-app-card2': !isPreview }">
       <div v-if="!checkHideTaskName(item.id)" class="row-center p-2">
         <div class="w-[10px] h-[10px] mr-2">
           <img v-if="completed" :src="checkError(item.outputs) ? '/images/icon-task-failer.svg' : '/images/icon-task.svg'" class="w-full h-full" />
@@ -62,8 +61,8 @@ function getTaskName(id: TToolID) {
           <ItemDevCheck v-if="item.id === 'tokensaddressaggdev-check_get' && !!item.outputs" :output="item.outputs" />
           <ItemTokenHoldingByHolder v-if="item.id === 'tokensaddressaggtop-holdersportfolio_get' && !!item.outputs" :output="item.outputs" />
           <ItemTopToken v-if="item.id === 'tokenstop_get' && !!item.outputs" :output="item.outputs" />
-          <ItemFirstDegen v-if="item.id === 'degen_first_alert'" :input="item.inputs" :created_at="created_at" />
-          <ItemSecondDegen v-if="item.id === 'degen_second_alert'" :input="item.inputs" />
+          <ItemFirstDegen v-if="item.id === 'degen_first_alert'" :input="item.inputs" :created_at="created_at" :is-preview="isPreview" />
+          <ItemSecondDegen v-if="item.id === 'degen_second_alert'" :input="item.inputs" :created_at="created_at" />
         </div>
       </div>
     </div>
