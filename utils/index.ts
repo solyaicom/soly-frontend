@@ -1,5 +1,5 @@
 import { toast } from "~/components/ui/toast";
-
+import moment from "moment";
 export function shortAddress(address?: string, numOfShow = 4) {
   if (!address) return "";
   const tmpAddress = address.trim();
@@ -126,4 +126,18 @@ export function convertTokenOutput(output: string): any[] {
 
 export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export function getTimeLabel(time: number, format = "DD/MM, HH:mm") {
+  const diff = Math.abs(moment(time).diff(moment(), "minutes"));
+  const otherDay = time < moment().startOf("day").toDate().getTime();
+  if (!otherDay) {
+    if (diff < 1) return "Just now";
+    if (diff < 60) return diff + "m";
+    return moment(time).format("HH:mm");
+  }
+
+  if (diff < 24 * 60) return `Yesterday, ${moment(time).format("HH:mm")}`;
+
+  return moment(time).format(format);
 }

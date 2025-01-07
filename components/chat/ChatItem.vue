@@ -27,9 +27,8 @@ function getMessageTime(item: IChatMessage): string {
   if (!isChannel.value) {
     return "";
   }
-  return `<p data-message-time title="${formatDate(new Date(item.created_at), "YYYY-MM-DD HH:mm")}">${formatDate(
-    new Date(item.created_at),
-    "HH:mm"
+  return `<p data-message-time title="${formatDate(new Date(item.created_at), "YYYY-MM-DD HH:mm")}">${getTimeLabel(
+    new Date(item.created_at).getTime()
   )}</p>`;
 }
 </script>

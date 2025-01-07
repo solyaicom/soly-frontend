@@ -3,8 +3,19 @@ import { FungibleToken, IFullToken, NonFungibleToken } from "./type";
 
 type HeliusMethod = "searchAssets" | "getBalance";
 
+const objToken: any = {};
+
 export async function fetchTokenAssets(addresses: string[]) {
   try {
+    const storeTokens: any[] = [];
+    addresses.forEach((address) => {
+      if (objToken[address]) {
+        storeTokens.push(objToken[address]);
+      }
+    });
+    if (storeTokens.length === addresses.length) {
+      return storeTokens;
+    }
     const response = await fetch(CONNECTION_CONFIG.mainnet, {
       method: "POST",
       headers: {
@@ -27,6 +38,7 @@ export async function fetchTokenAssets(addresses: string[]) {
         name: item.content.metadata.name,
         address: addresses[idx],
       };
+      objToken[addresses[idx]] = token;
       return token;
     });
 

@@ -25,9 +25,20 @@ export async function findConversationById(id: string): Promise<IConversation | 
   }
 }
 
-export async function fetchChatHistory(conv_id: string): Promise<IChatMessage[]> {
+export async function fetchChatHistory(
+  conv_id: string,
+  params: {
+    first_message_id?: string;
+    last_message_id?: string;
+  } = {}
+): Promise<IChatMessage[]> {
   try {
-    const { data } = await Fetch.get<{ data: IChatMessage[] }>(`@api/conversations/${conv_id}/history`);
+    const { data } = await Fetch.get<{ data: IChatMessage[] }>(`@api/conversations/${conv_id}/history`, {
+      params: {
+        ...params,
+        limit: 20,
+      },
+    });
     return data.data;
   } catch (error: any) {
     console.error("fetchChatHistory er", error.response.status);

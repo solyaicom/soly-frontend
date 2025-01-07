@@ -8,11 +8,14 @@ import { useConversationStore } from "~/stores/conversations";
 import BotButton from "../conversation/BotButton.vue";
 import BalanceButton from "./BalanceButton.vue";
 import { checkMessageExpired, findQuoteIdFromMessage } from "~/services/api/chat/utils";
+import { debounce } from "lodash";
 
 const currentMsg = ref<any>("");
 const scrollArea = ref<HTMLDivElement | null>(null);
 const loading = ref(false);
 const fetching = ref(true);
+const loadMore = ref(false);
+const finish = ref(false);
 const conversationStore = useConversationStore();
 const app = useAppSetting();
 const currentContent = ref<string>("");
@@ -26,6 +29,7 @@ const currentConversation = computed(() => conversationStore.conv);
 const currentAgent = computed(() => {
   return conversationStore.conv?.agent || app.agents[0] || {};
 });
+const currentScrollHeight = ref(0);
 
 const messages = computed(() => conversationStore.messages);
 
@@ -34,24 +38,62 @@ const lastMsg = computed(() => {
 });
 
 watch(
-  () => currentConversation.value?.id,
+  () => currentConversationID.value,
   async () => {
-    try {
-      loading.value = false;
-      fetching.value = true;
+    loading.value = false;
 
-      await fetchListMessage();
-      checkMessageFromStore();
-      if (conversationStore.conv) {
-        await checkMessageFromNewtab();
-      }
-    } catch (error) {
-    } finally {
-      fetching.value = false;
-    }
+    await fetchListMessage();
+    checkMessageFromStore();
   },
   { immediate: true }
 );
+
+watch(
+  () => conversationStore.conv,
+  async () => {
+    if (conversationStore.conv) {
+      await checkMessageFromNewtab();
+    }
+  }
+);
+
+onMounted(() => {
+  window.addEventListener("wheel", handleScroll);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("wheel", handleScroll);
+});
+
+async function onLoadMore() {
+  if (fetching.value) return;
+  if (finish.value) return;
+  if (loadMore.value) return;
+  loadMore.value = true;
+  if (scrollArea.value) {
+    currentScrollHeight.value = scrollArea.value?.scrollHeight;
+  }
+  const msgs = currentConversationID.value ? await fetchChatHistory(currentConversationID.value, { first_message_id: messages.value[0].id }) : [];
+  if (msgs.length < 20) {
+    finish.value = true;
+  }
+
+  messages.value.unshift(...msgs);
+  nextTick(() => {
+    loadMore.value = false;
+
+    if (scrollArea.value) {
+      scrollArea.value.scrollTop = scrollArea.value?.scrollHeight - currentScrollHeight.value;
+    }
+  });
+}
+
+function handleScroll(e: any) {
+  if (scrollArea.value) {
+    const scrollTop = scrollArea.value.scrollTop;
+    if (scrollTop < 200) onLoadMore();
+  }
+}
 
 function scrollToEnd(smooth = false) {
   setTimeout(() => {
@@ -61,6 +103,7 @@ function scrollToEnd(smooth = false) {
       } else {
         scrollArea.value.scrollTo({ top: scrollArea.value.scrollHeight, behavior: "smooth" });
       }
+      console.log("scrollArea.value.scrollHeight", scrollArea.value.scrollHeight);
     }
   }, 150);
 }
@@ -96,18 +139,19 @@ async function fetchListMessage() {
 
     if (convId && !conversationStore.currentMessage) {
       conversationStore.setMessages([]);
-
+      fetching.value = true;
       const msgs = convId ? await fetchChatHistory(convId) : [];
       conversationStore.setMessages(msgs);
     }
   } finally {
+    fetching.value = false;
   }
 }
 
 watch(
-  () => messages.value.length,
-  () => {
-    scrollToEnd();
+  () => [messages.value.length, scrollArea.value],
+  (newValue) => {
+    scrollArea.value && !loadMore.value && scrollToEnd();
   }
 );
 
@@ -303,6 +347,9 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
             <img src="/images/icon-loading.gif" class="w-[24px]" />
           </div>
           <div ref="scrollArea" v-else-if="messages.length > 0" class="h-full w-full pt-4 pb-[100px] overflow-y-auto relative">
+            <div class="flex-1 flex flex-col items-center justify-center mb-3" :class="loadMore ? 'opacity-1' : 'opacity-0'">
+              <img src="/images/icon-loading.gif" class="w-[24px]" />
+            </div>
             <ChatListChat :messages="messages" :thinking="botThinking" />
             <ChatItem v-if="currentMsg" :item="currentMsg" :thinking="botThinking" />
           </div>
