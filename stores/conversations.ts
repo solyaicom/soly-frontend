@@ -4,21 +4,21 @@ import { createNewConversation, deleteConversationById, fetchConversations, find
 import { IAgent, IChatMessage, IConversation } from "~/services/api/chat/type";
 
 type ConversationState = {
-  histories: IConversation[],
-  conv?: IConversation,
-  convID?: string,
-  currentMessage: string,
-  messages: IChatMessage[],
-  currentAgent?: IAgent,
+  histories: IConversation[];
+  conv?: IConversation;
+  convID?: string;
+  currentMessage: string;
+  messages: IChatMessage[];
+  currentAgent?: IAgent;
 };
 
 export const useConversationStore = defineStore("conversations", {
-  state: ():ConversationState => ({
+  state: (): ConversationState => ({
     histories: [],
     conv: undefined,
     convID: undefined,
     currentMessage: "",
-    messages: [] ,
+    messages: [],
     currentAgent: undefined,
   }),
   actions: {
@@ -59,21 +59,20 @@ export const useConversationStore = defineStore("conversations", {
     },
     async init(conv?: IConversation) {
       if (!this.histories.length) {
-        this.histories = await fetchConversations()
+        this.histories = await fetchConversations();
       }
 
-
       if (!conv && this.convID) {
-        conv = await findConversationById(this.convID)
+        conv = await findConversationById(this.convID);
       }
 
       if (conv) {
-        return this.change(conv)
+        return this.change(conv);
       }
     },
-    async change(conv?: IConversation, addNew?: boolean) {
+    async change(conv?: IConversation, addNew?: boolean, newTab?: boolean) {
       if (!conv) {
-        this.convID = '';
+        this.convID = "";
         this.conv = { agent: this.currentAgent, name: "New Chat" } as any;
         return window.history.replaceState({}, "", `/c`);
       }
@@ -84,9 +83,10 @@ export const useConversationStore = defineStore("conversations", {
       }
 
       this.conv = conv;
-      this.convID = conv.id
-
-      conv && window.history.replaceState({}, "", `/c/${conv.id}`);
+      this.convID = conv.id;
+      if (conv) {
+        window.history.replaceState({}, "", `/c/${conv.id}`);
+      }
     },
     async delete(deleteItem: IConversation) {
       const app = useAppSetting();

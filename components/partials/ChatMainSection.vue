@@ -34,11 +34,21 @@ const lastMsg = computed(() => {
 });
 
 watch(
-  currentConversationID,
-  () => {
-    loading.value = false;
-    fetchListMessage();
-    checkMessageFromStore();
+  () => currentConversation.value?.id,
+  async () => {
+    try {
+      loading.value = false;
+      fetching.value = true;
+
+      await fetchListMessage();
+      checkMessageFromStore();
+      if (conversationStore.conv) {
+        await checkMessageFromNewtab();
+      }
+    } catch (error) {
+    } finally {
+      fetching.value = false;
+    }
   },
   { immediate: true }
 );
@@ -62,6 +72,19 @@ function checkMessageFromStore() {
   }
 }
 
+function checkMessageFromNewtab() {
+  return new Promise((res) =>
+    setTimeout(() => {
+      const message = localStorage.getItem("newtab_message");
+      if (message) {
+        localStorage.removeItem("newtab_message");
+        sendContent(message, false, true);
+      }
+      res(true);
+    }, 400)
+  );
+}
+
 async function fetchListMessage() {
   try {
     const convId = currentConversationID.value;
@@ -72,14 +95,12 @@ async function fetchListMessage() {
     }
 
     if (convId && !conversationStore.currentMessage) {
-      fetching.value = true;
       conversationStore.setMessages([]);
 
       const msgs = convId ? await fetchChatHistory(convId) : [];
       conversationStore.setMessages(msgs);
     }
   } finally {
-    fetching.value = false;
   }
 }
 
@@ -122,12 +143,15 @@ async function onSendMessage(content: string, data?: { action?: "confirm_swap" |
           loading.value = false;
           break;
         case "observation":
+          console.log("observation", JSON.parse(ev.data));
           if (!_currentMsg.data.observations) {
             _currentMsg.data.observations = [];
           }
           _currentMsg.data.observations.push(JSON.parse(ev.data));
           break;
         case "observation_update":
+          console.log("observation_update", JSON.parse(ev.data));
+
           _currentMsg.data.observations?.pop();
           _currentMsg.data.observations?.push(JSON.parse(ev.data));
           break;
@@ -189,15 +213,15 @@ async function onSendMessage(content: string, data?: { action?: "confirm_swap" |
   });
 }
 
-async function sendContent(content: string, fromSaved = false) {
+async function sendContent(content: string, fromSaved = false, fromLocalStorage = false) {
   if (!content) return;
   if (loading.value) return;
   let conv = conversationStore.conv;
 
-  if (!fromSaved) {
+  if (!fromSaved || fromLocalStorage) {
     messages.value.push({ role: "user", id: "", content: content.trim(), completed: true, data: {}, created_at: new Date().toISOString() });
   }
-  if (!conv?.id) {
+  if (!currentConversationID.value) {
     conv = await createNewConversation(conversationStore.currentAgent?.id);
 
     if (!conv)

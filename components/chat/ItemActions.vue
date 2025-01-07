@@ -24,17 +24,10 @@ async function onSendContent(content: string, agent_id: string) {
       description: "Failed to create new conversation",
       duration: 3000,
     });
-  conversationStore.setMessages([
-    {
-      completed: true,
-      content: content,
-      id: "",
-      role: "user",
-      data: {},
-    },
-  ]);
-  conversationStore.setCurrentMessage(content);
-  conversationStore.change(conv, true);
+
+  localStorage.setItem("newtab_message", content);
+  window.open(`/c/${conv.id}`, "_blank");
+
   setTimeout(() => {
     app.changeLoading(false);
   }, 200);
@@ -49,7 +42,12 @@ function onActionClick(action: IAction) {
 
 <template>
   <div class="row-center gap-2 md:gap-3 max-w-[calc(100%-38px)] mt-2 md:mt-3 flex-wrap w-full">
-    <button v-for="(action, idx) in actions" :key="idx" @click="onActionClick(action)" class="flex-1 min-w-fit sm:flex-none row-center py-2 px-3 md:px-6 bg-app-card2 rounded-[6px] justify-center">
+    <button
+      v-for="(action, idx) in actions"
+      :key="idx"
+      @click="onActionClick(action)"
+      class="flex-1 min-w-fit sm:flex-none row-center py-2 px-3 md:px-6 bg-app-card2 rounded-[6px] justify-center"
+    >
       {{ action.label }}
       <img src="/images/icon-arrow-link.svg" class="ml-2" />
     </button>

@@ -1,8 +1,17 @@
 <script setup lang="ts">
+import { fetchTokenAssets } from "~/services/solana/helius-api";
+
 const props = defineProps<{ output: any; inputs: any; token: any }>();
 
 const token = ref<any>(props.token);
 const usdPrice = computed(() => JSON.parse(props.output)?.data?.usd_price || 0);
+
+onMounted(async () => {
+  if (!token.value) {
+    const _token = await fetchTokenAssets([props.inputs.address]);
+    token.value = _token[0];
+  }
+});
 
 function viewScanner(address: string) {
   window.open("https://gmgn.ai/sol/token/" + address, "_blank");
