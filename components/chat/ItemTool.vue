@@ -11,8 +11,10 @@ import ItemTopHolder from "./ItemTopHolder.vue";
 import ItemDevCheck from "./ItemDevCheck.vue";
 import ItemTokenHoldingByHolder from "./ItemTokenHoldingByHolder.vue";
 import ItemTopToken from "./ItemTopToken.vue";
+import ItemFirstDegen from "./ItemFirstDegen.vue";
+import ItemSecondDegen from "./ItemSecondDegen.vue";
 
-const props = defineProps<{ tools: ITool[]; token?: any; completed?: boolean }>();
+const props = defineProps<{ tools: ITool[]; token?: any; completed?: boolean; created_at: string }>();
 
 function checkError(output: string) {
   if (!props.completed) return false;
@@ -22,6 +24,11 @@ function checkError(output: string) {
   return false;
 }
 
+function checkHideTaskName(id: TToolID) {
+  const listToHide = ["degen_first_alert", "degen_second_alert"];
+  return listToHide.includes(id);
+}
+
 function getTaskName(id: TToolID) {
   const taskName = MAPPING_TOOL_NAME[id];
   return taskName || "";
@@ -29,16 +36,16 @@ function getTaskName(id: TToolID) {
 </script>
 
 <template>
-  <div v-for="(item, idx) in props.tools" :key="idx">
-    <div v-if="!!getTaskName(item.id)" class="bg-[#141414] rounded-[6px] mb-2 w-full lg:w-[90%]">
-      <div class="row-center p-2">
+  <template v-for="(item, idx) in props.tools" :key="idx">
+    <div v-if="!!getTaskName(item.id)" class="bg-[#141414] rounded-[6px] w-full">
+      <div v-if="!checkHideTaskName(item.id)" class="row-center p-2">
         <div class="w-[10px] h-[10px] mr-2">
           <img v-if="completed" :src="checkError(item.outputs) ? '/images/icon-task-failer.svg' : '/images/icon-task.svg'" class="w-full h-full" />
           <img v-else src="/images/icon-loading.gif" class="w-[14px]" />
         </div>
         <p class="font-[600] text-[#cacaca]">{{ getTaskName(item.id) }}</p>
       </div>
-      <div v-if="completed" class="border-t-[1px] border-t-[#FFFFFF1A]">
+      <div v-if="completed" :class="{ 'border-t-[1px] border-t-[#FFFFFF1A]': !checkHideTaskName(item.id) }">
         <div v-if="checkError(item.outputs)" class="row-center p-3">
           <div class="h-[48px] w-[48px] rounded-[6px] flex items-center justify-center bg-[#242424]">
             <img src="/images/icon-error.svg" class="w-[24px] h-[24px]" />
@@ -55,10 +62,12 @@ function getTaskName(id: TToolID) {
           <ItemDevCheck v-if="item.id === 'tokensaddressaggdev-check_get' && !!item.outputs" :output="item.outputs" />
           <ItemTokenHoldingByHolder v-if="item.id === 'tokensaddressaggtop-holdersportfolio_get' && !!item.outputs" :output="item.outputs" />
           <ItemTopToken v-if="item.id === 'tokenstop_get' && !!item.outputs" :output="item.outputs" />
+          <ItemFirstDegen v-if="item.id === 'degen_first_alert'" :input="item.inputs" :created_at="created_at" />
+          <ItemSecondDegen v-if="item.id === 'degen_second_alert'" :input="item.inputs" />
         </div>
       </div>
     </div>
-  </div>
+  </template>
 </template>
 
 <style>

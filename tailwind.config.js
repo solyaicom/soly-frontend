@@ -38,7 +38,7 @@ module.exports = {
                     bottom: "-6px",
                     right: "-3px",
                     fontSize: "14px",
-                }
+                },
             },
 
             li: {
@@ -103,6 +103,7 @@ module.exports = {
                     card1: "#242424",
                     card2: "#2f2f2f",
                     card3: "#656565",
+                    card4: "#404040",
                     line1: "#2b2b2b",
                     line2: "rgba(255,255,255,0.2)",
                     line3: "#3d3d3d",

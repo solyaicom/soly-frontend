@@ -141,3 +141,15 @@ export function getTimeLabel(time: number, format = "DD/MM, HH:mm") {
 
   return moment(time).format(format);
 }
+
+export function getTimeToDiff(time: number) {
+  const diff = Math.abs(moment(time * 1000).diff(moment(), "minutes"));
+  if (diff === 0) return "Just now";
+  if (diff < 60) return `${diff} minutes`;
+  if (diff < 24 * 60) return Math.floor(diff / 60) + " hour" + (diff > 120 ? "s" : "");
+  return Math.floor(diff / (24 * 60)) + "d";
+}
+
+export function getTokenExplorerLink(address: string) {
+  return "https://gmgn.ai/sol/token/" + address;
+}

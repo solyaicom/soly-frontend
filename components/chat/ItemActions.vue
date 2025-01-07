@@ -41,7 +41,7 @@ function onActionClick(action: IAction) {
 </script>
 
 <template>
-  <div class="row-center gap-2 md:gap-3 max-w-[calc(100%-38px)] mt-2 md:mt-3 flex-wrap w-full">
+  <div class="row-center gap-2 md:gap-3 max-w-full mt-2 md:mt-3 flex-wrap w-full">
     <button
       v-for="(action, idx) in actions"
       :key="idx"

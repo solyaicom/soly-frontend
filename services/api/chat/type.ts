@@ -35,6 +35,8 @@ export type TToolID =
   | "tokensaddressaggdev-check_get"
   | "tokensaddressaggtop-holdersportfolio_get"
   | "tokenstop_get"
+  | "degen_first_alert"
+  | "degen_second_alert"
   | "tokensaddressaggtop-holders_get";
 
 export interface ITool {
