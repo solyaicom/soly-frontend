@@ -31,18 +31,16 @@ export function transformToPortfolio(address: string, fungibleTokens: FungibleTo
   if (sol) {
     sol.content.metadata.name = "Solana";
   }
-  const tokens: Token[] = fungibleTokens
-    .map((token) => ({
-      mint: token.id,
-      name: token.content.metadata.name,
-      symbol: token.content.metadata.symbol,
-      imageUrl: token.content.files?.[0]?.uri || token.content.links?.image || "",
-      balance: token.token_info.balance / Math.pow(10, token.token_info.decimals),
-      pricePerToken: token.token_info.price_info?.price_per_token || 0,
-      decimals: token.token_info.decimals,
-      usdPrice: (token.token_info.price_info?.price_per_token || 0) * (token.token_info.balance / Math.pow(10, token.token_info.decimals)),
-    }))
-    .filter((token) => token.usdPrice >= 0.5);
+  const tokens: Token[] = fungibleTokens.map((token) => ({
+    mint: token.id,
+    name: token.content.metadata.name,
+    symbol: token.content.metadata.symbol,
+    imageUrl: token.content.files?.[0]?.uri || token.content.links?.image || "",
+    balance: token.token_info.balance / Math.pow(10, token.token_info.decimals),
+    pricePerToken: token.token_info.price_info?.price_per_token || 0,
+    decimals: token.token_info.decimals,
+    usdPrice: (token.token_info.price_info?.price_per_token || 0) * (token.token_info.balance / Math.pow(10, token.token_info.decimals)),
+  }));
 
   const nfts: NFT[] = nonFungibleTokens.map((nft) => ({
     name: nft.content.metadata.name,

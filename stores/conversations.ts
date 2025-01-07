@@ -25,6 +25,7 @@ export const useConversationStore = defineStore("conversations", {
     setMessages(messages: IChatMessage[]) {
       this.messages = messages;
     },
+
     addMessage(message: IChatMessage) {
       this.messages.push(message);
     },

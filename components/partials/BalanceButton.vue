@@ -81,12 +81,12 @@ async function onOpenPortfolio(e: any) {
                       <img :src="token.imageUrl" class="w-[28px] h-[28px] mr-2 rounded-full" />
                       <div>
                         <p class="text-[16px] text-[#cacaca]">{{ token.name }}</p>
-                        <p class="text-[#979797]">${{ formatNumber(token.pricePerToken, 3) }}</p>
+                        <p class="text-[#979797]">{{ token.pricePerToken ? `$${formatNumber(token.pricePerToken, 2)}` : "---" }}</p>
                       </div>
                     </div>
                     <div class="text-end">
                       <p class="font-[600] text-[#cacaca]">{{ formatNumber(token.balance, 3) }}</p>
-                      <p class="text-[#979797]">${{ formatNumber(token.balance * token.pricePerToken, 2) }}</p>
+                      <p class="text-[#979797]">{{ token.pricePerToken ? `$${formatNumber(token.balance * token.pricePerToken, 2)}` : "---" }}</p>
                     </div>
                   </div>
                 </div>
@@ -128,12 +128,12 @@ async function onOpenPortfolio(e: any) {
                     <img :src="token.imageUrl" class="w-[28px] h-[28px] mr-2 rounded-full" />
                     <div>
                       <p class="text-[16px] text-[#cacaca]">{{ token.name }}</p>
-                      <p class="text-[#979797]">${{ formatNumber(token.pricePerToken, 3) }}</p>
+                      <p class="text-[#979797]">{{ token.pricePerToken ? `$${formatNumber(token.pricePerToken, 2)}` : "---" }}</p>
                     </div>
                   </div>
                   <div class="text-end">
                     <p class="font-[600] text-[#cacaca]">{{ formatNumber(token.balance, 3) }}</p>
-                    <p class="text-[#979797]">${{ formatNumber(token.balance * token.pricePerToken, 2) }}</p>
+                    <p class="text-[#979797]">{{ token.pricePerToken ? `$${formatNumber(token.balance * token.pricePerToken, 2)}` : "---" }}</p>
                   </div>
                 </div>
               </div>
