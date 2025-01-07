@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import {formatDate}     from "@vueuse/shared";
-import {useMarkdownIt}  from "~/composables/useMarkdownIt";
+import { formatDate } from "@vueuse/shared";
+import { useMarkdownIt } from "~/composables/useMarkdownIt";
 import { IChatMessage } from "~/services/api/chat/type";
-import ChatObservation  from "./ChatObservation.vue";
-import ItemActions      from "./ItemActions.vue";
-const md = useMarkdownIt()
+import ChatObservation from "./ChatObservation.vue";
+import ItemActions from "./ItemActions.vue";
+const md = useMarkdownIt();
 
 const openPreview = ref(false);
 
@@ -17,7 +17,7 @@ const conversationStore = useConversationStore();
 const app = useAppSetting();
 
 const currentConversation = computed(() => conversationStore.conv);
-const isChannel = computed(() => !!currentConversation.value?.is_readonly)
+const isChannel = computed(() => !!currentConversation.value?.is_readonly);
 
 const currentAgent = computed(() => {
   return conversationStore.conv?.agent || app.agents[0];
@@ -25,15 +25,18 @@ const currentAgent = computed(() => {
 
 function getMessageTime(item: IChatMessage): string {
   if (!isChannel.value) {
-    return ''
+    return "";
   }
-  return `<p data-message-time title="${formatDate(new Date(item.created_at), 'YYYY-MM-DD HH:mm')}">${formatDate(new Date(item.created_at), 'HH:mm')}</p>`
+  return `<p data-message-time title="${formatDate(new Date(item.created_at), "YYYY-MM-DD HH:mm")}">${formatDate(
+    new Date(item.created_at),
+    "HH:mm"
+  )}</p>`;
 }
 </script>
 
 <template>
   <div v-if="isChannel && showPreDate" class="flex justify-center">
-    <div  class="mt-3 rounded-2xl bg-app-card2 inline-block px-3 py-1">{{ formatDate(new Date(item.created_at), 'YYYY-MM-DD') }}</div>
+    <div class="mt-3 rounded-2xl bg-app-card2 inline-block px-3 py-1">{{ formatDate(new Date(item.created_at), "YYYY-MM-DD") }}</div>
   </div>
   <div class="w-full row-center px-3" :class="{ 'justify-end ': item.role === 'user', 'mt-6': !showPreDate, 'mt-3': showPreDate }">
     <div class="w-[94%] row-center overflow-hidden" :class="{ 'justify-end': item.role === 'user' }">
@@ -69,9 +72,7 @@ function getMessageTime(item: IChatMessage): string {
             >
               <div class="markdown flex-1 overflow-hidden line-clamp-2">
                 <div
-                  v-html="
-                    md.render(item.data.reply_message.content)
-                  "
+                  v-html="md.render(item.data.reply_message.content)"
                   class="text-[#ececec] text-[16px] break-words text-start w-full"
                   :class="{
                     'text-[#efefef] mt-0  ': item.role === 'user',

@@ -65,6 +65,7 @@ function checkMessageFromStore() {
 async function fetchListMessage() {
   try {
     const convId = currentConversationID.value;
+
     if (!convId) {
       conversationStore.setMessages([]);
       return;
@@ -121,14 +122,12 @@ async function onSendMessage(content: string, data?: { action?: "confirm_swap" |
           loading.value = false;
           break;
         case "observation":
-          console.log("observation", ev.data);
           if (!_currentMsg.data.observations) {
             _currentMsg.data.observations = [];
           }
           _currentMsg.data.observations.push(JSON.parse(ev.data));
           break;
         case "observation_update":
-          console.log("observation_update", ev.data);
           _currentMsg.data.observations?.pop();
           _currentMsg.data.observations?.push(JSON.parse(ev.data));
           break;
@@ -138,7 +137,7 @@ async function onSendMessage(content: string, data?: { action?: "confirm_swap" |
           break;
         case "message":
           const msg: IChatMessage = JSON.parse(ev.data);
-          console.log("msg", msg);
+
           currentMsg.value = msg;
 
           if (msg.role === "user") return;
@@ -154,7 +153,6 @@ async function onSendMessage(content: string, data?: { action?: "confirm_swap" |
 
             // printMessage(msg);
           } else {
-            console.log(`${msg.role}: ${msg.content}`);
           }
 
           break;
@@ -192,8 +190,10 @@ async function onSendMessage(content: string, data?: { action?: "confirm_swap" |
 }
 
 async function sendContent(content: string, fromSaved = false) {
+  if (!content) return;
   if (loading.value) return;
   let conv = conversationStore.conv;
+
   if (!fromSaved) {
     messages.value.push({ role: "user", id: "", content: content.trim(), completed: true, data: {}, created_at: new Date().toISOString() });
   }
@@ -227,6 +227,7 @@ function onKeyChange(e: any) {
   currentContent.value = content;
   if (e.target.innerText.trim() === "") {
     e.target.innerHTML = "";
+    return;
   }
 
   if (e.key === "Enter" && !e.shiftKey) {
