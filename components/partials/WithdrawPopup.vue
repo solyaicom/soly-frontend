@@ -39,7 +39,7 @@ async function onContinueClick() {
     console.log("rs", rs);
     if (rs)
       toast({
-        description: "Withdraw transaction is success, please wait for processing...",
+        description: "Withdraw transaction is success",
         duration: 4000,
       });
     else {
@@ -79,8 +79,8 @@ watch(
             </div>
             <p class="mr-2">{{ formatNumber(selectedToken?.balance, 3) }}</p>
           </SelectTrigger>
-          <SelectContent>
-            <SelectGroup class="space-y-2">
+          <SelectContent class="p-0">
+            <SelectGroup class="space-y-2 p-0">
               <SelectItem v-for="token in solana.portfolio.tokens" :key="token.mint" :value="token" class="w-full bg-app-card2 h-[56px]">
                 <div class="w-full row-center bg-app-card2 rounded-[0] border-[0] h-[56px]">
                   <img :src="token?.imageUrl" class="w-[28px] h-[28px] rounded-full" />

@@ -103,7 +103,6 @@ function scrollToEnd(smooth = false) {
       } else {
         scrollArea.value.scrollTo({ top: scrollArea.value.scrollHeight, behavior: "smooth" });
       }
-      console.log("scrollArea.value.scrollHeight", scrollArea.value.scrollHeight);
     }
   }, 150);
 }
@@ -165,7 +164,6 @@ async function onSendMessage(content: string, data?: { action?: "confirm_swap" |
   conversationStore.updateCurrentChat();
 
   const access_token = localStorage.getItem("access_token");
-
   await fetchEventSource(`${AppConfig.env.API_BASE_URL}/conversations/${conv?.id || ""}/chat`, {
     method: "POST",
     headers: {
@@ -178,7 +176,6 @@ async function onSendMessage(content: string, data?: { action?: "confirm_swap" |
     openWhenHidden: true,
     onmessage(ev) {
       const _currentMsg = messages.value[messages.value.length - 1];
-
       switch (ev.event) {
         case "error":
           toast({
@@ -233,6 +230,7 @@ async function onSendMessage(content: string, data?: { action?: "confirm_swap" |
           // messages.value.push({ ...currentMsg.value });
           currentMsg.value = null;
           loading.value = false;
+          _currentMsg.completed = true;
           if (data?.action === "confirm_swap") {
             solana.refresh();
           }
@@ -260,7 +258,9 @@ async function onSendMessage(content: string, data?: { action?: "confirm_swap" |
 
 async function sendContent(content: string, fromSaved = false, fromLocalStorage = false) {
   if (!content) return;
+
   if (loading.value) return;
+
   let conv = conversationStore.conv;
 
   if (!fromSaved || fromLocalStorage) {

@@ -124,10 +124,14 @@ async function onOpenPortfolio(e: any) {
             </div>
           </div>
           <p class="text-[#fff] text-[28px] font-[600] mt-4">${{ formatNumber(solana.totalBalance, 2) }}</p>
-          <div class="row-center justify-center">
-            <div class="mt-4 flex flex-col items-center bg-[#1a1a1a] rounded-[12px] p-4 flex-1 cursor-pointer" @click="onOpenDeposit">
+          <div class="mt-4 row-center justify-center">
+            <div class="flex flex-col items-center bg-[#1a1a1a] rounded-[12px] p-4 flex-1 cursor-pointer" @click="onOpenDeposit">
               <img src="/images/icon-deposit.svg" />
               <p>Deposit</p>
+            </div>
+            <div class="ml-3 flex flex-col items-center bg-[#1a1a1a] rounded-[12px] p-4 flex-1 cursor-pointer" @click="onOpenWithdraw">
+              <img src="/images/icon-withdraw.svg" />
+              <p>Withdraw</p>
             </div>
           </div>
           <div class="mt-4">
