@@ -2,6 +2,7 @@
 import Dialog from "../ui/dialog/Dialog.vue";
 import DialogContent from "../ui/dialog/DialogContent.vue";
 import DepositPopup from "./DepositPopup.vue";
+import WithdrawPopup from "./WithdrawPopup.vue";
 
 const solana = useSolana();
 const openPortfolio = ref(false);
@@ -12,6 +13,7 @@ const app = useAppSetting();
 const portfolio_view = ref<HTMLElement | null>(null);
 const portfolio_content = ref<HTMLElement | null>(null);
 const container = ref<HTMLElement | null>(null);
+const openWithdraw = ref(false);
 onClickOutside(container, () => (openPortfolio.value = false));
 
 function viewScanner() {
@@ -20,6 +22,12 @@ function viewScanner() {
 function onOpenDeposit() {
   openPortfolio.value = false;
   openDeposit.value = true;
+}
+
+function onOpenWithdraw() {
+  openPortfolio.value = false;
+  console.log("open withdraw");
+  openWithdraw.value = true;
 }
 
 watch(
@@ -65,10 +73,14 @@ async function onOpenPortfolio(e: any) {
           </div>
           <div class="px-4">
             <p class="text-[#fff] text-[28px] font-[600]">${{ formatNumber(solana.totalBalance, 2) }}</p>
-            <div class="row-center justify-center">
-              <div class="mt-4 flex flex-col items-center bg-[#1a1a1a] rounded-[12px] p-4 flex-1 cursor-pointer" @click="onOpenDeposit">
+            <div class="row-center justify-center mt-4 space-x-3">
+              <div class="flex flex-col items-center bg-[#1a1a1a] rounded-[12px] p-4 flex-1 cursor-pointer" @click="onOpenDeposit">
                 <img src="/images/icon-deposit.svg" />
                 <p>Deposit</p>
+              </div>
+              <div class="flex flex-col items-center bg-[#1a1a1a] rounded-[12px] p-4 flex-1 cursor-pointer" @click="onOpenWithdraw">
+                <img src="/images/icon-withdraw.svg" />
+                <p>Withdraw</p>
               </div>
             </div>
             <div class="mt-4">
@@ -143,5 +155,6 @@ async function onOpenPortfolio(e: any) {
       </DialogContent>
     </Dialog>
     <DepositPopup :open="openDeposit" :onClose="() => (openDeposit = false)" />
+    <WithdrawPopup :open="openWithdraw" :onClose="() => (openWithdraw = false)" />
   </div>
 </template>

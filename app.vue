@@ -2,6 +2,10 @@
 import { useAppSetting } from "./stores/app";
 
 const app = useAppSetting();
+const colorMode = useColorMode();
+onMounted(() => {
+  colorMode.value = "dark";
+});
 </script>
 
 <template>
