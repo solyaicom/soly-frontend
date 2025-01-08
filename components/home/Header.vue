@@ -8,6 +8,7 @@ const menu = ref([
   // { label: "Github", icon: "", url: APP_DATA_LINK.github },
   { label: "Docs", icon: "", url: APP_DATA_LINK.docs },
   { label: "Twitter", icon: "x", url: APP_DATA_LINK.x },
+  { label: "Telegram", icon: "telegram", url: APP_DATA_LINK.telegram },
 ]);
 
 const user = computed(() => authStore.user);

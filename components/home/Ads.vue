@@ -2,23 +2,24 @@
 const ads = ref([
   {
     icon: "ads-click",
-    title: "Effortless \nOne-Click Setup",
-    content: "Launch your AI Agent presence instantly - no coding required. Agents have memory: Chat, Summarize, Save!",
+    title: "Effortless One-Click Setup",
+    content:
+      "Launch your AI Agent instantly- no coding required - and personalize it to follow each user's' trading strategies. Agents have memory: Chat, Summarize, Save!",
   },
   {
     icon: "ads-platform",
-    title: "Engage Seamlessly on Social Platforms",
-    content: "Effortlessly manage a unified presence across all your social media channels.",
+    title: "Master Trading with DeFAI",
+    content: "Integrate onchain activities and leverage AI-driven DeFi for the ultimate trading experience.",
   },
   {
     icon: "ads-data",
-    title: "Insightful On-Chain Data & Trading",
+    title: "Insightful On-Chain Data",
     content: "Buy and sell tokens and NFTs securely, with lightning speed, while enjoying immersive digital experiences.",
   },
   {
     icon: "ads-agent",
     title: "Smart AI Agents for Facile Automation",
-    content: "Transform your workflows with advanced AI agents and tailored automations built to tackle complex tasks. ",
+    content: "Transform your workflows & logics with advanced AI agents and tailored automations built to tackle complex tasks. ",
   },
 ]);
 </script>
@@ -32,7 +33,7 @@ const ads = ref([
         <div class="h-14 w-14 rounded-2xl bg-[#1f1f1f] flex items-center justify-center">
           <NuxtIcon :name="ad.icon" filled class="text-4xl" />
         </div>
-        <p class="text-white font-semibold text-lg sm:text-xl mt-3 mb-4 whitespace-break-spaces">{{ ad.title }}</p>
+        <p class="text-white font-semibold text-lg lg:text-xl mt-3 mb-4 whitespace-break-spaces">{{ ad.title }}</p>
         <p class="text-sm sm:text-base font-light text-home-neutral-400">{{ ad.content }}</p>
       </div>
     </div>

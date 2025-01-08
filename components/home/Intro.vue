@@ -31,6 +31,6 @@
   background: linear-gradient(180deg, #130c14 0%, #000000 100%);
 }
 .icon-eye {
-  @apply w-[5%] min-w-4 sm:min-w-9 sm:max-h-24 h-4/5 bg-white rounded-full;
+  @apply w-[5%] min-w-4 sm:min-w-9 sm:max-h-20 h-4/5 bg-white rounded-full;
 }
 </style>

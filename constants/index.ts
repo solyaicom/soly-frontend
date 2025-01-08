@@ -2,6 +2,7 @@ export const APP_DATA_LINK = {
   x: "https://x.com/Soly_AI",
   docs: "https://docs.solyai.com/soly-ai-agent",
   github: "",
+  telegram: "https://t.me/solyaiportal",
 };
 
 export const SIGN_MESSAGE_DESCRIPTION = "Please sign this message to connect your wallet.";
