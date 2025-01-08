@@ -78,10 +78,10 @@ async function onOpenPortfolio(e: any) {
                 <img src="/images/icon-deposit.svg" />
                 <p>Deposit</p>
               </div>
-              <div class="flex flex-col items-center bg-[#1a1a1a] rounded-[12px] p-4 flex-1 cursor-pointer" @click="onOpenWithdraw">
+              <!-- <div class="flex flex-col items-center bg-[#1a1a1a] rounded-[12px] p-4 flex-1 cursor-pointer" @click="onOpenWithdraw">
                 <img src="/images/icon-withdraw.svg" />
                 <p>Withdraw</p>
-              </div>
+              </div> -->
             </div>
             <div class="mt-4">
               <p class="text-[16px] font-[600] text-[#cacaca]">Token ({{ solana.portfolio.tokens.length }})</p>
@@ -129,10 +129,10 @@ async function onOpenPortfolio(e: any) {
               <img src="/images/icon-deposit.svg" />
               <p>Deposit</p>
             </div>
-            <div class="ml-3 flex flex-col items-center bg-[#1a1a1a] rounded-[12px] p-4 flex-1 cursor-pointer" @click="onOpenWithdraw">
+            <!-- <div class="ml-3 flex flex-col items-center bg-[#1a1a1a] rounded-[12px] p-4 flex-1 cursor-pointer" @click="onOpenWithdraw">
               <img src="/images/icon-withdraw.svg" />
               <p>Withdraw</p>
-            </div>
+            </div> -->
           </div>
           <div class="mt-4">
             <p class="text-[16px] font-[600] text-[#cacaca]">Token ({{ solana.portfolio.tokens.length }})</p>
