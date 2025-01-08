@@ -49,12 +49,14 @@ export const formatNumber = (number?: string | number, behind = 5) => {
   return value;
 };
 
-export function getTimeDurationLabel(time: number) {
+export function getTimeDurationLabel(time: number, onlyHour = false) {
   if (time === 0) return "0s";
-  if (time < 60) return `${time}s`;
+  if (time < 60) return `${Math.floor(time)}s`;
   const m = Math.floor(time / 60);
   const h = Math.floor(m / 60);
-  return `${h}h ${m % 60 ? `${m % 60}m` : ""}`;
+  if (h < 24) return `${h}h ${m % 60 && !onlyHour ? `${m % 60}m` : ""}`;
+
+  return `${Math.floor(h / 24)}d`;
 }
 
 export function formatSeconds(sec?: number): string {

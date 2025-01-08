@@ -12,7 +12,12 @@ const props = defineProps<{
       <span class="text-app-text2">{{ getTimeLabel(new Date(created_at).getTime()) }}</span>
     </div>
     <p class="text-app-text1 mt-1">
-      🚀 ${{ input.token_info?.symbol }} has increased <strong>{{ formatNotationNumber(input.multiply, 2) }}x</strong> with market cap rising from
+      🚀 ${{ input.token_info?.symbol }} has increased <strong>{{ formatNotationNumber(input.multiply, 2) }}x</strong> in
+      {{
+        input.first_message_time
+          ? getTimeDurationLabel((new Date(created_at).getTime() - new Date(input.first_message_time).getTime()) / 1000, true)
+          : ""
+      }}, with market cap rising from
       <strong>{{ formatNotationNumber(input.first_market_cap, 0) }}</strong>
       to <strong>{{ formatNotationNumber(input.token_info?.usd_market_cap, 0) }}</strong>
     </p>
