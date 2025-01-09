@@ -24,6 +24,7 @@ const selectedToken = computed(() => {
 const init = ref<any>(null);
 const usdAmount = computed(() => {
   if (selectedToken.value) {
+    console.log("USD to withdraw", Number(amount.value || 0) * (selectedToken.value.pricePerToken || 0));
     return Number(amount.value || 0) * (selectedToken.value.pricePerToken || 0);
   }
   return 0;
@@ -68,7 +69,7 @@ async function onExcuteWithdraw() {
 }
 
 async function onContinueClick() {
-  if (usdAmount.value < 1) {
+  if (usdAmount.value < MINT_USD_TO_WITHDRAW) {
     toast({
       description: "Amount must be greater than 1",
       duration: 4000,
@@ -191,13 +192,7 @@ watch(
               </div>
             </div>
           </div>
-          <PartialsButton
-            :loading="loading"
-            text="Continue"
-            class="w-[50%] py-3"
-            :disabled="!amount || !address || usdAmount < MINT_USD_TO_WITHDRAW"
-            @click="onContinueClick"
-          />
+          <PartialsButton :loading="loading" text="Continue" class="w-[50%] py-3" :disabled="!amount || !address" @click="onContinueClick" />
           <div class="w-full">
             <p class="font-[600]">Please note that</p>
             <ul class="list-disc pl-6 text-app-text2">
