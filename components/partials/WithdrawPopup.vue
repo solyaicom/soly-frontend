@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { getSolBalance } from "~/services/solana/utils";
-import BtnPhantomConnect from "./BtnPhantomConnect.vue";
 import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { toast } from "../ui/toast";
 import { postExecuteTransfer, postInitNewTransfer } from "~/services/api/wallet/api";
@@ -73,6 +71,14 @@ async function onContinueClick() {
   if (usdAmount.value < 1) {
     toast({
       description: "Amount must be greater than 1",
+      duration: 4000,
+    });
+    return;
+  }
+  const feeAmount = selectedToken.value?.mint === "So11111111111111111111111111111111111111112" ? 0.0005 : 0;
+  if (Number(amount.value) + feeAmount > (selectedToken.value?.balance || 0)) {
+    toast({
+      description: "Amount must be less than balance",
       duration: 4000,
     });
     return;
@@ -154,7 +160,7 @@ watch(
               <input
                 placeholder="Fill wallet address to here"
                 v-model="withdrawAddress"
-                class="outline-none text-end flex-1 h-[32px] bg-transparent mr-3 ml-3"
+                class="outline-none text-end flex-1 h-[32px] bg-transparent mr-1 ml-3"
               />
             </div>
             <div class="line" />

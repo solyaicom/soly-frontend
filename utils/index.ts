@@ -152,3 +152,7 @@ export function getTimeToDiff(time: number) {
 export function getTokenExplorerLink(address: string) {
   return "https://gmgn.ai/sol/token/" + address;
 }
+
+export function getTokenSolscanLink(address: string) {
+  return "https://solscan.io/token/" + address;
+}

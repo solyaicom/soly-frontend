@@ -88,20 +88,28 @@ async function onOpenPortfolio(e: any) {
 
               <div class="min-h-[150px]">
                 <div v-for="(token, idx) in solana.portfolio.tokens" :key="idx" class="mt-2">
-                  <div class="row-center justify-between">
+                  <div class="row-center justify-between group relative">
                     <div class="row-center">
-                      <img :src="token.imageUrl" class="w-[28px] h-[28px] mr-2 rounded-full" />
+                      <a class="w-[28px] h-[28px] mr-2 rounded-full" :href="`https://solscan.io/token/${token.mint}`" target="_blank">
+                        <img :src="token.imageUrl" class="w-full rounded-full" />
+                      </a>
                       <div>
-                        <p class="text-[16px] text-[#cacaca]">{{ token.name }}</p>
-                        <div class="row-center">
+                        <p class="text-[16px] text-[#cacaca]">
+                          {{ token.name }}
+                          <span class="text-[12px] text-[#979797]">({{ token.symbol }})</span>
+                        </p>
+                        <div class="row-center cursor-pointer" @click="copyToClipboard(token.mint)">
                           <p class="text-[#979797]">{{ shortAddress(token.mint) }}</p>
+                          <NuxtIcon name="icon-copy" class="ml-2 text-[#979797]" />
                         </div>
-                        <!-- <p class="text-[#979797]">{{ token.pricePerToken ? `$${formatNumber(token.pricePerToken, 2)}` : "---" }}</p> -->
                       </div>
                     </div>
                     <div class="text-end">
                       <p class="font-[600] text-[#cacaca]">{{ formatNumber(token.balance, 3) }}</p>
                       <p class="text-[#979797]">{{ token.pricePerToken ? `$${formatNumber(token.balance * token.pricePerToken, 2)}` : "---" }}</p>
+                    </div>
+                    <div class="absolute top-0 left-[50%] bg-app-card2 p-2 rounded-[4px] hidden group-hover:block">
+                      <p>${{ formatNumber(token.pricePerToken, 2) }}</p>
                     </div>
                   </div>
                 </div>
