@@ -15,42 +15,95 @@ const props = defineProps<{
 }>();
 const loading = ref(false);
 const solana = useSolana();
-const selectedToken = ref(solana.portfolio.tokens[0]);
 const withdrawAddress = ref("");
+const container = ref<HTMLElement | null>(null);
+const MINT_USD_TO_WITHDRAW = 1;
+
+const selectedAddress = ref("");
+const selectedToken = computed(() => {
+  return solana.portfolio.tokens.find((t) => t.mint === selectedAddress.value);
+});
+const init = ref<any>(null);
+const usdAmount = computed(() => {
+  if (selectedToken.value) {
+    return Number(amount.value || 0) * (selectedToken.value.pricePerToken || 0);
+  }
+  return 0;
+});
+
 watch(
   () => props.open,
   () => {
     openPopup.value = props.open;
     if (openPopup.value) {
-      selectedToken.value = solana.portfolio.tokens[0];
+      selectedAddress.value = solana.portfolio.tokens[0]?.mint || "";
     }
   }
 );
 
-async function onContinueClick() {
-  const txId = await postInitNewTransfer({
-    amount: Number(amount.value),
-    mint: selectedToken.value.mint,
-    to_address: withdrawAddress.value,
-  });
-  console.log("txId", txId);
-  if (txId) {
-    const rs = await postExecuteTransfer(txId);
-    console.log("rs", rs);
-    if (rs)
-      toast({
-        description: "Withdraw transaction is success",
-        duration: 4000,
-      });
-    else {
-      toast({
-        description: "Excute Withdraw is failed, please try again.",
-        duration: 4000,
-      });
-    }
+function scrollPage(side: "left" | "right" = "left") {
+  if (container.value) {
+    container.value.scrollTo({
+      left: side === "left" ? 0 : container.value.scrollWidth * 0.5,
+      behavior: "smooth",
+    });
+  }
+}
+
+async function onExcuteWithdraw() {
+  if (!init.value) return;
+  loading.value = true;
+  const rs = await postExecuteTransfer(init.value);
+  if (rs) {
+    loading.value = false;
+    toast({
+      description: "Withdraw transaction is success",
+      duration: 4000,
+    });
+    openPopup.value = false;
   } else {
     toast({
-      description: "Init Withdraw is failed, please try again.",
+      description: "Excute Withdraw is failed, please try again.",
+      duration: 4000,
+    });
+  }
+}
+
+async function onContinueClick() {
+  if (usdAmount.value < 1) {
+    toast({
+      description: "Amount must be greater than 1",
+      duration: 4000,
+    });
+    return;
+  }
+  try {
+    new PublicKey(withdrawAddress.value);
+  } catch (error) {
+    return toast({
+      description: "Invalid receive address",
+      duration: 4000,
+    });
+  }
+  loading.value = true;
+  const rs = await postInitNewTransfer({
+    amount: Number(amount.value),
+    mint: selectedAddress.value,
+    to_address: withdrawAddress.value,
+  });
+  if (rs) {
+    init.value = rs;
+    loading.value = false;
+
+    setTimeout(() => {
+      if (container.value) {
+        scrollPage("right");
+        return;
+      }
+    }, 200);
+  } else {
+    toast({
+      description: "Create withdrawal is failed, please try again.",
       duration: 4000,
     });
   }
@@ -66,64 +119,106 @@ watch(
 
 <template>
   <Dialog v-model:open="openPopup">
-    <DialogContent class="bg-[#141418] py-8 px-4 border-none flex flex-col items-center">
-      <DialogTitle class="text-center text-[28px] font-[600] mt-2">Withdraw</DialogTitle>
-      <div class="line" />
-      <div class="w-full border-[1px] border-app-line1 rounded-[8px] overflow-hidden">
-        <Select v-model="selectedToken">
-          <SelectTrigger class="w-full row-center bg-app-card2 rounded-[0] border-[0] h-[56px] outline-none px-3 py-2">
-            <img :src="selectedToken?.imageUrl" class="w-[28px] h-[28px] rounded-full" />
-            <div class="flex-1 ml-2">
-              <p class="text-[16px]">{{ selectedToken?.name }}</p>
-              <p class="text-app-text3">{{ selectedToken?.symbol }}</p>
-            </div>
-            <p class="mr-2">{{ formatNumber(selectedToken?.balance, 3) }}</p>
-          </SelectTrigger>
-          <SelectContent class="p-0">
-            <SelectGroup class="space-y-2 p-0">
-              <SelectItem v-for="token in solana.portfolio.tokens" :key="token.mint" :value="token" class="w-full bg-app-card2 h-[56px]">
-                <div class="w-full row-center bg-app-card2 rounded-[0] border-[0] h-[56px]">
-                  <img :src="token?.imageUrl" class="w-[28px] h-[28px] rounded-full" />
-                  <div class="flex-1 ml-2">
-                    <p class="text-[16px]">{{ token?.name }}</p>
-                    <p class="text-app-text3">{{ token?.symbol }}</p>
-                  </div>
-                  <p class="mr-2">{{ formatNumber(token?.balance, 3) }}</p>
+    <DialogContent class="bg-[#141418] border-none flex overflow-hidden">
+      <div ref="container" class="flex w-[100%] overflow-hidden">
+        <div class="flex-shrink-0 flex flex-col w-[100%] items-center pb-8 space-y-4">
+          <DialogTitle class="text-center text-[28px] font-[600] mt-2">Withdraw</DialogTitle>
+          <div class="line" />
+          <div class="w-full border-[1px] border-app-line1 rounded-[8px] overflow-hidden">
+            <Select v-model="selectedAddress">
+              <SelectTrigger class="w-full row-center bg-app-card1 rounded-[0] border-[0] h-[56px] outline-none px-3 py-2">
+                <img :src="selectedToken?.imageUrl" class="w-[28px] h-[28px] rounded-full" />
+                <div class="flex-1 ml-2">
+                  <p class="text-[16px]">{{ selectedToken?.name }}</p>
+                  <p class="text-app-text3">{{ selectedToken?.symbol }}</p>
                 </div>
-              </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-        <div class="row-center justify-between px-3 py-3">
-          <p>To:</p>
-          <input
-            placeholder="Fill wallet address to here"
-            v-model="withdrawAddress"
-            class="outline-none text-end flex-1 h-[32px] bg-transparent mr-3 ml-3"
+                <p class="mr-2">{{ formatNumber(selectedToken?.balance, 3) }}</p>
+              </SelectTrigger>
+              <SelectContent class="p-0">
+                <SelectGroup class="space-y-2 p-0">
+                  <SelectItem v-for="token in solana.portfolio.tokens" :key="token.mint" :value="token.mint" class="w-full bg-app-card2 h-[56px]">
+                    <div class="w-full row-center bg-app-card1 rounded-[0] border-[0] h-[56px]">
+                      <img :src="token?.imageUrl" class="w-[28px] h-[28px] rounded-full" />
+                      <div class="flex-1 ml-2">
+                        <p class="text-[16px]">{{ token?.name }}</p>
+                        <p class="text-app-text3">{{ token?.symbol }}</p>
+                      </div>
+                      <p class="mr-2">{{ formatNumber(token?.balance, 3) }}</p>
+                    </div>
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <div class="row-center justify-between px-3 py-3">
+              <p>To:</p>
+              <input
+                placeholder="Fill wallet address to here"
+                v-model="withdrawAddress"
+                class="outline-none text-end flex-1 h-[32px] bg-transparent mr-3 ml-3"
+              />
+            </div>
+            <div class="line" />
+            <div class="row-center justify-between px-3 py-2">
+              <div>
+                <p>Amount</p>
+                <p class="text-app-text3">Min: ${{ MINT_USD_TO_WITHDRAW }}</p>
+              </div>
+              <div class="flex-1">
+                <div class="row-center flex-1">
+                  <div class="flex-1 flex">
+                    <input
+                      placeholder="Fill amount to here"
+                      v-model="amount"
+                      type="number"
+                      class="outline-none text-end flex-1 h-[30px] bg-transparent mr-6 ml-3"
+                    />
+                  </div>
+                  <button @click="amount = selectedToken?.balance">Max</button>
+                </div>
+                <p class="text-app-text3 text-end mr-12 mt-[-4px]">${{ formatNumber(usdAmount, 2) }}</p>
+              </div>
+            </div>
+          </div>
+          <PartialsButton
+            :loading="loading"
+            text="Continue"
+            class="w-[50%] py-3"
+            :disabled="!amount || !address || usdAmount < MINT_USD_TO_WITHDRAW"
+            @click="onContinueClick"
           />
-        </div>
-        <div class="line" />
-        <div class="row-center justify-between px-3 py-2">
-          <p>Amount</p>
-          <div class="flex-1 flex">
-            <input
-              placeholder="Fill amount to here"
-              v-model="amount"
-              type="number"
-              class="outline-none text-end flex-1 h-[40px] bg-transparent mr-6 ml-3"
-            />
-            <button @click="amount = selectedToken?.balance">Max</button>
+          <div class="w-full">
+            <p class="font-[600]">Please note that</p>
+            <ul class="list-disc pl-6 text-app-text2">
+              <li>Enter the amount and the receiving wallet address you wish to withdraw to.</li>
+              <li>Some tokens can only be withdrawn on the same chain from which you deposited them.</li>
+              <li>Please make sure you have enough gas fees to process the transaction.</li>
+            </ul>
           </div>
         </div>
-      </div>
-      <PartialsButton text="Continue" class="w-[50%] py-3" :disabled="!amount || !address" @click="onContinueClick" />
-      <div class="w-full">
-        <p class="font-[600]">Please note that</p>
-        <ul class="list-disc pl-6 text-app-text2">
-          <li>Enter the amount and the receiving wallet address you wish to withdraw to.</li>
-          <li>Some tokens can only be withdrawn on the same chain from which you deposited them.</li>
-          <li>Please make sure you have enough gas fees to process the transaction.</li>
-        </ul>
+        <div class="flex-shrink-0 flex flex-col w-[100%] items-center pb-8 space-y-4 relative" :class="{ hidden: !init }">
+          <DialogTitle class="text-center text-[28px] font-[600] mt-2">Confirm Withdraw</DialogTitle>
+          <button class="absolute top-[-4px] left-0 cursor-pointer p-1" @click="scrollPage('left')">
+            <img src="/images/icon-arrow-back.svg" />
+          </button>
+          <div class="line" />
+          <div class="text-[16px] w-full border-[1px] border-app-line1 rounded-[8px] overflow-hidden">
+            <div class="font-[600] w-full row-center justify-between bg-app-card1 h-[56px] outline-none px-3 py-2">
+              <p>To:</p>
+              <p>{{ shortAddress(withdrawAddress) }}</p>
+            </div>
+
+            <div class="row-center justify-between p-4">
+              <p>Amount</p>
+              <p>{{ formatNumber(amount, 3) }} {{ selectedToken?.symbol }}</p>
+            </div>
+            <div class="line" />
+            <div class="row-center justify-between p-4">
+              <p>Fee</p>
+              <p>{{ formatNumber(init?.priority_fee, 3) }}</p>
+            </div>
+          </div>
+          <PartialsButton :loading="loading" text="Withdraw" class="w-[50%] py-3" :disabled="!init" @click="onExcuteWithdraw" />
+        </div>
       </div>
     </DialogContent>
   </Dialog>
