@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const props = defineProps<{ output: string }>();
 const data = JSON.parse(props.output).data;
+console.log("data", data);
 const totalPercent = (data.items as { amount_percentage: number }[]).reduce((total, item) => item.amount_percentage + total, 0);
 </script>
 
@@ -37,7 +38,7 @@ const totalPercent = (data.items as { amount_percentage: number }[]).reduce((tot
                   <p class="text-app-text2 text-[12px]">${{ formatNotationNumber(item.usd_value, 2) }}</p>
                 </div>
               </td>
-              <td>{{ item.accu_cost ? `$${formatNotationNumber(item.accu_cost)}` : "--" }}</td>
+              <td>{{ item.accu_cost ? `$${formatNotationNumber(item.entry)}` : "--" }}</td>
               <td>
                 <div v-if="item.profit !== 0">
                   <div class="row-center justify-center">
