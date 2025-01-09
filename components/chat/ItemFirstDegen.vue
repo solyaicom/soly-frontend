@@ -19,18 +19,23 @@ const props = defineProps<{
     </p>
     <div class="border-[2px] border-[#404040] mt-4 rounded-[6px]">
       <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-y-2">
-        <div class="flex flex-row">
-          <div class="w-[32px] h-[32px] md:w-[48px] md:h-[48px] rounded-full overflow-hidden">
-            <img :src="input.token_info?.logo" class="w-full" />
-          </div>
+        <div class="row-center">
+          <a :href="getTokenSolscanLink(input.token_info?.address)" target="_blank">
+            <div class="w-[32px] h-[32px] md:w-[48px] md:h-[48px] rounded-full overflow-hidden">
+              <img :src="input.token_info?.logo" class="w-full" />
+            </div>
+          </a>
           <div class="ml-2">
             <p>
               <span>{{ input.token_info?.name }}</span> <span class="ml-1 text-app-text3 text-[12px]">{{ input.token_info?.symbol }}</span>
             </p>
-            <a class="row-center mt-1 text-app-text1" :href="getTokenExplorerLink(input.token_info?.address)" target="_blank">
-              <p>{{ shortAddress(input.token_info?.address) }}</p>
-              <NuxtIcon name="icon-scanner" class="ml-1" />
-            </a>
+            <div class="row-center">
+              <div class="row-center mt-1 text-app-text1 cursor-pointer" @click="copyToClipboard(input.token_info?.address)">
+                <p>{{ shortAddress(input.token_info?.address) }}</p>
+                <NuxtIcon name="icon-copy" class="ml-1" />
+              </div>
+              <a :href="getTokenExplorerLink(input.token_info?.address)" target="_blank" class="ml-3 mt-1 text-blue-500 underline"> GMGN </a>
+            </div>
           </div>
         </div>
         <div class="grid grid-cols-2">

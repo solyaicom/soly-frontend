@@ -158,7 +158,7 @@ watch(
             <div class="row-center justify-between px-3 py-3">
               <p>To:</p>
               <input
-                placeholder="Fill wallet address to here"
+                placeholder="Enter received address"
                 v-model="withdrawAddress"
                 class="outline-none text-end flex-1 h-[32px] bg-transparent mr-1 ml-3"
               />
@@ -171,17 +171,23 @@ watch(
               </div>
               <div class="flex-1">
                 <div class="row-center flex-1">
-                  <div class="flex-1 flex">
+                  <div class="flex flex-1 relative h-[30px] mt-[-12px]">
                     <input
-                      placeholder="Fill amount to here"
+                      placeholder="Enter Amount"
                       v-model="amount"
                       type="number"
-                      class="outline-none text-end flex-1 h-[30px] bg-transparent mr-6 ml-3"
+                      class="outline-none text-end flex-1 h-full bg-transparent mr-1 ml-3"
                     />
+                    <p class="text-app-text3 text-end mr-1 absolute right-0 bottom-[-12px]">${{ formatNumber(usdAmount, 2) }}</p>
                   </div>
-                  <button @click="amount = selectedToken?.balance">Max</button>
+                  <button
+                    v-if="selectedToken?.mint !== 'So11111111111111111111111111111111111111112'"
+                    @click="amount = selectedToken?.balance"
+                    class="ml-5"
+                  >
+                    Max
+                  </button>
                 </div>
-                <p class="text-app-text3 text-end mr-12 mt-[-4px]">${{ formatNumber(usdAmount, 2) }}</p>
               </div>
             </div>
           </div>
