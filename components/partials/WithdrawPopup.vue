@@ -3,9 +3,7 @@ import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { toast } from "../ui/toast";
 import { postExecuteTransfer, postInitNewTransfer } from "~/services/api/wallet/api";
 
-const { getUser } = useAuthStore();
 const openPopup = ref(false);
-const { publicKey, address, sendTransaction } = useSolConnect();
 const amount = ref("");
 const props = defineProps<{
   open: boolean;
@@ -192,7 +190,7 @@ watch(
               </div>
             </div>
           </div>
-          <PartialsButton :loading="loading" text="Continue" class="w-[50%] py-3" :disabled="!amount || !address" @click="onContinueClick" />
+          <PartialsButton :loading="loading" text="Continue" class="w-[50%] py-3" :disabled="!amount || !withdrawAddress" @click="onContinueClick" />
           <div class="w-full">
             <p class="font-[600]">Please note that</p>
             <ul class="list-disc pl-6 text-app-text2">
