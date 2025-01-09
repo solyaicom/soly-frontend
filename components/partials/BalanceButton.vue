@@ -88,7 +88,7 @@ async function onOpenPortfolio(e: any) {
 
               <div class="min-h-[150px]">
                 <div v-for="(token, idx) in solana.portfolio.tokens" :key="idx" class="mt-2">
-                  <div class="row-center justify-between group relative">
+                  <div class="row-center justify-between">
                     <div class="row-center">
                       <a class="w-[28px] h-[28px] mr-2 rounded-full" :href="`https://solscan.io/token/${token.mint}`" target="_blank">
                         <img :src="token.imageUrl" class="w-full rounded-full" />
@@ -104,13 +104,21 @@ async function onOpenPortfolio(e: any) {
                         </div>
                       </div>
                     </div>
-                    <div class="text-end">
-                      <p class="font-[600] text-[#cacaca]">{{ formatNumber(token.balance, 3) }}</p>
-                      <p class="text-[#979797]">{{ token.pricePerToken ? `$${formatNumber(token.balance * token.pricePerToken, 2)}` : "---" }}</p>
-                    </div>
-                    <div class="absolute top-0 left-[50%] bg-app-card2 p-2 rounded-[4px] hidden group-hover:block">
-                      <p>${{ formatNumber(token.pricePerToken, 2) }}</p>
-                    </div>
+                    <TooltipProvider :delayDuration="0">
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <div class="text-end">
+                            <p class="font-[600] text-[#cacaca]">{{ formatNumber(token.balance, 3) }}</p>
+                            <p class="text-[#979797]">
+                              {{ token.pricePerToken ? `$${formatNumber(token.balance * token.pricePerToken, 2)}` : "---" }}
+                            </p>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent class="z-[1000]" side="left">
+                          <p>Price: ${{ formatNumber(token.pricePerToken, 2) }}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
                 </div>
               </div>

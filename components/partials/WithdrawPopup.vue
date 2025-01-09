@@ -29,6 +29,7 @@ const usdAmount = computed(() => {
 });
 const txhash = ref("");
 const statusChecking = ref(true);
+const interval = ref<any>(0);
 
 watch(
   () => props.open,
@@ -40,14 +41,22 @@ watch(
   }
 );
 
+onUnmounted(() => {
+  clearInterval(interval.value);
+});
+
 async function checkTransactionStatus(tx: string) {
-  const result = await connection.getSignatureStatus(tx, {
-    searchTransactionHistory: true,
+  return new Promise(async (res) => {
+    interval.value = setInterval(async () => {
+      const result = await connection.getSignatureStatus(tx, {
+        searchTransactionHistory: true,
+      });
+      if (result.value?.confirmationStatus === "finalized") {
+        clearInterval(interval.value);
+        return res(true);
+      }
+    }, 1500);
   });
-  if (result.value?.confirmationStatus === "finalized") {
-    return true;
-  }
-  return checkTransactionStatus(tx);
 }
 
 function scrollPage(side: "left" | "right" = "left") {
@@ -141,7 +150,7 @@ watch(
 
 <template>
   <Dialog v-model:open="openPopup">
-    <DialogContent class="bg-[#141418] border-none flex overflow-hidden">
+    <DialogContent class="bg-[#141414] border-none flex overflow-hidden">
       <div ref="container" class="flex w-[100%] overflow-hidden">
         <div class="flex-shrink-0 flex flex-col w-[100%] items-center pb-8 space-y-4">
           <DialogTitle class="text-center text-[28px] font-[600] mt-2">Withdraw</DialogTitle>
@@ -158,8 +167,8 @@ watch(
               </SelectTrigger>
               <SelectContent class="p-0">
                 <SelectGroup class="space-y-2 p-0">
-                  <SelectItem v-for="token in solana.portfolio.tokens" :key="token.mint" :value="token.mint" class="w-full bg-app-card2 h-[56px]">
-                    <div class="w-full row-center bg-app-card1 rounded-[0] border-[0] h-[56px]">
+                  <SelectItem v-for="token in solana.portfolio.tokens" :key="token.mint" :value="token.mint" class="w-full h-[56px]">
+                    <div class="w-full row-center rounded-[0] border-[0] h-[56px]">
                       <img :src="token?.imageUrl" class="w-[28px] h-[28px] rounded-full" />
                       <div class="flex-1 ml-2">
                         <p class="text-[16px]">{{ token?.name }}</p>
@@ -219,8 +228,8 @@ watch(
         </div>
         <div class="flex-shrink-0 flex flex-col w-[100%] items-center pb-8 space-y-4 relative" :class="{ hidden: !init }">
           <DialogTitle class="text-center text-[28px] font-[600] mt-2">Confirm Withdraw</DialogTitle>
-          <button class="absolute top-[-4px] left-0 cursor-pointer p-1" @click="scrollPage('left')">
-            <img src="/images/icon-arrow-back.svg" />
+          <button v-if="!txhash" class="absolute top-[0px] left-0 cursor-pointer p-1" @click="scrollPage('left')">
+            <img src="/images/icon-arrow-back.svg" class="w-[20px]" />
           </button>
           <div class="line" />
           <div class="text-[16px] w-full border-[1px] border-app-line1 rounded-[8px] overflow-hidden">
@@ -238,9 +247,11 @@ watch(
               <p>Fee</p>
               <p>{{ formatNumber(init?.priority_fee, 3) }}</p>
             </div>
+            <div class="line" />
+
             <div v-if="txhash" class="row-center justify-between p-4">
               <p>Txhash</p>
-              <a :href="`https://explorer.solana.com/tx/${txhash}`" class="text-blue-500" target="_blank">
+              <a :href="`https://solscan.io/tx/${txhash}`" class="text-blue-500" target="_blank">
                 <div class="row-center">
                   <p>{{ shortAddress(txhash) }}</p>
                   <img v-if="statusChecking" src="/images/icon-loading.gif" class="w-[18px] ml-2" />
