@@ -5,7 +5,7 @@ export async function postInitNewTransfer(body: { amount: number; mint: string; 
     const { data } = await Fetch.post<{ data: any }>(`@api/wallets/init-transfer`, body);
     return data.data;
   } catch (error: any) {
-    console.error("createNewConversation er", error.response.status);
+    console.error("postInitNewTransfer er", error);
 
     return null;
   }
@@ -16,7 +16,7 @@ export async function postExecuteTransfer(body: { transfer_id: string }): Promis
     const { data } = await Fetch.post<{ data: any }>(`@api/wallets/execute-transfer`, body);
     return data.data;
   } catch (error: any) {
-    console.error("createNewConversation er", error.response.status);
+    console.error("postExecuteTransfer er", error);
 
     return null;
   }

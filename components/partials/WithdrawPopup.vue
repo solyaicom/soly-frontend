@@ -27,6 +27,8 @@ const usdAmount = computed(() => {
   }
   return 0;
 });
+const txhash = ref("");
+const statusChecking = ref(true);
 
 watch(
   () => props.open,
@@ -37,6 +39,16 @@ watch(
     }
   }
 );
+
+async function checkTransactionStatus(tx: string) {
+  const result = await connection.getSignatureStatus(tx, {
+    searchTransactionHistory: true,
+  });
+  if (result.value?.confirmationStatus === "finalized") {
+    return true;
+  }
+  return checkTransactionStatus(tx);
+}
 
 function scrollPage(side: "left" | "right" = "left") {
   if (container.value) {
@@ -52,12 +64,17 @@ async function onExcuteWithdraw() {
   loading.value = true;
   const rs = await postExecuteTransfer(init.value);
   if (rs) {
-    loading.value = false;
-    toast({
-      description: "Withdraw transaction is success",
-      duration: 4000,
-    });
-    openPopup.value = false;
+    setTimeout(async () => {
+      loading.value = false;
+      toast({
+        description: "Withdraw transaction is success",
+        duration: 4000,
+      });
+      txhash.value = rs.tx_signature;
+      const status = await checkTransactionStatus(rs.tx_signature);
+      console.log("status", status);
+      statusChecking.value = false;
+    }, 300);
   } else {
     toast({
       description: "Excute Withdraw is failed, please try again.",
@@ -221,8 +238,18 @@ watch(
               <p>Fee</p>
               <p>{{ formatNumber(init?.priority_fee, 3) }}</p>
             </div>
+            <div v-if="txhash" class="row-center justify-between p-4">
+              <p>Txhash</p>
+              <a :href="`https://explorer.solana.com/tx/${txhash}`" class="text-blue-500" target="_blank">
+                <div class="row-center">
+                  <p>{{ shortAddress(txhash) }}</p>
+                  <img v-if="statusChecking" src="/images/icon-loading.gif" class="w-[18px] ml-2" />
+                  <img v-else src="/images/icon-checked.svg" class="w-[18px] ml-2" />
+                </div>
+              </a>
+            </div>
           </div>
-          <PartialsButton :loading="loading" text="Withdraw" class="w-[50%] py-3" :disabled="!init" @click="onExcuteWithdraw" />
+          <PartialsButton v-if="!txhash" :loading="loading" text="Withdraw" class="w-[50%] py-3" :disabled="!init" @click="onExcuteWithdraw" />
         </div>
       </div>
     </DialogContent>
