@@ -25,6 +25,7 @@ const actionExpired = ref(false);
 const botThinking = ref(false);
 const currentConversationID = computed(() => conversationStore.convID);
 const currentConversation = computed(() => conversationStore.conv);
+const route = useRoute();
 
 const currentAgent = computed(() => {
   return conversationStore.conv?.agent || app.agents[0] || {};
@@ -48,14 +49,9 @@ watch(
   { immediate: true }
 );
 
-watch(
-  () => conversationStore.conv,
-  async () => {
-    if (conversationStore.conv) {
-      await checkMessageFromNewtab();
-    }
-  }
-);
+onMounted(() => {
+  nextTick(() => checkMessageFromNewtab());
+});
 
 onMounted(() => {
   window.addEventListener("wheel", handleScroll);
@@ -114,17 +110,16 @@ function checkMessageFromStore() {
   }
 }
 
-function checkMessageFromNewtab() {
-  return new Promise((res) =>
-    setTimeout(() => {
-      const message = localStorage.getItem("newtab_message");
-      if (message) {
-        localStorage.removeItem("newtab_message");
-        sendContent(message, false, true);
-      }
-      res(true);
-    }, 400)
-  );
+async function checkMessageFromNewtab() {
+  if (route.query.initial_message && route.query.agent_id) {
+    const _conv = await createNewConversation(route.query.agent_id.toString());
+    if (_conv) {
+      conversationStore.change(_conv, true);
+      setTimeout(() => {
+        sendContent(route.query.initial_message!.toString(), false, true);
+      }, 20);
+    }
+  }
 }
 
 async function fetchListMessage() {
@@ -132,16 +127,15 @@ async function fetchListMessage() {
     const convId = currentConversationID.value;
 
     if (!convId) {
-      conversationStore.setMessages([]);
+      // conversationStore.setMessages([]);
       return;
     }
-
     if (convId && !conversationStore.currentMessage) {
-      conversationStore.setMessages([]);
+      // conversationStore.setMessages([]);
       fetching.value = true;
       const msgs = convId ? await fetchChatHistory(convId) : [];
       msgs.length < 20 && (finish.value = true);
-      conversationStore.setMessages(msgs);
+      msgs.length > 0 && conversationStore.setMessages(msgs);
     }
   } finally {
     fetching.value = false;
@@ -266,7 +260,7 @@ async function sendContent(content: string, fromSaved = false, fromLocalStorage 
   if (!fromSaved || fromLocalStorage) {
     messages.value.push({ role: "user", id: "", content: content.trim(), completed: true, data: {}, created_at: new Date().toISOString() });
   }
-  if (!currentConversationID.value) {
+  if (!conv?.id) {
     conv = await createNewConversation(conversationStore.currentAgent?.id);
 
     if (!conv)

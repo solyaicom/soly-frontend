@@ -30,6 +30,7 @@ export const useConversationStore = defineStore("conversations", {
       this.messages.push(message);
     },
     setCurrentAgent(agent?: IAgent) {
+      this.messages = [];
       this.currentAgent = agent;
     },
     async newConversation(agent_id?: string) {
@@ -59,6 +60,7 @@ export const useConversationStore = defineStore("conversations", {
       this.convID = id;
     },
     async init(conv?: IConversation) {
+      this.messages = [];
       if (!this.histories.length) {
         this.histories = await fetchConversations();
       }
