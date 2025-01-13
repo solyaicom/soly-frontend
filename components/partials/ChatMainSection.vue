@@ -66,6 +66,7 @@ async function onLoadMore() {
   if (fetching.value) return;
   if (finish.value) return;
   if (loadMore.value) return;
+  if (messages.value[0].id === "") return;
   if (conversationStore.messages.length < 20) return;
   loadMore.value = true;
   if (scrollArea.value) {
