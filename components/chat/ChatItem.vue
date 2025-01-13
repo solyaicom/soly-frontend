@@ -46,7 +46,7 @@ const currentAgent = computed(() => {
       </div>
     </div>
     <Dialog v-if="item.data.reply_message" v-model:open="openPreview">
-      <DialogContent class="bg-[#141414] py-3 px-3 border-none max-h-[calc(100vh-100px)] overflow-scroll">
+      <DialogContent class="bg-[#141414] py-3 px-3 border-none max-h-[calc(100vh-100px)] md:max-w-[720px] overflow-scroll">
         <div class="row-center">
           <img :src="currentAgent.avatar_url" class="w-[36px]" />
           <span class="ml-2 font-bold text-[16px]">{{ currentAgent.name }}</span>
