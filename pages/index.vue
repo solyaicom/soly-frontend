@@ -15,6 +15,7 @@ useSeoMeta({
     <HomeIntro />
     <HomeAds />
     <HomeFeatures />
+    <HomePartners />
     <HomeFaqs />
     <HomeFooter />
   </div>
