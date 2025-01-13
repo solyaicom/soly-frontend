@@ -73,7 +73,7 @@ export const useConversationStore = defineStore("conversations", {
         return this.change(conv);
       }
     },
-    async change(conv?: IConversation, addNew?: boolean, newTab?: boolean) {
+    change(conv?: IConversation, addNew?: boolean, newTab?: boolean) {
       if (!conv) {
         this.convID = "";
         this.conv = { agent: this.currentAgent, name: "New Chat" } as any;

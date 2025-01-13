@@ -115,9 +115,7 @@ async function checkMessageFromNewtab() {
     const _conv = await createNewConversation(route.query.agent_id.toString());
     if (_conv) {
       conversationStore.change(_conv, true);
-      setTimeout(() => {
-        sendContent(route.query.initial_message!.toString(), false, true);
-      }, 20);
+      sendContent(route.query.initial_message!.toString(), false, true);
     }
   }
 }
