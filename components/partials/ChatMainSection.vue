@@ -125,6 +125,7 @@ async function fetchListMessage() {
     const convId = currentConversationID.value;
 
     if (!convId) {
+      finish.value = true;
       // conversationStore.setMessages([]);
       return;
     }
