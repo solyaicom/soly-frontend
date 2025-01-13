@@ -1,5 +1,6 @@
 import { toast } from "~/components/ui/toast";
 import moment from "moment";
+import { TToolID } from "~/services/api/chat/type";
 export function shortAddress(address?: string, numOfShow = 4) {
   if (!address) return "";
   const tmpAddress = address.trim();
@@ -103,6 +104,21 @@ export function copyToClipboard(str: string) {
     });
   } finally {
     document.body.removeChild(textarea);
+  }
+}
+
+export function convertToolOutput(output: string, toolId?: TToolID) {
+  try {
+    if (!output) return undefined;
+    if (toolId === "dataset_4f7c1e48-f62d-4f75-bf3b-80d4167a50a9") return convertTokenOutput(output);
+    let outputStr = output.split("tool response: ")[0] || "";
+    if (outputStr.endsWith(".")) {
+      outputStr = outputStr.slice(0, -1);
+    }
+    const parseOutput = JSON.parse(output.split("tool response: ")[0]);
+    return parseOutput.output?.data || parseOutput.data || parseOutput;
+  } catch (error) {
+    return undefined;
   }
 }
 

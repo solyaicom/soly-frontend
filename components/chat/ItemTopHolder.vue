@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{ output: string }>();
-const data = JSON.parse(props.output).data;
+const data = convertToolOutput(props.output);
 const totalPercent = (data.items as { amount_percentage: number }[]).reduce((total, item) => item.amount_percentage + total, 0);
 </script>
 

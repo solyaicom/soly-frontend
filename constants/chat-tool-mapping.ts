@@ -5,6 +5,7 @@ export const MAPPING_TOOL_NAME: { [key in TToolID]: string } = {
   tokensaddressprice_get: "Search Token Price",
   solyAiTradingQuoteAPIPost: "Preview Swap Detail",
   solyAiTradingBalanceGet: "Check Token Balance",
+  walletsaddressassets_get: "Search Wallet Porfolio",
   solyAiTradingQuoteExecutePost: "Swap Token",
   "dataset_4f7c1e48-f62d-4f75-bf3b-80d4167a50a9": "Search Token Address",
   "tokensaddressaggtop-holders_get": "Scan Top Holders",

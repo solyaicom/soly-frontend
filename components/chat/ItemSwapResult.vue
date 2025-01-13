@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const props = defineProps<{ output: string }>();
 function onViewScanner() {
-  const output0 = props.output.split("tool response: ")[0];
-  const parseOutput = JSON.parse(output0);
-  const txhash = parseOutput.output.tx_signature;
+  const data = convertToolOutput(props.output);
+  const txhash = data.tx_signature;
+
   window.open(`https://solscan.io/tx/${txhash}`, "_blank");
 }
 </script>

@@ -1,23 +1,13 @@
 <script setup lang="ts">
-import { ITool } from "~/services/api/chat/type";
-import { fetchTokenAssets } from "~/services/solana/helius-api";
-import { IFullToken } from "~/services/solana/type";
+const props = defineProps<{ output: string }>();
 
-const props = defineProps<{ item: ITool }>();
-
-const token = ref<IFullToken | null>(null);
 const { getUser } = useAuthStore();
-const amount = ref(0);
-
-onMounted(async () => {
-  const inputs = props.item.inputs;
-  if (inputs?.mint) {
-    const [_token] = await fetchTokenAssets([inputs.mint]);
-    token.value = _token;
-  }
-  const output = convertToolOutput(props.item.outputs);
-  amount.value = output.amount || 0;
-});
+const solana = useSolana();
+const data = convertToolOutput(props.output);
+function findBalanceUSD(address: string) {
+  const _token = solana.portfolio.tokens.find((token) => token.mint === address);
+  return _token?.usdPrice || 0;
+}
 </script>
 
 <template>
@@ -33,10 +23,10 @@ onMounted(async () => {
         <NuxtIcon name="icon-copy" class="text-[20px] text-[#979797]" />
       </div>
       <div class="line mt-3 bg-[#2c2c2c]"></div>
-      <div v-if="!!token" class="mt-3 space-y-3">
+      <div v-for="token in data.items" :key="token.address" class="mt-3 space-y-3">
         <div class="row-center">
-          <div class="w-[48px] h-[48px] rounded-full overflow-hidden">
-            <img :src="token?.imageUrl" class="w-full h-full" />
+          <div class="w-[28px] h-[28px] md:w-[40px] md:h-[40px] rounded-full overflow-hidden">
+            <img :src="token?.logo" class="w-full h-full" />
           </div>
           <div class="flex-1 ml-2">
             <p class="text-[#cacaca] font-[600]">
@@ -45,8 +35,8 @@ onMounted(async () => {
             <p class="text-[#979797]">{{ shortAddress(token?.address) }}</p>
           </div>
           <div class="text-end">
-            <p class="text-[#cacaca] font-[600]">{{ formatNumber(amount) }} SOL</p>
-            <p class="text-[12px] text-[#656565] font-[400]">${{ formatNumber(amount * (token?.price_per_token || 0), 2) }}</p>
+            <p class="text-[#cacaca] font-[600]">{{ formatNumber(Number(token.amount_float), 3) }} {{ token.symbol }}</p>
+            <p class="text-[12px] text-[#656565] font-[400]">${{ formatNumber(findBalanceUSD(token.address), 2) }}</p>
           </div>
         </div>
       </div>

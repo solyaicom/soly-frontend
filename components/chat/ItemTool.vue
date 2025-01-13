@@ -13,6 +13,8 @@ import ItemTokenHoldingByHolder from "./ItemTokenHoldingByHolder.vue";
 import ItemTopToken from "./ItemTopToken.vue";
 import ItemFirstDegen from "./ItemFirstDegen.vue";
 import ItemSecondDegen from "./ItemSecondDegen.vue";
+import { MAPPING_TOOL_COMPONENT } from "~/constants/mapping-tool-component";
+import ItemWalletPorfolio from "./ItemWalletPorfolio.vue";
 
 const props = defineProps<{ tools: ITool[]; token?: any; completed?: boolean; created_at: string; isPreview?: boolean }>();
 function checkError(output: string) {
@@ -28,21 +30,21 @@ function checkHideTaskName(id: TToolID) {
   return listToHide.includes(id);
 }
 
-function getTaskName(id: TToolID) {
-  const taskName = MAPPING_TOOL_NAME[id];
-  return taskName || "";
+function getTool(id: TToolID) {
+  const tool = MAPPING_TOOL_COMPONENT[id];
+  return tool;
 }
 </script>
 
 <template>
   <template v-for="(item, idx) in props.tools" :key="idx">
-    <div v-if="!!getTaskName(item.id)" class="rounded-[6px] w-full" :class="{ 'bg-app-card2': !isPreview }">
+    <div v-if="!!getTool(item.id)" class="rounded-[6px] w-full" :class="{ 'bg-app-card2': !isPreview }">
       <div v-if="!checkHideTaskName(item.id)" class="row-center p-2">
         <div class="w-[10px] h-[10px] mr-2">
           <img v-if="completed" :src="checkError(item.outputs) ? '/images/icon-task-failer.svg' : '/images/icon-task.svg'" class="w-full h-full" />
           <img v-else src="/images/icon-loading.gif" class="w-[14px]" />
         </div>
-        <p class="font-[600] text-[#cacaca]">{{ getTaskName(item.id) }}</p>
+        <p class="font-[600] text-[#cacaca]">{{ getTool(item.id).name }}</p>
       </div>
       <div v-if="completed" :class="{ 'border-t-[1px] border-t-[#FFFFFF1A]': !checkHideTaskName(item.id) }">
         <div v-if="checkError(item.outputs)" class="row-center p-3">
@@ -63,6 +65,7 @@ function getTaskName(id: TToolID) {
           <ItemTopToken v-if="item.id === 'tokenstop_get' && !!item.outputs" :output="item.outputs" />
           <ItemFirstDegen v-if="item.id === 'degen_first_alert'" :input="item.inputs" :created_at="created_at" :is-preview="isPreview" />
           <ItemSecondDegen v-if="item.id === 'degen_second_alert'" :input="item.inputs" :created_at="created_at" />
+          <ItemWalletPorfolio v-if="item.id === 'walletsaddressassets_get' && !!item.outputs" :output="item.outputs" />
         </div>
       </div>
     </div>

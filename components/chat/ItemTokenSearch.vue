@@ -2,7 +2,7 @@
 import { convertTokenOutput } from "~/utils";
 
 const props = defineProps<{ output: string }>();
-const data = computed(() => convertTokenOutput(props.output));
+const data = computed(() => convertToolOutput(props.output, "dataset_4f7c1e48-f62d-4f75-bf3b-80d4167a50a9"));
 
 async function onCopy(address: string) {
   copyToClipboard(address);

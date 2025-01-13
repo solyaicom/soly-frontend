@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{ output: string }>();
-const data = JSON.parse(props.output).data;
+const data = convertToolOutput(props.output);
 </script>
 
 <template>

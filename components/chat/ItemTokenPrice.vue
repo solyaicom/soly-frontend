@@ -4,7 +4,7 @@ import { fetchTokenAssets } from "~/services/solana/helius-api";
 const props = defineProps<{ output: any; inputs: any; token: any }>();
 
 const token = ref<any>(props.token);
-const usdPrice = computed(() => JSON.parse(props.output)?.data?.usd_price || 0);
+const usdPrice = convertToolOutput(props.output).usd_price;
 
 onMounted(async () => {
   if (!token.value) {

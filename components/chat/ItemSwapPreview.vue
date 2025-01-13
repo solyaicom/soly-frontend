@@ -11,14 +11,7 @@ const listOutToken = ref<IFullToken[]>([]);
 
 onMounted(async () => {
   if (props.output) {
-    let outputStr = props.output || "";
-    if (outputStr.endsWith(".")) {
-      outputStr = outputStr.slice(0, -1);
-    }
-    const [outputStrReal] = outputStr.split("tool response: ");
-
-    const outputs = JSON.parse(outputStrReal).output;
-    const expire = outputs.expire_at;
+    const outputs = convertToolOutput(props.output);
     const _plans = outputs.plans || ([] as any[]);
     const mints = _plans.map((pl: any) => pl.output_mint);
     const tokens = await fetchTokenAssets([_plans[0].input_mint, ...mints]);
