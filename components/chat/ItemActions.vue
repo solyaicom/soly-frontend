@@ -24,12 +24,18 @@ async function onSendContent(content: string, agent_id: string) {
       description: "Failed to create new conversation",
       duration: 3000,
     });
-
   localStorage.setItem("newtab_message", content);
-  window.open(`/c/${conv.id}`, "_blank");
+
+  const linkElement = document.createElement("a");
+  linkElement.href = `/c/${conv.id}`;
+  linkElement.target = "_blank";
+  linkElement.click();
+
+  // window.open(`/c/${conv.id}`, "_blank");
 
   setTimeout(() => {
     app.changeLoading(false);
+    document.removeChild(linkElement);
   }, 200);
 }
 function onActionClick(action: IAction) {
