@@ -53,12 +53,12 @@ onMounted(() => {
   nextTick(() => checkMessageFromNewtab());
 });
 
-onMounted(() => {
-  window.addEventListener("wheel", handleScroll);
+watch(scrollArea, () => {
+  scrollArea.value && scrollArea.value?.addEventListener("scroll", handleScroll);
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener("wheel", handleScroll);
+  scrollArea.value && scrollArea.value.removeEventListener("scroll", handleScroll);
 });
 
 async function onLoadMore() {
@@ -123,7 +123,7 @@ async function checkMessageFromNewtab() {
 async function fetchListMessage() {
   try {
     const convId = currentConversationID.value;
-
+    finish.value = false;
     if (!convId) {
       finish.value = true;
       // conversationStore.setMessages([]);
