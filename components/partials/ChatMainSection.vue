@@ -26,6 +26,7 @@ const botThinking = ref(false);
 const currentConversationID = computed(() => conversationStore.convID);
 const currentConversation = computed(() => conversationStore.conv);
 const route = useRoute();
+const autoSroll = ref(true);
 
 const currentAgent = computed(() => {
   return conversationStore.conv?.agent || app.agents[0] || {};
@@ -65,6 +66,7 @@ async function onLoadMore() {
   if (fetching.value) return;
   if (finish.value) return;
   if (loadMore.value) return;
+  if (conversationStore.messages.length < 20) return;
   loadMore.value = true;
   if (scrollArea.value) {
     currentScrollHeight.value = scrollArea.value?.scrollHeight;
@@ -87,20 +89,25 @@ async function onLoadMore() {
 function handleScroll(e: any) {
   if (scrollArea.value) {
     const scrollTop = scrollArea.value.scrollTop;
+    const scrollHeight = scrollArea.value?.scrollHeight;
+    const windowHeight = window.innerHeight;
+    // console.log("scrollTOp", scrollTop, scrollHeight, scrollArea.value.clientHeight);
+
     if (scrollTop < 200) onLoadMore();
+    // autoSroll.value = scrollTop >= scrollHeight - scrollArea.value.clientHeight - 30;
   }
 }
 
 function scrollToEnd(smooth = false) {
-  setTimeout(() => {
-    if (scrollArea.value) {
+  nextTick(() => {
+    if (scrollArea.value && autoSroll.value) {
       if (!smooth) {
         scrollArea.value.scrollTop = scrollArea.value.scrollHeight + 300;
       } else {
         scrollArea.value.scrollTo({ top: scrollArea.value.scrollHeight, behavior: "smooth" });
       }
     }
-  }, 150);
+  });
 }
 
 function checkMessageFromStore() {
@@ -142,9 +149,9 @@ async function fetchListMessage() {
 }
 
 watch(
-  () => [messages.value.length, scrollArea.value],
+  () => [messages.value.length, autoSroll.value, scrollArea.value],
   (newValue) => {
-    scrollArea.value && !loadMore.value && scrollToEnd();
+    scrollArea.value && !loadMore.value && autoSroll.value && scrollToEnd();
   }
 );
 
