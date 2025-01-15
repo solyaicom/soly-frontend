@@ -64,5 +64,6 @@ export interface IAgent {
 
 export interface IAgentMetadata {
   capabilities: { sub_title: string; title: string }[];
+  suggested_messages: { message: string }[];
   socials: { icon_url: string; title: string; url: string }[];
 }

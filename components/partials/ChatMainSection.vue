@@ -363,6 +363,16 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
             <p class="mt-4 text-center text-[16px] text-[#CACACA] px-4">
               {{ currentAgent.description || `👋 Hi, I'm ${currentAgent.name} — Chat with me` }}
             </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 w-full px-10">
+              <div
+                @click="sendContent(suggest.message)"
+                v-for="(suggest, idx) in currentAgent.metadata?.suggested_messages || []"
+                :key="idx"
+                class="w-full text-[#CACACA] px-4 py-2 rounded-[4px] border-[1px] border-app-line1 cursor-pointer hover:bg-app-card1"
+              >
+                <p class="line-clamp-1">{{ suggest.message }}</p>
+              </div>
+            </div>
           </div>
         </div>
         <div class="w-full px-3 pb-4">
