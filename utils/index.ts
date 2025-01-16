@@ -122,7 +122,7 @@ export function convertToolOutput(output: string, toolId?: TToolID) {
   }
 }
 
-export function convertTokenOutput(output: string): any[] {
+function convertTokenOutput(output: string): any[] {
   if (!output) return [];
   const tokensStr = output.split("\n");
   const tokens = tokensStr.map((str) => {

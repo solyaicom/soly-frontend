@@ -2,7 +2,6 @@
 import { IObservation, ITool, TToolID } from "~/services/api/chat/type";
 import ItemTokenSearch from "./ItemTokenSearch.vue";
 import ItemTokenPrice from "./ItemTokenPrice.vue";
-import { convertTokenOutput } from "~/utils";
 import ItemSwapPreview from "./ItemSwapPreview.vue";
 import ItemBalanceGet from "./ItemBalanceGet.vue";
 import { MAPPING_TOOL_NAME } from "~/constants/chat-tool-mapping";
@@ -15,6 +14,8 @@ import ItemFirstDegen from "./ItemFirstDegen.vue";
 import ItemSecondDegen from "./ItemSecondDegen.vue";
 import { MAPPING_TOOL_COMPONENT } from "~/constants/mapping-tool-component";
 import ItemWalletPorfolio from "./ItemWalletPorfolio.vue";
+import ItemPoolDetail from "./ItemPoolDetail.vue";
+import ItemFindPool from "./ItemFindPool.vue";
 
 const props = defineProps<{ tools: ITool[]; token?: any; completed?: boolean; created_at: string; isPreview?: boolean }>();
 function checkError(output: string) {
@@ -66,6 +67,8 @@ function getTool(id: TToolID) {
           <ItemFirstDegen v-if="item.id === 'degen_first_alert'" :input="item.inputs" :created_at="created_at" :is-preview="isPreview" />
           <ItemSecondDegen v-if="item.id === 'degen_second_alert'" :input="item.inputs" :created_at="created_at" />
           <ItemWalletPorfolio v-if="item.id === 'walletsaddressassets_get' && !!item.outputs" :output="item.outputs" />
+          <ItemPoolDetail v-if="item.id === 'dlmmpairsaddress_get' && !!item.outputs" :output="item.outputs" />
+          <ItemFindPool v-if="item.id === 'dlmmpairs_get' && !!item.outputs" :output="item.outputs" />
         </div>
       </div>
     </div>

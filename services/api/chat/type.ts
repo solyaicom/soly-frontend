@@ -38,6 +38,8 @@ export type TToolID =
   | "degen_first_alert"
   | "degen_second_alert"
   | "walletsaddressassets_get"
+  | "dlmmpairsaddress_get"
+  | "dlmmpairs_get"
   | "tokensaddressaggtop-holders_get";
 
 export interface ITool {

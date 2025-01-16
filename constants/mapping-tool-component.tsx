@@ -26,4 +26,6 @@ export const MAPPING_TOOL_COMPONENT: { [key in TToolID]: { name: string; compone
     tokenstop_get: { name: "Search Top Tokens", component: ItemTopToken },
     degen_first_alert: { name: "", component: ItemBalanceGet },
     degen_second_alert: { name: "", component: ItemSecondDegen },
+    dlmmpairsaddress_get: { name: "Search for DLMM pool details", component: ItemTopToken },
+    dlmmpairs_get: { name: "Find DLMM pools on Meteora", component: ItemTopToken },
 };

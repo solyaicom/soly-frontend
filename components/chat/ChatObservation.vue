@@ -14,7 +14,7 @@ const token = computed(() => {
     });
   });
   if (!findOutputToken) return null;
-  const _token = convertTokenOutput(findOutputToken);
+  const _token = convertToolOutput(findOutputToken);
   return _token.map((item: any) => ({
     ...item,
     imageUrl: item.icon,

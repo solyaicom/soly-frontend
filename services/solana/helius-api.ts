@@ -5,7 +5,7 @@ type HeliusMethod = "searchAssets" | "getBalance";
 
 const objToken: any = {};
 
-export async function fetchTokenAssets(addresses: string[]) {
+export async function fetchTokenAssets(addresses: string[]): Promise<IFullToken[]> {
   try {
     const storeTokens: any[] = [];
     addresses.forEach((address) => {
@@ -35,7 +35,7 @@ export async function fetchTokenAssets(addresses: string[]) {
         symbol: item.token_info.symbol,
         price_per_token: item.token_info.price_info?.price_per_token || 0,
         imageUrl: item.content.files?.[0]?.uri || item.content.links?.image || "",
-        name: item.content.metadata.name,
+        name: addresses[idx] === "So11111111111111111111111111111111111111112" ? "Solana" : item.content.metadata.name,
         address: addresses[idx],
       };
       objToken[addresses[idx]] = token;

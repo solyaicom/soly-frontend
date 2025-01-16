@@ -46,8 +46,20 @@ watch(
 
     await fetchListMessage();
     checkMessageFromStore();
+    setTimeout(() => {
+      fetching.value = false;
+    }, 150);
   },
   { immediate: true }
+);
+
+watch(
+  () => conversationStore.currentMessage,
+  () => {
+    if (fetching.value || !conversationStore.currentMessage || !conversationStore.convID) return;
+    console.log("new message");
+    checkMessageFromStore();
+  }
 );
 
 onMounted(() => {
@@ -113,7 +125,7 @@ function scrollToEnd(smooth = false) {
 
 function checkMessageFromStore() {
   if (conversationStore.currentMessage) {
-    sendContent(conversationStore.currentMessage, true);
+    sendContent(conversationStore.currentMessage);
     conversationStore.setCurrentMessage("");
   }
 }
@@ -123,7 +135,7 @@ async function checkMessageFromNewtab() {
     const _conv = await createNewConversation(route.query.agent_id.toString());
     if (_conv) {
       conversationStore.change(_conv, true);
-      sendContent(route.query.initial_message!.toString(), false, true);
+      sendContent(route.query.initial_message!.toString());
     }
   }
 }
@@ -145,7 +157,6 @@ async function fetchListMessage() {
       msgs.length > 0 && conversationStore.setMessages(msgs);
     }
   } finally {
-    fetching.value = false;
   }
 }
 
@@ -257,17 +268,16 @@ async function onSendMessage(content: string, data?: { action?: "confirm_swap" |
   });
 }
 
-async function sendContent(content: string, fromSaved = false, fromLocalStorage = false) {
+async function sendContent(content: string) {
   if (!content) return;
 
   if (loading.value) return;
 
   let conv = conversationStore.conv;
 
-  if (!fromSaved || fromLocalStorage) {
-    messages.value.push({ role: "user", id: "", content: content.trim(), completed: true, data: {}, created_at: new Date().toISOString() });
-  }
   if (!conv?.id) {
+    conversationStore.setCurrentMessage(content);
+
     conv = await createNewConversation(conversationStore.currentAgent?.id);
 
     if (!conv)
@@ -275,9 +285,9 @@ async function sendContent(content: string, fromSaved = false, fromLocalStorage 
         description: "Failed to create new conversation",
         duration: 3000,
       });
-    conversationStore.setCurrentMessage(content);
     return conversationStore.change(conv, true);
   }
+  messages.value.push({ role: "user", id: "", content: content.trim(), completed: true, data: {}, created_at: new Date().toISOString() });
 
   return onSendMessage(content.trim());
 }
