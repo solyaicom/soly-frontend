@@ -22,7 +22,7 @@ onMounted(async () => {
           <img :src="tokens[1]?.imageUrl" class="w-[32px] md:w-[44px] absolute right-0 top-0 rounded-full" />
         </div>
         <div class="ml-2">
-          <div class="md:row-center">
+          <div class="sm:row-center">
             <p class="text-[16px] font-[600]">{{ data.name }}</p>
             <div class="row-center ml-2 text-[12px]">
               <div class="row-center">

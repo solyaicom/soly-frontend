@@ -19,6 +19,9 @@ module.exports = {
                 fontSize: "24px",
             },
             h2: {
+                fontSize: "20px",
+            },
+            h3: {
                 fontSize: "18px",
             },
             p: {
