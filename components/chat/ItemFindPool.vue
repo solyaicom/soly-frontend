@@ -62,13 +62,13 @@ function onViewDetail(address: string) {
           <tr class="text-app-text2 text-start">
             <td>Pool</td>
             <td>
-              <div class="row-center" @click="onSortClick('liq')">Liquidity <NuxtIcon name="icon-sort" /></div>
+              <div class="row-center cursor-pointer" @click="onSortClick('liq')">Liquidity <NuxtIcon name="icon-sort" /></div>
             </td>
             <td>
-              <div class="row-center" @click="onSortClick('vol')">24h Vol <NuxtIcon name="icon-sort" /></div>
+              <div class="row-center cursor-pointer" @click="onSortClick('vol')">24h Vol <NuxtIcon name="icon-sort" /></div>
             </td>
             <td>
-              <div class="row-center" @click="onSortClick('fee')">24h Fee/TVL <NuxtIcon name="icon-sort" /></div>
+              <div class="row-center cursor-pointer" @click="onSortClick('fee')">24h Fee/TVL <NuxtIcon name="icon-sort" /></div>
             </td>
             <td></td>
           </tr>
