@@ -33,7 +33,10 @@ export const formatNumber = (number?: string | number, behind = 5) => {
     return "0";
   }
   const min = 1 / Math.pow(10, behind);
-  if (Math.abs(Number(number)) < min) return `< 0.${"0".repeat(behind - 1)}1`;
+  if (Math.abs(Number(number)) < min) {
+    if (behind === 0) return "< 0.0001";
+    return `< 0.${"0".repeat(behind - 1)}1`;
+  }
   let value = number.toString();
   if (value.includes(".") || value.includes(",")) {
     value = value.replace(/(\d)(?=(\d{3})+\.)/g, "$1,");

@@ -35,7 +35,7 @@ function onSortClick(type: "liq" | "vol" | "fee") {
     pairs.value = pairs.value.sort((a, b) => (a.apr < b.apr ? 1 : -1));
   }
   if (type === "liq") {
-    pairs.value = pairs.value.sort((a, b) => (a.liquidity < b.liquidity ? 1 : -1));
+    pairs.value = pairs.value.sort((a, b) => (Number(a.liquidity) < Number(b.liquidity) ? 1 : -1));
   }
   if (type === "vol") {
     pairs.value = pairs.value.sort((a, b) => (a.trade_volume_24h < b.trade_volume_24h ? 1 : -1));
@@ -62,13 +62,19 @@ function onViewDetail(address: string) {
           <tr class="text-app-text2 text-start">
             <td>Pool</td>
             <td>
-              <div class="row-center cursor-pointer" @click="onSortClick('liq')">Liquidity <NuxtIcon name="icon-sort" /></div>
+              <div class="row-center cursor-pointer" :class="{ 'text-app-text1': currentType === 'liq' }" @click="onSortClick('liq')">
+                Liquidity <NuxtIcon name="icon-sort" />
+              </div>
             </td>
             <td>
-              <div class="row-center cursor-pointer" @click="onSortClick('vol')">24h Vol <NuxtIcon name="icon-sort" /></div>
+              <div class="row-center cursor-pointer" :class="{ 'text-app-text1': currentType === 'vol' }" @click="onSortClick('vol')">
+                24h Vol <NuxtIcon name="icon-sort" />
+              </div>
             </td>
             <td>
-              <div class="row-center cursor-pointer" @click="onSortClick('fee')">24h Fee/TVL <NuxtIcon name="icon-sort" /></div>
+              <div class="row-center cursor-pointer" :class="{ 'text-app-text1': currentType === 'fee' }" @click="onSortClick('fee')">
+                24h Fee/TVL <NuxtIcon name="icon-sort" />
+              </div>
             </td>
             <td></td>
           </tr>
@@ -82,7 +88,7 @@ function onViewDetail(address: string) {
                   <img :src="objToken[pair.mint_y].imageUrl" class="w-[22px] absolute right-0 top-0 rounded-full" />
                 </div>
                 <p class="ml-1">{{ pair.name }}</p>
-                <img v-if="pair.tags === 'high_risk'" src="/images/icon-error.svg" class="w-[16px] ml-1" />
+                <img v-if="pair.tags?.includes('high_risk')" src="/images/icon-error.svg" class="w-[16px] ml-1" />
               </div>
             </td>
             <td class="text-start min-w-[20%]">${{ formatNotationNumber(pair.liquidity) }}</td>

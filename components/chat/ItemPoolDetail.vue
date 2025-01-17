@@ -5,7 +5,6 @@ import { IFullToken } from "~/services/solana/type";
 const props = defineProps<{ output: string }>();
 const data = convertToolOutput(props.output);
 const tokens = ref<IFullToken[]>([]);
-
 onMounted(async () => {
   if (data.mint_x && data.mint_y) {
     tokens.value = await fetchTokenAssets([data.mint_x, data.mint_y]);
@@ -17,7 +16,7 @@ onMounted(async () => {
   <div class="p-3 bg-[#2f2f2f] rounded-b-[6px]">
     <div class="row-center justify-between">
       <div class="row-center justify-between">
-        <div class="relative w-[64px] md:w-[78px] h-[44px]">
+        <div class="relative w-[56px] md:w-[72px] h-[44px]">
           <img :src="tokens[0]?.imageUrl" class="w-[32px] md:w-[44px] rounded-full" />
           <img :src="tokens[1]?.imageUrl" class="w-[32px] md:w-[44px] absolute right-0 top-0 rounded-full" />
         </div>
@@ -35,8 +34,20 @@ onMounted(async () => {
               </div>
             </div>
           </div>
-          <div class="py-1 px-[6px] border-[1px] border-app-line2 mt-1 text-app-text2 md:font-[600] text-[10px] md:text-[12px] rounded-[12px] w-fit">
-            DLMM POOL
+          <div class="row-center mt-1">
+            <div class="py-1 px-[6px] border-[1px] border-app-line2 text-app-text2 md:font-[600] text-[10px] md:text-[12px] rounded-[12px] w-fit">
+              DLMM POOL
+            </div>
+            <TooltipProvider :delayDuration="0">
+              <Tooltip>
+                <TooltipTrigger>
+                  <img v-if="data.tags?.includes('high_risk')" src="/images/icon-error.svg" class="w-[16px] ml-1" />
+                </TooltipTrigger>
+                <TooltipContent class="z-[1000]">
+                  <p>Either an unknown token contract not listed on Jupiter, low TVL, or low 24h volume."</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
       </div>
