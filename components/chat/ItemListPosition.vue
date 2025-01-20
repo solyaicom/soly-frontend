@@ -45,6 +45,22 @@ const unclaimFee = computed(() => {
     );
   }, 0);
 });
+
+function fee24hByTvl(position: any) {
+  const usdPriceX = objToken.value[position.pair.mint_x]?.price_per_token || 0;
+  const decimalsX = Math.pow(10, objToken.value[position.pair.mint_x]?.decimals || 1);
+  const usdPriceY = objToken.value[position.pair.mint_y]?.price_per_token || 0;
+  const decimalsY = Math.pow(10, objToken.value[position.pair.mint_y]?.decimals || 1);
+
+  const tvl = (Number(position.total_x_amount) / decimalsX) * usdPriceX + (Number(position.total_y_amount) / decimalsY) * usdPriceY;
+  const unclaimedFeeUsd = (Number(position.fee_x) / decimalsX) * usdPriceX + (position.fee_y / decimalsY) * usdPriceY;
+
+  const totalFeeUsd = unclaimedFeeUsd + position.total_claimed_fee_usd;
+  const createdAtUnix = new Date(position.created_at).getTime() / 1000;
+  const currentTimeUnix = new Date().getTime() / 1000;
+  const rs = ((totalFeeUsd / (currentTimeUnix - createdAtUnix)) * 86400) / tvl;
+  return rs * 100;
+}
 </script>
 
 <template>
@@ -62,6 +78,9 @@ const unclaimFee = computed(() => {
           <tr class="text-app-text2 text-start">
             <td>Pool</td>
             <td>
+              <div class="row-center cursor-pointer">24hr Fee / TVL</div>
+            </td>
+            <td>
               <div class="row-center cursor-pointer">Price Range($)</div>
             </td>
             <td>
@@ -75,17 +94,19 @@ const unclaimFee = computed(() => {
         </thead>
         <tbody>
           <tr v-for="(item, index) in items" :key="index">
-            <td>
+            <td class="min-w-[126px]">
               <div class="row-center">
                 <div class="relative w-[40px] h-[24px]">
                   <img :src="objToken[item.pair.mint_x]?.imageUrl" class="w-[22px] rounded-full" />
                   <img :src="objToken[item.pair.mint_y]?.imageUrl" class="w-[22px] absolute right-0 top-0 rounded-full" />
                 </div>
-                <p class="ml-1">{{ item.name }}</p>
+                <p class="ml-1">{{ item.pair.name }}</p>
                 <img v-if="item.tags?.includes('high_risk')" src="/images/icon-error.svg" class="w-[16px] ml-1" />
               </div>
             </td>
-            <td class="text-start min-w-fit">{{ formatNumber(item.min_price, 2) }}-{{ formatNumber(item.max_price, 2) }}</td>
+            <td class="min-w-[80px]">{{ formatNumber(fee24hByTvl(item), 2) }}%</td>
+
+            <td class="text-start min-w-[120px]">{{ formatNumber(item.min_price, 2) }}-{{ formatNumber(item.max_price, 2) }}</td>
             <td class="text-start min-w-fit text-[12px]">
               <div>
                 <p v-if="Number(item.total_x_amount)">
