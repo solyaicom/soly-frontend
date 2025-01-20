@@ -3,6 +3,7 @@ import { formatDate } from "@vueuse/shared";
 import { IChatMessage } from "~/services/api/chat/type";
 import ItemFindPool from "./ItemFindPool.vue";
 import ItemPoolDetail from "./ItemPoolDetail.vue";
+import ItemDeposit from "./ItemDeposit.vue";
 
 defineProps<{
   messages: IChatMessage[];
@@ -21,5 +22,6 @@ function isSameDate(a: string, b: string): boolean {
       :item="item"
       :show-pre-date="index == 0 || !isSameDate(messages[index - 1].created_at, item.created_at)"
     />
+    <!-- <ItemDeposit /> -->
   </div>
 </template>

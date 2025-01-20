@@ -73,7 +73,7 @@ function fee24hByTvl(position: any) {
       </ul>
     </div>
     <div class="max-h-[390px] overflow-scroll relative">
-      <table class="w-full min-w-[540px] bg-app-card1 border-separate py-3 px-2 text-center rounded-[6px]">
+      <table class="w-full min-w-[730px] bg-app-card1 border-separate py-3 px-2 text-center rounded-[6px]">
         <thead class="sticky z-[1] top-0 bg-app-card1">
           <tr class="text-app-text2 text-start">
             <td>Pool</td>
@@ -106,7 +106,7 @@ function fee24hByTvl(position: any) {
             </td>
             <td class="min-w-[80px]">{{ formatNumber(fee24hByTvl(item), 2) }}%</td>
 
-            <td class="text-start min-w-[120px]">{{ formatNumber(item.min_price, 2) }}-{{ formatNumber(item.max_price, 2) }}</td>
+            <td class="text-start min-w-[110px]">{{ formatNumber(item.min_price, 2) }}-{{ formatNumber(item.max_price, 2) }}</td>
             <td class="text-start min-w-fit text-[12px]">
               <div>
                 <p v-if="Number(item.total_x_amount)">
