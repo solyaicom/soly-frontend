@@ -10,9 +10,8 @@ import ItemTokenSearch from "~/components/chat/ItemTokenSearch.vue";
 import ItemTopHolder from "~/components/chat/ItemTopHolder.vue";
 import ItemTopToken from "~/components/chat/ItemTopToken.vue";
 import ItemWalletPorfolio from "~/components/chat/ItemWalletPorfolio.vue";
-import { TToolID } from "~/services/api/chat/type";
 
-export const MAPPING_TOOL_COMPONENT: { [key in TToolID]: { name: string; component: any; render?: (tool: any) => VNode } } = {
+export const MAPPING_TOOL_COMPONENT = {
     tokensaddressinfo_get: { name: "Search Token Information", component: null },
     tokensaddressprice_get: { name: "Search Token Price", component: ItemTokenPrice },
     solyAiTradingQuoteAPIPost: { name: "Preview Swap Detail", component: ItemSwapPreview },
@@ -28,4 +27,5 @@ export const MAPPING_TOOL_COMPONENT: { [key in TToolID]: { name: string; compone
     degen_second_alert: { name: "", component: ItemSecondDegen },
     dlmmpairsaddress_get: { name: "Search for DLMM pool details", component: ItemTopToken },
     dlmmpairs_get: { name: "Find DLMM pools on Meteora", component: ItemTopToken },
+    dlmmwalletsaddresspositions_get: { name: "Find Position", component: null },
 };

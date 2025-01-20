@@ -16,6 +16,7 @@ import { MAPPING_TOOL_COMPONENT } from "~/constants/mapping-tool-component";
 import ItemWalletPorfolio from "./ItemWalletPorfolio.vue";
 import ItemPoolDetail from "./ItemPoolDetail.vue";
 import ItemFindPool from "./ItemFindPool.vue";
+import ItemListPosition from "./ItemListPosition.vue";
 
 const props = defineProps<{ tools: ITool[]; token?: any; completed?: boolean; created_at: string; isPreview?: boolean }>();
 function checkError(output: string) {
@@ -69,6 +70,7 @@ function getTool(id: TToolID) {
           <ItemWalletPorfolio v-if="item.id === 'walletsaddressassets_get' && !!item.outputs" :output="item.outputs" />
           <ItemPoolDetail v-if="item.id === 'dlmmpairsaddress_get' && !!item.outputs" :output="item.outputs" />
           <ItemFindPool v-if="item.id === 'dlmmpairs_get' && !!item.outputs" :output="item.outputs" />
+          <ItemListPosition v-if="item.id === 'dlmmwalletsaddresspositions_get' && !!item.outputs" :output="item.outputs" />
         </div>
       </div>
     </div>

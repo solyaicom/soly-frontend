@@ -1,3 +1,5 @@
+import { MAPPING_TOOL_COMPONENT } from "~/constants/mapping-tool-component";
+
 export interface IChatMessage {
   id: string;
   role: "user" | "assistant";
@@ -25,22 +27,7 @@ export interface IObservation {
   tools: ITool[];
 }
 
-export type TToolID =
-  | "tokensaddressinfo_get"
-  | "tokensaddressprice_get"
-  | "dataset_4f7c1e48-f62d-4f75-bf3b-80d4167a50a9"
-  | "solyAiTradingQuoteAPIPost"
-  | "solyAiTradingBalanceGet"
-  | "solyAiTradingQuoteExecutePost"
-  | "tokensaddressaggdev-check_get"
-  | "tokensaddressaggtop-holdersportfolio_get"
-  | "tokenstop_get"
-  | "degen_first_alert"
-  | "degen_second_alert"
-  | "walletsaddressassets_get"
-  | "dlmmpairsaddress_get"
-  | "dlmmpairs_get"
-  | "tokensaddressaggtop-holders_get";
+export type TToolID = keyof typeof MAPPING_TOOL_COMPONENT;
 
 export interface ITool {
   id: TToolID;
