@@ -19,6 +19,14 @@ const positionInfo = ref<any>(null);
 const loading = ref(false);
 const conversationStore = useConversationStore();
 const checkInsuff = ref("");
+const selectTextByType = computed(() => {
+  if (selectedType.value === "spot")
+    return "Spot provides a uniform distribution that is versatile and risk adjusted, suitable for any type of market and conditions. This is similar to setting a CLMM price range.";
+
+  if (selectedType.value === "curve")
+    return "Curve is ideal for a concentrated approach that aims to maximize capital efficiency. This is great for stables or pairs where the price does not change very often.";
+  return "Bid-Ask is an inverse Curve distribution, typically deployed single sided for a DCA in or out strategy. It can be used to capture volatility especially when prices vastly move out of the typical range.";
+});
 
 onMounted(async () => {
   if (data.action_id) {
@@ -196,8 +204,7 @@ function checkInsufficient() {
       <div>
         <p class="font-[600] text-app-text1">Select Volatility Strategy</p>
         <p class="text-app-text3 mt-1">
-          Spot provides a uniform distribution that is versatile and risk adjusted, suitable for any type of market and conditions. This is similar to
-          setting a CLMM price range.
+          {{ selectTextByType }}
         </p>
       </div>
       <div class="space-x-3 row-center justify-center">
@@ -231,7 +238,7 @@ function checkInsufficient() {
       </div>
     </div>
     <div class="line" />
-    <p class="font-[600] text-app-text1">Select Volatility Strategy</p>
+    <p class="font-[600] text-app-text1">Set Price Range</p>
     <div class="row-center text-app-text2">
       <p>Current Price</p>
       <NuxtIcon name="icon-about" class="ml-1" />
