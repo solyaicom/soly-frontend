@@ -61,7 +61,10 @@ function getTool(id: TToolID) {
           <ItemTokenPrice v-if="item.id === 'tokensaddressprice_get'" :token="token" :output="item.outputs" :inputs="item.inputs" />
           <ItemSwapPreview v-if="item.id === 'solyAiTradingQuoteAPIPost' && !!item.outputs" :output="item.outputs" />
           <ItemBalanceGet v-if="item.id === 'solyAiTradingBalanceGet' && !!item.outputs" :item="item" />
-          <ItemSwapResult v-if="item.id === 'solyAiTradingQuoteExecutePost' && !!item.outputs" :output="item.outputs" />
+          <ItemSwapResult
+            v-if="(item.id === 'solyAiTradingQuoteExecutePost' || item.id === 'executetransactionpost') && !!item.outputs"
+            :output="item.outputs"
+          />
           <ItemTopHolder v-if="item.id === 'tokensaddressaggtop-holders_get' && !!item.outputs" :output="item.outputs" />
           <ItemDevCheck v-if="item.id === 'tokensaddressaggdev-check_get' && !!item.outputs" :output="item.outputs" />
           <ItemTokenHoldingByHolder v-if="item.id === 'tokensaddressaggtop-holdersportfolio_get' && !!item.outputs" :output="item.outputs" />

@@ -18,6 +18,7 @@ export const MAPPING_TOOL_COMPONENT = {
     solyAiTradingBalanceGet: { name: "Check Token Balance", component: ItemBalanceGet },
     walletsaddressassets_get: { name: "Search Wallet Porfolio", component: ItemWalletPorfolio },
     solyAiTradingQuoteExecutePost: { name: "Swap Token", component: ItemSwapResult },
+    executetransactionpost: { name: "" },
     "dataset_4f7c1e48-f62d-4f75-bf3b-80d4167a50a9": { name: "Search Token Address", component: ItemTokenSearch },
     "tokensaddressaggtop-holders_get": { name: "Scan Top Holders", component: ItemTopHolder },
     "tokensaddressaggdev-check_get": { name: "Check Developer Profile", component: ItemDevCheck },
