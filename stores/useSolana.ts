@@ -16,6 +16,7 @@ export const useSolana = defineStore("solana-store", {
       totalBalance: 0,
     } as WalletPortfolio,
     totalBalance: 0,
+    init_done: false,
   }),
   actions: {
     async init(force?: boolean) {
@@ -29,6 +30,8 @@ export const useSolana = defineStore("solana-store", {
       const { getUser } = useAuthStore();
       const address = getUser()?.wallet?.address;
       if (!address) return;
+      this.init_done = false;
+
       this.portfolio = await getWalletPortfolio(address);
       this.totalBalance = this.portfolio.totalBalance;
       this.balance = this.portfolio.tokens[0]?.balance || 0;
@@ -40,6 +43,7 @@ export const useSolana = defineStore("solana-store", {
           totalBalance: this.portfolio.totalBalance,
         })
       );
+      this.init_done = true;
     },
     async refresh() {
       this.init(true);

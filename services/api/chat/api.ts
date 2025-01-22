@@ -89,3 +89,56 @@ export async function fetchListChannel(): Promise<IConversation[]> {
     return [];
   }
 }
+
+export async function findDepositAction(id: string): Promise<any | undefined> {
+  try {
+    const { data } = await Fetch.get<{ data: any }>(`@api/dlmm/actions/${id}`);
+    return data.data;
+  } catch (error: any) {
+    console.error("findDepositAction er", error.response.status);
+
+    return undefined;
+  }
+}
+
+export async function updateDepositAction(id: string, body: any): Promise<any | undefined> {
+  try {
+    const { data } = await Fetch.put<{ data: any }>(`@api/dlmm/actions/${id}`, {
+      actionID: id,
+      data: body,
+    });
+    return data.data;
+  } catch (error: any) {
+    console.error("findDepositAction er", error.response.status);
+
+    return undefined;
+  }
+}
+
+export async function executeDepositAction(id: string, body: any): Promise<any | undefined> {
+  try {
+    const { data } = await Fetch.put<{ data: any }>(`@api/dlmm/actions/execute`, {
+      action_id: id,
+      dry_run: true,
+    });
+    return data.data;
+  } catch (error: any) {
+    console.error("findDepositAction er", error.response.status);
+
+    return undefined;
+  }
+}
+
+export async function getPairDetail(pair_address: string): Promise<any | undefined> {
+  try {
+    const rs = await fetch(`https://dlmm-api.meteora.ag/pair/${pair_address}`, {
+      method: "GET",
+    });
+    const data = await rs.json();
+    return data;
+  } catch (error: any) {
+    console.error("getPairDetail er", error.response.status);
+
+    return undefined;
+  }
+}

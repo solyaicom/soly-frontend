@@ -9,7 +9,7 @@ const items = ref<any[]>([]);
 const objToken = ref<{ [key: string]: IFullToken }>({});
 
 onMounted(async () => {
-  const ps = data.items;
+  const ps = data.items || [];
   const listTokenAddress: string[] = [];
   ps.forEach((item: any) => {
     if (!listTokenAddress.includes(item.pair.mint_x)) listTokenAddress.push(item.pair.mint_x);
@@ -19,7 +19,7 @@ onMounted(async () => {
   tokens.forEach((token) => {
     objToken.value[token.address] = token;
   });
-  items.value = data.items;
+  items.value = data.items || [];
 });
 
 const totalDeposit = computed(() => {

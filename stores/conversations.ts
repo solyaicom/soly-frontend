@@ -10,6 +10,7 @@ type ConversationState = {
   currentMessage: string;
   messages: IChatMessage[];
   currentAgent?: IAgent;
+  disableAction: boolean;
 };
 
 export const useConversationStore = defineStore("conversations", {
@@ -20,10 +21,14 @@ export const useConversationStore = defineStore("conversations", {
     currentMessage: "",
     messages: [],
     currentAgent: undefined,
+    disableAction: false,
   }),
   actions: {
     setMessages(messages: IChatMessage[]) {
       this.messages = messages;
+    },
+    setDisableAction(value: boolean) {
+      this.disableAction = value;
     },
 
     addMessage(message: IChatMessage) {

@@ -7,7 +7,7 @@ import { createNewConversation, fetchChatHistory } from "~/services/api/chat/api
 import { useConversationStore } from "~/stores/conversations";
 import BotButton from "../conversation/BotButton.vue";
 import BalanceButton from "./BalanceButton.vue";
-import { checkMessageExpired, findQuoteIdFromMessage } from "~/services/api/chat/utils";
+import { checkMessageExpired, findDlmmAction, findActionIdFromMessage, getActionByTool } from "~/services/api/chat/utils";
 import { debounce } from "lodash";
 
 const currentMsg = ref<any>("");
@@ -167,7 +167,7 @@ watch(
   }
 );
 
-async function onSendMessage(content: string, data?: { action?: "confirm_swap" | "cancel_swap"; params: { quote_id?: string; message_id: string } }) {
+async function onSendMessage(content: string, data?: { action?: string; params: { quote_id?: string; action_id?: string; message_id: string } }) {
   if (loading.value) return;
   actionExpired.value = false;
   loading.value = true;
@@ -327,7 +327,7 @@ function onKeyDown(e: any) {
   }
 }
 
-function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
+function makeTransactionAction(action: "confirm" | "cancel") {
   if (!lastMsg.value) return;
   const msg = lastMsg.value;
   if (checkMessageExpired(msg)) {
@@ -337,14 +337,15 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
       duration: 5000,
     });
   }
-  const content = action === "confirm_swap" ? "Confirm this action" : "Cancel this action";
-  const quote_id = findQuoteIdFromMessage(msg);
+  const actionCode = getActionByTool(msg);
+  const content = action === "confirm" ? "Confirm this action" : "Cancel this action";
+  const id = findActionIdFromMessage(msg);
   const msgId = msg.id;
 
   messages.value.push({ role: "user", id: "", content, completed: true, data: {}, created_at: new Date().toISOString() });
   onSendMessage(content, {
-    action,
-    params: { message_id: msgId || "", quote_id },
+    action: `${action}_${actionCode}`,
+    params: { message_id: msgId || "", quote_id: id, action_id: id },
   });
 }
 </script>
@@ -390,24 +391,23 @@ function makeTransactionAction(action: "confirm_swap" | "cancel_swap") {
             <BalanceButton class="absolute top-[-60px] right-[0px] z-1" />
 
             <div
-              v-if="!!findQuoteIdFromMessage(lastMsg) && !checkMessageExpired(lastMsg) && !actionExpired"
+              v-if="!!findActionIdFromMessage(lastMsg) && !checkMessageExpired(lastMsg) && !actionExpired"
               class="p-6 w-full bg-[#141414] flex flex-col items-center justify-center"
             >
-              <p class="text-[#979797] text-[16px]">Do you want {{ currentAgent?.name || "SolyAI" }} make this swap?</p>
+              <p class="text-[#979797] text-[16px]">Do you want {{ currentAgent?.name || "SolyAI" }} make this action?</p>
               <div class="row-center mt-3">
-                <div
-                  class="font-[600] text-[16px] py-3 px-10 bg-[#1e1e1e] rounded-[6px] cursor-pointer"
-                  @click="makeTransactionAction('cancel_swap')"
-                >
+                <div class="font-[600] text-[16px] py-3 px-10 bg-[#1e1e1e] rounded-[6px] cursor-pointer" @click="makeTransactionAction('cancel')">
                   Cancel
                 </div>
                 <p class="mx-4 font-[600] text-[16px]">/</p>
-                <div
+                <button
                   class="font-[600] text-[16px] py-3 px-10 bg-[#fff] rounded-[6px] text-[#131313] cursor-pointer"
-                  @click="makeTransactionAction('confirm_swap')"
+                  :class="conversationStore.disableAction ? 'opacity-50' : ''"
+                  @click="makeTransactionAction('confirm')"
+                  :disabled="conversationStore.disableAction"
                 >
                   Confirm
-                </div>
+                </button>
               </div>
             </div>
             <div v-else-if="!currentConversation?.is_readonly" class="w-full flex flex-row items-start relative">
