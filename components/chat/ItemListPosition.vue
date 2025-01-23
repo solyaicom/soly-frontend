@@ -146,8 +146,11 @@ function onClaimfee(address: string) {
               <div class="row-center">
                 <div class="text-blue-500 cursor-pointer p-1" @click="onWithdraw(item.address)">Withdraw</div>
                 <div
-                  class="text-blue-500 cursor-pointer ml-1 p-1 w-[80px]"
-                  :class="{ 'pointer-events-none text-app-text2': Number(item.fee_y) + Number(item.fee_x) === 0 }"
+                  class="cursor-pointer ml-1 p-1 w-[80px]"
+                  :class="{
+                    'pointer-events-none text-app-text2': Number(item.fee_y) + Number(item.fee_x) === 0,
+                    'text-blue-500': Number(item.fee_y) + Number(item.fee_x) !== 0,
+                  }"
                   @click="onClaimfee(item.address)"
                 >
                   Claim Fee
