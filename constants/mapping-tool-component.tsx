@@ -29,5 +29,5 @@ export const MAPPING_TOOL_COMPONENT = {
     dlmmpairsaddress_get: { name: "Search for DLMM pool details", component: ItemTopToken },
     dlmmpairs_get: { name: "Find DLMM pools on Meteora", component: ItemTopToken },
     dlmmwalletsaddresspositions_get: { name: "Find Position", component: null },
-    dlmmactionsinit_post: { name: "Initial Deposit" },
+    dlmmactionsinit_post: { name: "Add Liquidity" },
 };
