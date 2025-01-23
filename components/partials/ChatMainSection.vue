@@ -347,6 +347,11 @@ function makeTransactionAction(action: "confirm" | "cancel") {
     action: `${action}_${actionCode}`,
     params: { message_id: msgId || "", quote_id: id, action_id: id },
   });
+  if (action === "confirm") {
+    setTimeout(() => {
+      solana.refresh();
+    }, 6000);
+  }
 }
 </script>
 
