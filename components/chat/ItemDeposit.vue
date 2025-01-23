@@ -110,6 +110,7 @@ const totalFee = computed(() => {
 async function onEditClick() {
   if (!editable.value) {
     editable.value = true;
+    conversationStore.setHideChat(true);
     return;
   }
   if (!(actions.value?.data.amount_x || actions.value?.data.amount_y) || !actions.value?.data.min_price || !actions.value?.data.max_price) return;
@@ -123,6 +124,8 @@ async function onEditClick() {
   });
   loading.value = false;
   editable.value = false;
+  conversationStore.setHideChat(false);
+
   !checkInsuff.value && conversationStore.setDisableAction(false);
 }
 

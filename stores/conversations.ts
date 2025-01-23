@@ -11,6 +11,7 @@ type ConversationState = {
   messages: IChatMessage[];
   currentAgent?: IAgent;
   disableAction: boolean;
+  hideChat: boolean;
 };
 
 export const useConversationStore = defineStore("conversations", {
@@ -22,6 +23,7 @@ export const useConversationStore = defineStore("conversations", {
     messages: [],
     currentAgent: undefined,
     disableAction: false,
+    hideChat: false,
   }),
   actions: {
     setMessages(messages: IChatMessage[]) {
@@ -30,7 +32,9 @@ export const useConversationStore = defineStore("conversations", {
     setDisableAction(value: boolean) {
       this.disableAction = value;
     },
-
+    setHideChat(value: boolean) {
+      this.hideChat = value;
+    },
     addMessage(message: IChatMessage) {
       this.messages.push(message);
     },

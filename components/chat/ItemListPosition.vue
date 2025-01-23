@@ -7,6 +7,7 @@ const data = convertToolOutput(props.output);
 
 const items = ref<any[]>([]);
 const objToken = ref<{ [key: string]: IFullToken }>({});
+const conversationStore = useConversationStore();
 
 onMounted(async () => {
   const ps = data.items || [];
@@ -61,6 +62,14 @@ function fee24hByTvl(position: any) {
   const rs = ((totalFeeUsd / (currentTimeUnix - createdAtUnix)) * 86400) / tvl;
   return rs * 100;
 }
+
+function onWithdraw(address: string) {
+  conversationStore.setCurrentMessage(`Withdraw all from position ${address}`);
+}
+
+function onClaimfee(address: string) {
+  conversationStore.setCurrentMessage(`Claim all fees from position ${address}`);
+}
 </script>
 
 <template>
@@ -104,11 +113,11 @@ function fee24hByTvl(position: any) {
                 <img v-if="item.tags?.includes('high_risk')" src="/images/icon-error.svg" class="w-[16px] ml-1" />
               </div>
             </td>
-            <td class="min-w-[80px]">{{ formatNumber(fee24hByTvl(item), 2) }}%</td>
+            <td class="min-w-[80px]">{{ fee24hByTvl(item) ? formatNumber(fee24hByTvl(item), 2) : "--" }}%</td>
 
             <td class="text-start min-w-[110px]">{{ formatNumber(item.min_price, 2) }}-{{ formatNumber(item.max_price, 2) }}</td>
             <td class="text-start min-w-fit text-[12px]">
-              <div>
+              <div v-if="Number(item.total_x_amount) || Number(item.total_y_amount)">
                 <p v-if="Number(item.total_x_amount)">
                   {{ formatNumber(Number(item.total_x_amount) / Math.pow(10, objToken[item.pair.mint_x]?.decimals)) }}
                   {{ objToken[item.pair.mint_x]?.symbol }}
@@ -118,9 +127,10 @@ function fee24hByTvl(position: any) {
                   {{ objToken[item.pair.mint_y]?.symbol }}
                 </p>
               </div>
+              <p v-else>--</p>
             </td>
             <td class="text-start text-[12px]">
-              <div>
+              <div v-if="Number(item.fee_x) || Number(item.fee_y)">
                 <p v-if="Number(item.fee_x)">
                   {{ formatNumber(Number(item.fee_x) / Math.pow(10, objToken[item.pair.mint_x]?.decimals)) }}
                   {{ objToken[item.pair.mint_x]?.symbol }}
@@ -130,11 +140,18 @@ function fee24hByTvl(position: any) {
                   {{ objToken[item.pair.mint_y]?.symbol }}
                 </p>
               </div>
+              <p v-else>--</p>
             </td>
             <td>
               <div class="row-center">
-                <div class="text-blue-500 cursor-pointer p-1">Withdraw</div>
-                <div class="text-blue-500 cursor-pointer ml-1 p-1 w-[80px]">Claim Fee</div>
+                <div class="text-blue-500 cursor-pointer p-1" @click="onWithdraw(item.address)">Withdraw</div>
+                <div
+                  class="text-blue-500 cursor-pointer ml-1 p-1 w-[80px]"
+                  :class="{ 'pointer-events-none text-app-text2': Number(item.fee_y) + Number(item.fee_x) === 0 }"
+                  @click="onClaimfee(item.address)"
+                >
+                  Claim Fee
+                </div>
               </div>
             </td>
           </tr>

@@ -391,7 +391,7 @@ function makeTransactionAction(action: "confirm" | "cancel") {
             <BalanceButton class="absolute top-[-60px] right-[0px] z-1" />
 
             <div
-              v-if="!!findActionIdFromMessage(lastMsg) && !checkMessageExpired(lastMsg) && !actionExpired"
+              v-if="!!findActionIdFromMessage(lastMsg) && !checkMessageExpired(lastMsg) && !actionExpired && !conversationStore.hideChat"
               class="p-6 w-full bg-[#141414] flex flex-col items-center justify-center"
             >
               <p class="text-[#979797] text-[16px]">Do you want {{ currentAgent?.name || "SolyAI" }} make this action?</p>
@@ -410,7 +410,7 @@ function makeTransactionAction(action: "confirm" | "cancel") {
                 </button>
               </div>
             </div>
-            <div v-else-if="!currentConversation?.is_readonly" class="w-full flex flex-row items-start relative">
+            <div v-else-if="!currentConversation?.is_readonly && !conversationStore.hideChat" class="w-full flex flex-row items-start relative">
               <div
                 contenteditable
                 @keyup="onKeyChange"
