@@ -3,19 +3,18 @@ import { ITool } from "~/services/api/chat/type";
 import { fetchTokenAssets } from "~/services/solana/helius-api";
 import { IFullToken } from "~/services/solana/type";
 
-const props = defineProps<{ item: ITool }>();
+const props = defineProps<{ inputs: any; output: any }>();
 
 const token = ref<IFullToken | null>(null);
 const { getUser } = useAuthStore();
 const amount = ref(0);
 
 onMounted(async () => {
-  const inputs = props.item.inputs;
-  if (inputs?.mint) {
-    const [_token] = await fetchTokenAssets([inputs.mint]);
+  if (props.inputs?.mint) {
+    const [_token] = await fetchTokenAssets([props.inputs.mint]);
     token.value = _token;
   }
-  const output = convertToolOutput(props.item.outputs);
+  const output = convertToolOutput(props.output);
   amount.value = output.amount || 0;
 });
 </script>

@@ -1,23 +1,6 @@
 <script setup lang="ts">
 import { IObservation, ITool, TToolID } from "~/services/api/chat/type";
-import ItemTokenSearch from "./ItemTokenSearch.vue";
-import ItemTokenPrice from "./ItemTokenPrice.vue";
-import ItemSwapPreview from "./ItemSwapPreview.vue";
-import ItemBalanceGet from "./ItemBalanceGet.vue";
-import { MAPPING_TOOL_NAME } from "~/constants/chat-tool-mapping";
-import ItemSwapResult from "./ItemSwapResult.vue";
-import ItemTopHolder from "./ItemTopHolder.vue";
-import ItemDevCheck from "./ItemDevCheck.vue";
-import ItemTokenHoldingByHolder from "./ItemTokenHoldingByHolder.vue";
-import ItemTopToken from "./ItemTopToken.vue";
-import ItemFirstDegen from "./ItemFirstDegen.vue";
-import ItemSecondDegen from "./ItemSecondDegen.vue";
 import { MAPPING_TOOL_COMPONENT } from "~/constants/mapping-tool-component";
-import ItemWalletPorfolio from "./ItemWalletPorfolio.vue";
-import ItemPoolDetail from "./ItemPoolDetail.vue";
-import ItemFindPool from "./ItemFindPool.vue";
-import ItemListPosition from "./ItemListPosition.vue";
-import ItemDeposit from "./ItemDeposit.vue";
 
 const props = defineProps<{ tools: ITool[]; token?: any; completed?: boolean; created_at: string; isPreview?: boolean }>();
 function checkError(output: string) {
@@ -56,26 +39,16 @@ function getTool(id: TToolID) {
           </div>
           <p class="text-[#CACACA] font-[600] ml-2">Error</p>
         </div>
-        <div v-else>
-          <ItemTokenSearch v-if="item.id === 'dataset_4f7c1e48-f62d-4f75-bf3b-80d4167a50a9' && !!item.outputs" :output="item.outputs" />
-          <ItemTokenPrice v-if="item.id === 'tokensaddressprice_get'" :token="token" :output="item.outputs" :inputs="item.inputs" />
-          <ItemSwapPreview v-if="item.id === 'solyAiTradingQuoteAPIPost' && !!item.outputs" :output="item.outputs" />
-          <ItemBalanceGet v-if="item.id === 'solyAiTradingBalanceGet' && !!item.outputs" :item="item" />
-          <ItemSwapResult
-            v-if="(item.id === 'solyAiTradingQuoteExecutePost' || item.id === 'executetransactionpost') && !!item.outputs"
+        <div v-else v-for="key in Object.keys(MAPPING_TOOL_COMPONENT)" :key="key">
+          <component
+            v-if="key === item.id"
+            :is="MAPPING_TOOL_COMPONENT[key].component"
             :output="item.outputs"
+            :inputs="item.inputs"
+            :token="token"
+            :created_at="created_at"
+            :is-preview="isPreview"
           />
-          <ItemTopHolder v-if="item.id === 'tokensaddressaggtop-holders_get' && !!item.outputs" :output="item.outputs" />
-          <ItemDevCheck v-if="item.id === 'tokensaddressaggdev-check_get' && !!item.outputs" :output="item.outputs" />
-          <ItemTokenHoldingByHolder v-if="item.id === 'tokensaddressaggtop-holdersportfolio_get' && !!item.outputs" :output="item.outputs" />
-          <ItemTopToken v-if="item.id === 'tokenstop_get' && !!item.outputs" :output="item.outputs" />
-          <ItemFirstDegen v-if="item.id === 'degen_first_alert'" :input="item.inputs" :created_at="created_at" :is-preview="isPreview" />
-          <ItemSecondDegen v-if="item.id === 'degen_second_alert'" :input="item.inputs" :created_at="created_at" />
-          <ItemWalletPorfolio v-if="item.id === 'walletsaddressassets_get' && !!item.outputs" :output="item.outputs" />
-          <ItemPoolDetail v-if="item.id === 'dlmmpairsaddress_get' && !!item.outputs" :output="item.outputs" />
-          <ItemFindPool v-if="item.id === 'dlmmpairs_get' && !!item.outputs" :output="item.outputs" />
-          <ItemListPosition v-if="item.id === 'dlmmwalletsaddresspositions_get' && !!item.outputs" :output="item.outputs" />
-          <ItemDeposit v-if="item.id === 'dlmmactionsinit_post' && !!item.outputs" :output="item.outputs" />
         </div>
       </div>
     </div>
@@ -94,3 +67,24 @@ tbody td {
   padding-bottom: 8px;
 }
 </style>
+
+<!-- <ItemTokenSearch v-if="item.id === 'dataset_4f7c1e48-f62d-4f75-bf3b-80d4167a50a9' && !!item.outputs" :output="item.outputs" />
+<ItemTokenPrice v-if="item.id === 'tokensaddressprice_get'" :token="token" :output="item.outputs" :inputs="item.inputs" />
+<ItemSwapPreview v-if="item.id === 'solyAiTradingQuoteAPIPost' && !!item.outputs" :output="item.outputs" />
+<ItemBalanceGet v-if="item.id === 'solyAiTradingBalanceGet' && !!item.outputs" :item="item" />
+<ItemSwapResult
+  v-if="(item.id === 'solyAiTradingQuoteExecutePost' || item.id === 'executetransactionpost') && !!item.outputs"
+  :output="item.outputs"
+/>
+<ItemTopHolder v-if="item.id === 'tokensaddressaggtop-holders_get' && !!item.outputs" :output="item.outputs" />
+<ItemDevCheck v-if="item.id === 'tokensaddressaggdev-check_get' && !!item.outputs" :output="item.outputs" />
+<ItemTokenHoldingByHolder v-if="item.id === 'tokensaddressaggtop-holdersportfolio_get' && !!item.outputs" :output="item.outputs" />
+<ItemTopToken v-if="item.id === 'tokenstop_get' && !!item.outputs" :output="item.outputs" />
+<ItemFirstDegen v-if="item.id === 'degen_first_alert'" :input="item.inputs" :created_at="created_at" :is-preview="isPreview" />
+<ItemSecondDegen v-if="item.id === 'degen_second_alert'" :input="item.inputs" :created_at="created_at" />
+<ItemWalletPorfolio v-if="item.id === 'walletsaddressassets_get' && !!item.outputs" :output="item.outputs" />
+<ItemPoolDetail v-if="item.id === 'dlmmpairsaddress_get' && !!item.outputs" :output="item.outputs" />
+<ItemFindPool v-if="item.id === 'dlmmpairs_get' && !!item.outputs" :output="item.outputs" />
+<ItemListPosition v-if="item.id === 'dlmmwalletsaddresspositions_get' && !!item.outputs" :output="item.outputs" />
+<ItemDeposit v-if="item.id === 'dlmmactionsinit_post' && !!item.outputs" :output="item.outputs" />
+ -->

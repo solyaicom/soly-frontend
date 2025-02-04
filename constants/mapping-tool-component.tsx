@@ -1,6 +1,10 @@
-import { DefineComponent, RendererNode, VNode } from "vue";
 import ItemBalanceGet from "~/components/chat/ItemBalanceGet.vue";
+import ItemDeposit from "~/components/chat/ItemDeposit.vue";
 import ItemDevCheck from "~/components/chat/ItemDevCheck.vue";
+import ItemFindPool from "~/components/chat/ItemFindPool.vue";
+import ItemFirstDegen from "~/components/chat/ItemFirstDegen.vue";
+import ItemListPosition from "~/components/chat/ItemListPosition.vue";
+import ItemPoolDetail from "~/components/chat/ItemPoolDetail.vue";
 import ItemSecondDegen from "~/components/chat/ItemSecondDegen.vue";
 import ItemSwapPreview from "~/components/chat/ItemSwapPreview.vue";
 import ItemSwapResult from "~/components/chat/ItemSwapResult.vue";
@@ -12,22 +16,21 @@ import ItemTopToken from "~/components/chat/ItemTopToken.vue";
 import ItemWalletPorfolio from "~/components/chat/ItemWalletPorfolio.vue";
 
 export const MAPPING_TOOL_COMPONENT = {
-    tokensaddressinfo_get: { name: "Search Token Information", component: null },
     tokensaddressprice_get: { name: "Search Token Price", component: ItemTokenPrice },
     solyAiTradingQuoteAPIPost: { name: "Preview Swap Detail", component: ItemSwapPreview },
     solyAiTradingBalanceGet: { name: "Check Token Balance", component: ItemBalanceGet },
     walletsaddressassets_get: { name: "Search Wallet Porfolio", component: ItemWalletPorfolio },
     solyAiTradingQuoteExecutePost: { name: "Swap Token", component: ItemSwapResult },
-    executetransactionpost: { name: "" },
+    executetransactionpost: { name: "", component: ItemSwapResult },
     "dataset_4f7c1e48-f62d-4f75-bf3b-80d4167a50a9": { name: "Search Token Address", component: ItemTokenSearch },
     "tokensaddressaggtop-holders_get": { name: "Scan Top Holders", component: ItemTopHolder },
     "tokensaddressaggdev-check_get": { name: "Check Developer Profile", component: ItemDevCheck },
     "tokensaddressaggtop-holdersportfolio_get": { name: "Search Top Holders Portfolio", component: ItemTokenHoldingByHolder },
     tokenstop_get: { name: "Search Top Tokens", component: ItemTopToken },
-    degen_first_alert: { name: "", component: ItemBalanceGet },
-    degen_second_alert: { name: "", component: ItemSecondDegen },
-    dlmmpairsaddress_get: { name: "Search for DLMM pool details", component: ItemTopToken },
-    dlmmpairs_get: { name: "Find DLMM pools on Meteora", component: ItemTopToken },
-    dlmmwalletsaddresspositions_get: { name: "Find Position", component: null },
-    dlmmactionsinit_post: { name: "Add Liquidity" },
+    degen_first_alert: { name: "", component: ItemFirstDegen, binding: { created_at: "created_at", "is-preview": "isPreview" } },
+    degen_second_alert: { name: "", component: ItemSecondDegen, binding: { created_at: "created_at" } },
+    dlmmpairsaddress_get: { name: "Search for DLMM pool details", component: ItemPoolDetail },
+    dlmmpairs_get: { name: "Find DLMM pools on Meteora", component: ItemFindPool },
+    dlmmwalletsaddresspositions_get: { name: "Find Position", component: ItemListPosition },
+    dlmmactionsinit_post: { name: "Add Liquidity", component: ItemDeposit },
 };
