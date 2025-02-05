@@ -68,5 +68,9 @@
     "browser": {
         "crypto": "crypto-browserify",
         "stream": "stream-browserify"
-    }
+    },
+    "volta": {
+        "node": "22.13.1"
+    },
+    "packageManager": "pnpm@10.2.0"
 }
