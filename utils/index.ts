@@ -119,7 +119,7 @@ export function convertToolOutput(output: string, toolId?: TToolID) {
       outputStr = outputStr.slice(0, -1);
     }
     const parseOutput = JSON.parse(output.split("tool response: ")[0]);
-    return parseOutput.output?.data || parseOutput.data || parseOutput;
+    return parseOutput.output?.data || parseOutput.data || parseOutput.output || parseOutput;
   } catch (error) {
     return undefined;
   }

@@ -12,13 +12,29 @@ function checkError(output: string) {
 }
 
 function checkHideTaskName(id: TToolID) {
-  const listToHide = ["degen_first_alert", "degen_second_alert"];
-  return listToHide.includes(id);
+  return !MAPPING_TOOL_COMPONENT[id].name;
 }
 
 function getTool(id: TToolID) {
   const tool = MAPPING_TOOL_COMPONENT[id];
   return tool;
+}
+
+function getComponentProps(id: TToolID, item: ITool) {
+  const tool = MAPPING_TOOL_COMPONENT[id];
+
+  // @ts-ignore
+  const binding = tool.binding || null;
+  const obj: any = {
+    output: item.outputs,
+  };
+  if (!binding) return obj;
+
+  Object.keys(binding).forEach((key) => {
+    // @ts-ignore
+    obj[key] = props[binding[key]] || item[binding[key]] || null;
+  });
+  return obj;
 }
 </script>
 
@@ -39,16 +55,8 @@ function getTool(id: TToolID) {
           </div>
           <p class="text-[#CACACA] font-[600] ml-2">Error</p>
         </div>
-        <div v-else v-for="key in Object.keys(MAPPING_TOOL_COMPONENT)" :key="key">
-          <component
-            v-if="key === item.id"
-            :is="MAPPING_TOOL_COMPONENT[key].component"
-            :output="item.outputs"
-            :inputs="item.inputs"
-            :token="token"
-            :created_at="created_at"
-            :is-preview="isPreview"
-          />
+        <div v-else-if="!!getTool(item.id)">
+          <component :is="getTool(item.id).component" v-bind="getComponentProps(item.id, item)" />
         </div>
       </div>
     </div>

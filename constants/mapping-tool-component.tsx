@@ -16,9 +16,9 @@ import ItemTopToken from "~/components/chat/ItemTopToken.vue";
 import ItemWalletPorfolio from "~/components/chat/ItemWalletPorfolio.vue";
 
 export const MAPPING_TOOL_COMPONENT = {
-    tokensaddressprice_get: { name: "Search Token Price", component: ItemTokenPrice },
+    tokensaddressprice_get: { name: "Search Token Price", component: ItemTokenPrice, binding: { token: "token", inputs: "inputs" } },
     solyAiTradingQuoteAPIPost: { name: "Preview Swap Detail", component: ItemSwapPreview },
-    solyAiTradingBalanceGet: { name: "Check Token Balance", component: ItemBalanceGet },
+    solyAiTradingBalanceGet: { name: "Check Token Balance", component: ItemBalanceGet, binding: { inputs: "inputs" } },
     walletsaddressassets_get: { name: "Search Wallet Porfolio", component: ItemWalletPorfolio },
     solyAiTradingQuoteExecutePost: { name: "Swap Token", component: ItemSwapResult },
     executetransactionpost: { name: "", component: ItemSwapResult },
@@ -27,8 +27,8 @@ export const MAPPING_TOOL_COMPONENT = {
     "tokensaddressaggdev-check_get": { name: "Check Developer Profile", component: ItemDevCheck },
     "tokensaddressaggtop-holdersportfolio_get": { name: "Search Top Holders Portfolio", component: ItemTokenHoldingByHolder },
     tokenstop_get: { name: "Search Top Tokens", component: ItemTopToken },
-    degen_first_alert: { name: "", component: ItemFirstDegen, binding: { created_at: "created_at", "is-preview": "isPreview" } },
-    degen_second_alert: { name: "", component: ItemSecondDegen, binding: { created_at: "created_at" } },
+    degen_first_alert: { name: "", component: ItemFirstDegen, binding: { created_at: "created_at", "is-preview": "isPreview", inputs: "inputs" } },
+    degen_second_alert: { name: "", component: ItemSecondDegen, binding: { created_at: "created_at", inputs: "inputs" } },
     dlmmpairsaddress_get: { name: "Search for DLMM pool details", component: ItemPoolDetail },
     dlmmpairs_get: { name: "Find DLMM pools on Meteora", component: ItemFindPool },
     dlmmwalletsaddresspositions_get: { name: "Find Position", component: ItemListPosition },
