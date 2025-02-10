@@ -75,24 +75,3 @@ tbody td {
   padding-bottom: 8px;
 }
 </style>
-
-<!-- <ItemTokenSearch v-if="item.id === 'dataset_4f7c1e48-f62d-4f75-bf3b-80d4167a50a9' && !!item.outputs" :output="item.outputs" />
-<ItemTokenPrice v-if="item.id === 'tokensaddressprice_get'" :token="token" :output="item.outputs" :inputs="item.inputs" />
-<ItemSwapPreview v-if="item.id === 'solyAiTradingQuoteAPIPost' && !!item.outputs" :output="item.outputs" />
-<ItemBalanceGet v-if="item.id === 'solyAiTradingBalanceGet' && !!item.outputs" :item="item" />
-<ItemSwapResult
-  v-if="(item.id === 'solyAiTradingQuoteExecutePost' || item.id === 'executetransactionpost') && !!item.outputs"
-  :output="item.outputs"
-/>
-<ItemTopHolder v-if="item.id === 'tokensaddressaggtop-holders_get' && !!item.outputs" :output="item.outputs" />
-<ItemDevCheck v-if="item.id === 'tokensaddressaggdev-check_get' && !!item.outputs" :output="item.outputs" />
-<ItemTokenHoldingByHolder v-if="item.id === 'tokensaddressaggtop-holdersportfolio_get' && !!item.outputs" :output="item.outputs" />
-<ItemTopToken v-if="item.id === 'tokenstop_get' && !!item.outputs" :output="item.outputs" />
-<ItemFirstDegen v-if="item.id === 'degen_first_alert'" :input="item.inputs" :created_at="created_at" :is-preview="isPreview" />
-<ItemSecondDegen v-if="item.id === 'degen_second_alert'" :input="item.inputs" :created_at="created_at" />
-<ItemWalletPorfolio v-if="item.id === 'walletsaddressassets_get' && !!item.outputs" :output="item.outputs" />
-<ItemPoolDetail v-if="item.id === 'dlmmpairsaddress_get' && !!item.outputs" :output="item.outputs" />
-<ItemFindPool v-if="item.id === 'dlmmpairs_get' && !!item.outputs" :output="item.outputs" />
-<ItemListPosition v-if="item.id === 'dlmmwalletsaddresspositions_get' && !!item.outputs" :output="item.outputs" />
-<ItemDeposit v-if="item.id === 'dlmmactionsinit_post' && !!item.outputs" :output="item.outputs" />
- -->

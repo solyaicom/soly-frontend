@@ -1,8 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { nodePolyfills } from "vite-plugin-node-polyfills";
+// @ts-ignore
+import veauryVitePlugins from "veaury/vite/index.js";
 
 export default defineNuxtConfig({
-  devtools: { enabled: false },
+  devtools: { enabled: true },
 
   modules: [
     "@nuxtjs/tailwindcss",
@@ -15,7 +17,7 @@ export default defineNuxtConfig({
     "@sentry/nuxt/module",
     "nuxt-qrcode",
   ],
-
+  experimental: { appManifest: false },
   vite: {
     plugins: [
       nodePolyfills({
@@ -31,6 +33,11 @@ export default defineNuxtConfig({
         },
         // Whether to polyfill `node:` protocol imports.
         protocolImports: true,
+      }),
+      // @ts-ignore
+      veauryVitePlugins({
+        type: "vue",
+        isNuxt: true,
       }),
     ],
   },
