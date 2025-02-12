@@ -27,6 +27,7 @@ const currentConversationID = computed(() => conversationStore.convID);
 const currentConversation = computed(() => conversationStore.conv);
 const route = useRoute();
 const autoSroll = ref(true);
+const showDelegate = ref(false);
 
 const currentAgent = computed(() => {
   return conversationStore.conv?.agent || app.agents[0] || {};
@@ -408,7 +409,7 @@ function makeTransactionAction(action: "confirm" | "cancel") {
                 <button
                   class="font-[600] text-[16px] py-3 px-10 bg-[#fff] rounded-[6px] text-[#131313] cursor-pointer"
                   :class="conversationStore.disableAction ? 'opacity-50' : ''"
-                  @click="makeTransactionAction('confirm')"
+                  @click="showDelegate = true"
                   :disabled="conversationStore.disableAction"
                 >
                   Confirm
@@ -434,6 +435,11 @@ function makeTransactionAction(action: "confirm" | "cancel") {
         </div>
       </div>
     </div>
+    <PrivyDelegateWallet
+      v-if="showDelegate"
+      @success="makeTransactionAction('confirm')"
+      @error="toast({ description: 'Something went wrong', duration: 3000 })"
+    />
   </section>
 </template>
 

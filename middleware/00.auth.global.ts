@@ -10,9 +10,13 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const conversation = useConversationStore();
   let userInfo = getUser();
   if (getAccessToken()) {
-    userInfo = await getUserInfo();
+    try {
+      userInfo = await getUserInfo();
 
-    setUser(userInfo);
+      setUser(userInfo);
+    } catch (error) {
+      return navigateTo("/auth/login");
+    }
   } else if (to.name !== "index") {
     return navigateTo("/auth/login");
   }

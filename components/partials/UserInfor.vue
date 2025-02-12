@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { getSolBalance } from "~/services/solana/utils";
 import DepositPopup from "./DepositPopup.vue";
+import PrivyLogout from "~/react_app/LogoutButton";
 
+import { applyPureReactInVue } from "veaury";
+
+const LogoutButton = applyPureReactInVue(PrivyLogout);
 const { getUser, logOut } = useAuthStore();
 
 const openPopup = ref(false);
@@ -76,9 +80,7 @@ function onLogout() {
               <div class="py-2 px-3 font-[500] cursor-pointer row-center hover:bg-[#232323]" @click="onDeposit">
                 <span class="flex-1">Deposit</span> <img src="/images/icon-chevron-right-light.svg" class="w-[20px]" />
               </div>
-              <div class="py-2 px-3 font-[500] cursor-pointer row-center hover:bg-[#232323]" @click="onLogout">
-                <span class="flex-1 text-[red]">Logout</span>
-              </div>
+              <LogoutButton />
             </div>
           </section>
         </div>

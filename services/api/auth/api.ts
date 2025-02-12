@@ -1,11 +1,11 @@
 import Fetch from "..";
 import { IAuthLimit, IUserProfile } from "./type";
 
-export async function loginWithGoogle(params: any): Promise<IAuthLimit> {
+export async function loginWithProvider(provider: "google" | "privy", params: any): Promise<IAuthLimit> {
   try {
     const { data } = await Fetch.post<{ data: IAuthLimit }>(`@api/auth/login`, {
       data: params,
-      provider: "google",
+      provider,
     });
     return data.data;
   } catch (error: any) {
