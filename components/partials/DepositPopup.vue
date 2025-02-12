@@ -11,9 +11,12 @@ const amount = ref(0);
 const props = defineProps<{
   open: boolean;
   onClose: () => void;
+  address?: string;
 }>();
 const phantomBalance = ref(0);
 const loading = ref(false);
+
+const addressView = computed(() => props.address || getUser().wallet.address);
 
 async function onPhantomChange(address?: string) {
   phantomBalance.value = await getSolBalance(address || "");
@@ -63,7 +66,7 @@ watch(
 );
 
 function onCopy() {
-  copyToClipboard(getUser().wallet.address);
+  copyToClipboard(addressView.value);
 }
 </script>
 
@@ -104,12 +107,12 @@ function onCopy() {
       <div class="rounded-[12px] border-[1px] border-[#ffffff33]">
         <div class="p-4 rounded-[12px]">
           <div class="rounded-[8px] overflow-hidden">
-            <Qrcode :value="getUser()?.wallet.address" variant="pixelated" class="w-[150px]" />
+            <Qrcode :value="addressView" variant="pixelated" class="w-[150px]" />
           </div>
         </div>
       </div>
       <div class="row-center cursor-pointer w-full px-4 py-2 bg-[#ffffff11] rounded-[6px] mt-2" @click="onCopy">
-        <p class="flex-1 text-[16px]">Solana Address: {{ shortAddress(getUser()?.wallet.address) }}</p>
+        <p class="flex-1 text-[16px]">Solana Address: {{ shortAddress(addressView) }}</p>
         <img src="/images/icon-copy.svg" class="ml-2" />
       </div>
     </DialogContent>

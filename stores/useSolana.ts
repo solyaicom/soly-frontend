@@ -28,7 +28,7 @@ export const useSolana = defineStore("solana-store", {
         return;
       }
       const { getUser } = useAuthStore();
-      const address = getUser()?.wallet?.address;
+      const address = localStorage.getItem("privy_address");
       if (!address) return;
       this.init_done = false;
 

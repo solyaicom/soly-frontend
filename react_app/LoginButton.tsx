@@ -7,15 +7,11 @@ export default function ({ children, onSuccess }: { children: React.ReactNode; o
     const { identityToken } = useIdentityToken();
 
     useEffect(() => {
-        if (identityToken) onSuccess(identityToken);
-    }, [identityToken]);
-
-    useEffect(() => {
-        if (user)
-            getAccessToken().then((v) => {
-                console.log("user", user);
-            });
-    }, [user]);
+        if (identityToken && user) {
+            localStorage.setItem("privy_address", user.wallet?.address || "");
+            onSuccess(identityToken);
+        }
+    }, [identityToken, user]);
 
     async function onClick() {
         if (!user) return login();

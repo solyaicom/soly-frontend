@@ -2,6 +2,7 @@
 import { applyPureReactInVue } from "veaury";
 import { useAppSetting } from "./stores/app";
 import PriviReact from "~/react_app/PriviProvider.tsx";
+import HookEvent from "./components/Privy/HookEvent.vue";
 const PriviProvider = applyPureReactInVue(PriviReact);
 
 const app = useAppSetting();
@@ -22,5 +23,6 @@ onMounted(() => {
         <NuxtPage />
       </div>
     </NuxtLayout>
+    <HookEvent />
   </PriviProvider>
 </template>

@@ -11,26 +11,28 @@ const { getUser, logOut } = useAuthStore();
 const openPopup = ref(false);
 const openQRCode = ref(false);
 const solana = useSolana();
+const openSolyAssets = ref(false);
+const addressView = computed(() => localStorage.getItem("privy_address") || getUser().wallet.address);
 
 const balance = ref(0);
 
 onMounted(async () => {
-  const _balance = solana.balance ? solana.balance : await getSolBalance(getUser().wallet.address);
+  const _balance = solana.balance ? solana.balance : await getSolBalance(addressView.value);
   balance.value = _balance;
 });
 
 function viewScanner() {
   openPopup.value = false;
-  window.open("https://solscan.io/address/" + getUser().wallet.address, "_blank");
+  window.open("https://solscan.io/address/" + addressView.value, "_blank");
 }
 
 function onDeposit() {
   openPopup.value = false;
   openQRCode.value = true;
 }
-
-function onLogout() {
-  logOut();
+function onViewAssets() {
+  openPopup.value = false;
+  openSolyAssets.value = true;
 }
 </script>
 
@@ -44,7 +46,7 @@ function onLogout() {
               <img :src="getUser().avatar_url" class="w-full h-full" />
             </div>
             <div class="flex-1">
-              <p>{{ shortAddress(getUser().wallet.address) }}</p>
+              <p>{{ shortAddress(addressView) }}</p>
               <div class="row-center">
                 <p class="w-full text-[12px] text-[#cacaca] overflow-hidden whitespace-nowrap text-ellipsis">
                   {{ formatNumber(solana.balance || balance, 3) }} SOL
@@ -65,7 +67,7 @@ function onLogout() {
                 <img :src="getUser()?.avatar_url" class="w-[40px] h-[40px] rounded-full" />
                 <div class="flex-1 ml-2">
                   <div class="row-center justify-between">
-                    <p class="text-[16px] text-[#fff] font-[600]">{{ shortAddress(getUser()?.wallet.address) }}</p>
+                    <p class="text-[16px] text-[#fff] font-[600]">{{ shortAddress(addressView) }}</p>
                     <div class="px-1 cursor-pointer" @click="viewScanner">
                       <img src="/images/icon-arrow-up-right.svg" />
                     </div>
@@ -80,6 +82,9 @@ function onLogout() {
               <div class="py-2 px-3 font-[500] cursor-pointer row-center hover:bg-[#232323]" @click="onDeposit">
                 <span class="flex-1">Deposit</span> <img src="/images/icon-chevron-right-light.svg" class="w-[20px]" />
               </div>
+              <div class="py-2 px-3 font-[500] cursor-pointer row-center hover:bg-[#232323]" @click="onViewAssets">
+                <span class="flex-1">View Soly Assets</span> <img src="/images/icon-chevron-right-light.svg" class="w-[20px]" />
+              </div>
               <LogoutButton />
             </div>
           </section>
@@ -87,5 +92,6 @@ function onLogout() {
       </PopoverContent>
     </Popover>
     <DepositPopup :open="openQRCode" :onClose="() => (openQRCode = false)" />
+    <PartialsSolyAssetModal :address="getUser()?.wallet.address" v-if="openSolyAssets" @close="() => (openSolyAssets = false)" />
   </div>
 </template>

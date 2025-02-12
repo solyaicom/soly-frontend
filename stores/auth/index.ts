@@ -6,6 +6,7 @@ export const useAuthStore = defineStore("auth", () => {
   const accessToken = useLocalStorage(storageKey, "");
 
   const user = ref<IUserProfile>({ name: "" } as IUserProfile);
+  const privyAddress = useLocalStorage("privy_address", "");
 
   function logOut() {
     setAccessToken("");
@@ -34,5 +35,6 @@ export const useAuthStore = defineStore("auth", () => {
     setAccessToken,
     logOut,
     user,
+    privyAddress,
   };
 });

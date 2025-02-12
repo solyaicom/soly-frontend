@@ -1,23 +1,51 @@
 <script setup lang="ts">
+import { getWalletPortfolio } from "~/services/solana/utils";
 import Dialog from "../ui/dialog/Dialog.vue";
 import DialogContent from "../ui/dialog/DialogContent.vue";
 import DepositPopup from "./DepositPopup.vue";
 import WithdrawPopup from "./WithdrawPopup.vue";
+
+const props = defineProps<{
+  address?: string;
+}>();
 
 const solana = useSolana();
 const openPortfolio = ref(false);
 const openPortfolioMobile = ref(false);
 const openDeposit = ref(false);
 const { getUser } = useAuthStore();
-const app = useAppSetting();
 const portfolio_view = ref<HTMLElement | null>(null);
 const portfolio_content = ref<HTMLElement | null>(null);
 const container = ref<HTMLElement | null>(null);
 const openWithdraw = ref(false);
 onClickOutside(container, () => (openPortfolio.value = false));
+const portfolio = ref<{ totalBalance: number; portfolio: { tokens: any[] } }>({
+  totalBalance: 0,
+  portfolio: {
+    tokens: [],
+  },
+});
+const addressView = computed(() => localStorage.getItem("privy_address") || getUser().wallet.address);
+
+onMounted(async () => {
+  if (!props.address) {
+    portfolio.value = {
+      totalBalance: solana.totalBalance,
+      portfolio: solana.portfolio,
+    };
+  } else {
+    const res = await getWalletPortfolio(props.address);
+    portfolio.value = {
+      totalBalance: res.totalBalance,
+      portfolio: {
+        tokens: res.tokens,
+      },
+    };
+  }
+});
 
 function viewScanner() {
-  window.open("https://solscan.io/address/" + getUser().wallet.address, "_blank");
+  window.open("https://solscan.io/address/" + addressView.value, "_blank");
 }
 function onOpenDeposit() {
   openPortfolio.value = false;
@@ -51,10 +79,13 @@ async function onOpenPortfolio(e: any) {
 </script>
 <template>
   <div ref="container">
-    <button class="row-center py-[6px] px-3 rounded-full bg-[#141414]" @click="onOpenPortfolio">
+    <button v-if="!$slots.default" class="row-center py-[6px] px-3 rounded-full bg-[#141414]" @click="onOpenPortfolio">
       <img src="/images/icon-wallet.svg" class="mr-2" />
       <p class="text-[16px]">{{ formatNumber(solana.balance, 3) }} SOL</p>
       <NuxtIcon name="icon-arrow-down" class="ml-2" />
+    </button>
+    <button v-else @click="onOpenPortfolio">
+      <slot />
     </button>
     <div ref="portfolio_view" class="absolute right-0 z-[999] w-[450px] max-w-screen max-h-0 overflow-hidden rounded-[12px]">
       <div ref="portfolio_content" class="bg-[#141414] border-none max-h-screen" hideClose>
@@ -62,7 +93,7 @@ async function onOpenPortfolio(e: any) {
           <div class="row-center justify-between sticky top-0 left-0 w-full p-4 bg-[#141414]">
             <div class="row-center cursor-pointer" @click="viewScanner">
               <img :src="getUser().avatar_url" class="w-[24px] h-[24px] mr-2 rounded-full" />
-              <p class="text-[16px] text-[#cacaca]">{{ shortAddress(getUser().wallet.address) }}</p>
+              <p class="text-[16px] text-[#cacaca]">{{ shortAddress(addressView) }}</p>
               <div class="ml-2">
                 <NuxtIcon name="icon-scanner" class="text-[16px] text-[#cacaca]" />
               </div>
@@ -72,7 +103,7 @@ async function onOpenPortfolio(e: any) {
             </div>
           </div>
           <div class="px-4">
-            <p class="text-[#fff] text-[28px] font-[600]">${{ formatNumber(solana.totalBalance, 2) }}</p>
+            <p class="text-[#fff] text-[28px] font-[600]">${{ formatNumber(portfolio.totalBalance, 2) }}</p>
             <div class="row-center justify-center mt-4 space-x-3">
               <div class="flex flex-col items-center bg-[#1a1a1a] rounded-[12px] p-4 flex-1 cursor-pointer" @click="onOpenDeposit">
                 <img src="/images/icon-deposit.svg" />
@@ -84,10 +115,10 @@ async function onOpenPortfolio(e: any) {
               </div>
             </div>
             <div class="mt-4">
-              <p class="text-[16px] font-[600] text-[#cacaca]">Token ({{ solana.portfolio.tokens.length }})</p>
+              <p class="text-[16px] font-[600] text-[#cacaca]">Token ({{ portfolio.portfolio.tokens.length }})</p>
 
               <div class="min-h-[150px]">
-                <div v-for="(token, idx) in solana.portfolio.tokens" :key="idx" class="mt-2">
+                <div v-for="(token, idx) in portfolio.portfolio.tokens" :key="idx" class="mt-2">
                   <div class="row-center justify-between">
                     <div class="row-center">
                       <a class="w-[28px] h-[28px] mr-2 rounded-full" :href="`https://solscan.io/token/${token.mint}`" target="_blank">
@@ -133,7 +164,7 @@ async function onOpenPortfolio(e: any) {
           <div class="row-center justify-between fixed top-0 left-0 w-full px-4 py-3 bg-[#141414]">
             <div class="row-center cursor-pointer" @click="viewScanner">
               <img :src="getUser().avatar_url" class="w-[24px] h-[24px] mr-2 rounded-full" />
-              <p class="text-[16px] text-[#cacaca]">{{ shortAddress(getUser().wallet.address) }}</p>
+              <p class="text-[16px] text-[#cacaca]">{{ shortAddress(addressView) }}</p>
               <div class="ml-2">
                 <NuxtIcon name="icon-scanner" class="text-[16px] text-[#cacaca]" />
               </div>
@@ -187,7 +218,7 @@ async function onOpenPortfolio(e: any) {
         </div>
       </DialogContent>
     </Dialog>
-    <DepositPopup :open="openDeposit" :onClose="() => (openDeposit = false)" />
-    <WithdrawPopup :open="openWithdraw" :onClose="() => (openWithdraw = false)" />
+    <DepositPopup :open="openDeposit" :address="addressView" :onClose="() => (openDeposit = false)" />
+    <WithdrawPopup :open="openWithdraw" :address="addressView" :onClose="() => (openWithdraw = false)" />
   </div>
 </template>

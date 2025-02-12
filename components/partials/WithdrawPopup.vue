@@ -2,12 +2,14 @@
 import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
 import { toast } from "../ui/toast";
 import { postExecuteTransfer, postInitNewTransfer } from "~/services/api/wallet/api";
+import { getWalletPortfolio } from "~/services/solana/utils";
 
 const openPopup = ref(false);
 const amount = ref("");
 const props = defineProps<{
   open: boolean;
   onClose: () => void;
+  address?: string;
 }>();
 const loading = ref(false);
 const solana = useSolana();
@@ -16,13 +18,36 @@ const container = ref<HTMLElement | null>(null);
 const MINT_USD_TO_WITHDRAW = 1;
 
 const selectedAddress = ref("");
+
+const portfolio = ref<{ totalBalance: number; portfolio: { tokens: any[] } }>({
+  totalBalance: 0,
+  portfolio: {
+    tokens: [],
+  },
+});
+
+onMounted(async () => {
+  if (!props.address) {
+    portfolio.value = {
+      totalBalance: solana.totalBalance,
+      portfolio: solana.portfolio,
+    };
+  } else {
+    const res = await getWalletPortfolio(props.address);
+    portfolio.value = {
+      totalBalance: res.totalBalance,
+      portfolio: {
+        tokens: res.tokens,
+      },
+    };
+  }
+});
 const selectedToken = computed(() => {
-  return solana.portfolio.tokens.find((t) => t.mint === selectedAddress.value);
+  return portfolio.value.portfolio.tokens.find((t) => t.mint === selectedAddress.value);
 });
 const init = ref<any>(null);
 const usdAmount = computed(() => {
   if (selectedToken.value) {
-    console.log("USD to withdraw", Number(amount.value || 0) * (selectedToken.value.pricePerToken || 0));
     return Number(amount.value || 0) * (selectedToken.value.pricePerToken || 0);
   }
   return 0;
@@ -36,7 +61,7 @@ watch(
   () => {
     openPopup.value = props.open;
     if (openPopup.value) {
-      selectedAddress.value = solana.portfolio.tokens[0]?.mint || "";
+      selectedAddress.value = portfolio.value.portfolio.tokens[0]?.mint || "";
     }
   }
 );
@@ -167,7 +192,7 @@ watch(
               </SelectTrigger>
               <SelectContent class="p-0">
                 <SelectGroup class="space-y-2 p-0">
-                  <SelectItem v-for="token in solana.portfolio.tokens" :key="token.mint" :value="token.mint" class="w-full h-[56px]">
+                  <SelectItem v-for="token in portfolio.portfolio.tokens" :key="token.mint" :value="token.mint" class="w-full h-[56px]">
                     <div class="w-full row-center rounded-[0] border-[0] h-[56px]">
                       <img :src="token?.imageUrl" class="w-[28px] h-[28px] rounded-full" />
                       <div class="flex-1 ml-2">
