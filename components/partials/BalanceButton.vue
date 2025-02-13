@@ -18,6 +18,7 @@ const portfolio_view = ref<HTMLElement | null>(null);
 const portfolio_content = ref<HTMLElement | null>(null);
 const container = ref<HTMLElement | null>(null);
 const openWithdraw = ref(false);
+
 onClickOutside(container, () => (openPortfolio.value = false));
 const portfolio = ref<{ totalBalance: number; portfolio: { tokens: any[] } }>({
   totalBalance: 0,

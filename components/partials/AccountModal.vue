@@ -11,9 +11,10 @@ const props = defineProps<{
 }>();
 const solana = useSolana();
 const solyBalance = ref(0);
-// const { privy } = useReactForVue();
+const vuePrivy = useVuePrivy();
 
 onMounted(async () => {
+  console.log(vuePrivy.user);
   solyBalance.value = await getSolBalance(getUser().wallet.address);
 });
 
@@ -46,9 +47,9 @@ function onCopy() {
 
       <div class="flex flex-col items-start">
         <p class="text-[#fff] text-[16px] font-[600]">Privy Embedded Wallet</p>
-        <div class="mt-1 row-center">
+        <div class="mt-1 row-center gap-x-2">
           <div class="text-app-green text-[12px] px-2 rounded-[20px] border border-app-green">Active</div>
-          <div class="text-app-green text-[12px] px-2 rounded-[20px] border border-app-green">Delegate</div>
+          <div v-if="vuePrivy.user?.wallet?.delegated" class="text-app-text2 text-[12px] px-2 rounded-[20px] border border-app-text2">Delegate</div>
         </div>
       </div>
       <div class="border-[1px] border-app-line2 w-full rounded-[12px] p-4">

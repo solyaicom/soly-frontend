@@ -1,16 +1,30 @@
 <script setup>
 import { applyPureReactInVue } from "veaury";
 import { useAppSetting } from "./stores/app";
-import { ReactForVueProvider } from "~/react_app/ReactInVue";
 
 import PriviReact from "~/react_app/PriviProvider.tsx";
+import Hook from "~/react_app/Hook";
 const PriviProvider = applyPureReactInVue(PriviReact);
-const ReactForVue = applyPureReactInVue(ReactForVueProvider);
+const PrivyHook = applyPureReactInVue(Hook);
 
 const app = useAppSetting();
 const colorMode = useColorMode();
+const vuePrivy = useVuePrivy();
 onMounted(() => {
   colorMode.value = "dark";
+  window.addEventListener("message", (e) => {
+    if (e.data.origin === "privy") {
+      if (e.data.type === "user") {
+        vuePrivy.setPrivyUser(e.data.data);
+      }
+      if (e.data.type === "data") {
+        vuePrivy.setPrivyData(e.data.data);
+      }
+    }
+  });
+});
+onBeforeUnmount(() => {
+  window.removeEventListener("message", () => {});
 });
 </script>
 
@@ -25,5 +39,6 @@ onMounted(() => {
         <NuxtPage />
       </div>
     </NuxtLayout>
+    <PrivyHook />
   </PriviProvider>
 </template>

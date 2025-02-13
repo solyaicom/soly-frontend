@@ -4,15 +4,16 @@ import { usePrivy } from "@privy-io/react-auth";
 export default function () {
     const { user } = usePrivy();
 
-    function onMessage(event: any) {
-        console.log("event", event);
-    }
     useEffect(() => {
-        window.addEventListener("message", onMessage);
-        return () => {
-            window.removeEventListener("message", onMessage);
-        };
-    }, []);
+        window.postMessage(
+            {
+                origin: "privy",
+                type: "user",
+                data: user,
+            },
+            "*"
+        );
+    }, [user]);
 
     return null;
 }

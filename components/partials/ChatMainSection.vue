@@ -7,8 +7,7 @@ import { createNewConversation, fetchChatHistory } from "~/services/api/chat/api
 import { useConversationStore } from "~/stores/conversations";
 import BotButton from "../conversation/BotButton.vue";
 import BalanceButton from "./BalanceButton.vue";
-import { checkMessageExpired, findDlmmAction, findActionIdFromMessage, getActionByTool } from "~/services/api/chat/utils";
-import { debounce } from "lodash";
+import { checkMessageExpired, findActionIdFromMessage, getActionByTool } from "~/services/api/chat/utils";
 
 const currentMsg = ref<any>("");
 const scrollArea = ref<HTMLDivElement | null>(null);
