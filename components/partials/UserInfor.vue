@@ -4,12 +4,13 @@ import DepositPopup from "./DepositPopup.vue";
 import PrivyLogout from "~/react_app/LogoutButton";
 
 import { applyPureReactInVue } from "veaury";
+import AccountModal from "./AccountModal.vue";
 
 const LogoutButton = applyPureReactInVue(PrivyLogout);
 const { getUser, logOut } = useAuthStore();
 
 const openPopup = ref(false);
-const openQRCode = ref(false);
+const openAccount = ref(false);
 const solana = useSolana();
 const openSolyAssets = ref(false);
 const addressView = computed(() => localStorage.getItem("privy_address") || getUser().wallet.address);
@@ -26,9 +27,9 @@ function viewScanner() {
   window.open("https://solscan.io/address/" + addressView.value, "_blank");
 }
 
-function onDeposit() {
+function onOpenAccount() {
   openPopup.value = false;
-  openQRCode.value = true;
+  openAccount.value = true;
 }
 function onViewAssets() {
   openPopup.value = false;
@@ -79,8 +80,8 @@ function onViewAssets() {
 
             <div class="line" />
             <div>
-              <div class="py-2 px-3 font-[500] cursor-pointer row-center hover:bg-[#232323]" @click="onDeposit">
-                <span class="flex-1">Deposit</span> <img src="/images/icon-chevron-right-light.svg" class="w-[20px]" />
+              <div class="py-2 px-3 font-[500] cursor-pointer row-center hover:bg-[#232323]" @click="onOpenAccount">
+                <span class="flex-1">Account</span> <img src="/images/icon-chevron-right-light.svg" class="w-[20px]" />
               </div>
               <div class="py-2 px-3 font-[500] cursor-pointer row-center hover:bg-[#232323]" @click="onViewAssets">
                 <span class="flex-1">View Soly Assets</span> <img src="/images/icon-chevron-right-light.svg" class="w-[20px]" />
@@ -91,7 +92,7 @@ function onViewAssets() {
         </div>
       </PopoverContent>
     </Popover>
-    <DepositPopup :open="openQRCode" :onClose="() => (openQRCode = false)" />
+    <AccountModal :address="getUser()?.wallet.address" :open="openAccount" @close="() => (openAccount = false)" />
     <PartialsSolyAssetModal :address="getUser()?.wallet.address" v-if="openSolyAssets" @close="() => (openSolyAssets = false)" />
   </div>
 </template>

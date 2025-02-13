@@ -1,9 +1,11 @@
 <script setup>
 import { applyPureReactInVue } from "veaury";
 import { useAppSetting } from "./stores/app";
+import { ReactForVueProvider } from "~/react_app/ReactInVue";
+
 import PriviReact from "~/react_app/PriviProvider.tsx";
-import HookEvent from "./components/Privy/HookEvent.vue";
 const PriviProvider = applyPureReactInVue(PriviReact);
+const ReactForVue = applyPureReactInVue(ReactForVueProvider);
 
 const app = useAppSetting();
 const colorMode = useColorMode();
@@ -23,6 +25,5 @@ onMounted(() => {
         <NuxtPage />
       </div>
     </NuxtLayout>
-    <HookEvent />
   </PriviProvider>
 </template>

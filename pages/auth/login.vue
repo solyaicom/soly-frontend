@@ -22,7 +22,6 @@ function onLoginSuccess() {
         <img src="/images/icon-logo-black.svg " class="h-[80px]" />
         <span class="text-center text-[54px] font-[700] ml-4">Soly AI</span>
       </div>
-      <span class="text-center text-[28px] font-[500] mt-10">Login with Google</span>
       <div class="w-[200px] mt-10">
         <PartialsButtonGoogle @success="onLoginSuccess" />
       </div>

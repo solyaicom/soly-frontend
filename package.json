@@ -38,7 +38,6 @@
         "nuxt": "^3.10.3",
         "nuxt-icons": "^3.2.1",
         "nuxt-storage": "^1.2.2",
-        "nuxt-vue3-google-signin": "^0.0.11",
         "ofetch": "^1.4.0",
         "pinia": "^2.1.7",
         "radix-vue": "^1.8.3",

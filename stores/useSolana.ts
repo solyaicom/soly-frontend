@@ -17,6 +17,7 @@ export const useSolana = defineStore("solana-store", {
     } as WalletPortfolio,
     totalBalance: 0,
     init_done: false,
+    currentAddress: "",
   }),
   actions: {
     async init(force?: boolean) {
@@ -30,6 +31,7 @@ export const useSolana = defineStore("solana-store", {
       const { getUser } = useAuthStore();
       const address = localStorage.getItem("privy_address");
       if (!address) return;
+      this.currentAddress = address;
       this.init_done = false;
 
       this.portfolio = await getWalletPortfolio(address);

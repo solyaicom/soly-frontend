@@ -13,7 +13,6 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "nuxt-icons",
     "@pinia/nuxt",
-    "nuxt-vue3-google-signin",
     "@sentry/nuxt/module",
     "nuxt-qrcode",
   ],
@@ -72,10 +71,6 @@ export default defineNuxtConfig({
 
   ssr: false,
   spaLoadingTemplate: "splash-loading.html",
-
-  googleSignIn: {
-    clientId: "320448324963-luc2s6c99ksmhh3viirt2tfcpkjth6jh.apps.googleusercontent.com",
-  },
 
   nitro: {
     prerender: {
