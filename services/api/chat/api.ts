@@ -25,6 +25,39 @@ export async function findConversationById(id: string): Promise<IConversation | 
   }
 }
 
+export async function findPublicConversationById(id: string): Promise<IConversation | undefined> {
+  try {
+    const { data } = await Fetch.get<{ data: IConversation }>(`@api/public/conversations/${id}`);
+    return data.data;
+  } catch (error: any) {
+    console.error("findPublicConversationById er", error.response.status);
+
+    return undefined;
+  }
+}
+
+export async function fetchPublicChatHistory(
+  conv_id: string,
+  params: {
+    first_message_id?: string;
+    last_message_id?: string;
+  } = {}
+): Promise<IChatMessage[]> {
+  try {
+    const { data } = await Fetch.get<{ data: IChatMessage[] }>(`@api/public/conversations/${conv_id}/history`, {
+      params: {
+        ...params,
+        limit: 20,
+      },
+    });
+    return data.data;
+  } catch (error: any) {
+    console.error("fetchChatHistory er", error.response.status);
+
+    return [];
+  }
+}
+
 export async function fetchChatHistory(
   conv_id: string,
   params: {

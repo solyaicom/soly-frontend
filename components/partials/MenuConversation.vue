@@ -32,13 +32,13 @@ function onSelectAgent(agent: IAgent) {
         <div class="p-4">
           <div class="row-center justify-center">
             <img src="/images/icon-logo-black.svg" />
-            <span class="text-[24px] font-[600] ml-2">Soly AI</span>
+            <span class="text-[23px] font-[600] ml-2">Soly AI</span>
           </div>
         </div>
       </NuxtLink>
       <div class="flex-1 flex flex-col overflow-hidden p-4 border-t-[1px] border-app-line1">
         <div class="h-full overflow-y-scroll pb-[60px]">
-          <div>
+          <div v-if="app.agents.length > 0">
             <p class="text-[#cacaca] px-3 mb-2">Explore</p>
             <div
               v-for="(item, idx) in app.agents"
@@ -54,7 +54,7 @@ function onSelectAgent(agent: IAgent) {
             <div class="line mb-4"></div>
           </div>
 
-          <div>
+          <div v-if="app.channels.length > 0">
             <p class="text-[#cacaca] px-3 mb-2">Channels</p>
             <div
               v-for="(item, idx) in app.channels"
@@ -70,7 +70,7 @@ function onSelectAgent(agent: IAgent) {
             <div class="line mb-4"></div>
           </div>
 
-          <p class="text-[#cacaca] px-3 mb-2">Conversations</p>
+          <p v-if="conversationStore.histories.length > 0" class="text-[#cacaca] px-3 mb-2">Conversations</p>
           <div
             v-for="(item, idx) in conversationStore.histories"
             :key="item.id"
