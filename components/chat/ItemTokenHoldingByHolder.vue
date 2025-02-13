@@ -1,12 +1,13 @@
 <script setup lang="ts">
 const props = defineProps<{ output: string }>();
 const data = convertToolOutput(props.output);
+console.log("data", data);
 </script>
 
 <template>
   <div class="p-3 bg-[#2f2f2f] rounded-b-[6px]">
     <ul class="list-disc pl-6 space-y-3 text-app-text1 font-[600]">
-      <li>{{ formatNumber(data.noteworthy_count) }}/{{ formatNumber(data.items.length) }} top holders are noteworthy</li>
+      <li>{{ formatNumber(data.noteworthy_count) }}/{{ formatNumber(data.items?.length || 0) }} top holders are noteworthy</li>
       <li>KOL: {{ formatNumber(data.kol_count) }}</li>
     </ul>
     <div class="line mt-3" />

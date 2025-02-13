@@ -12,6 +12,7 @@ const props = defineProps<{
 const conversationStore = useConversationStore();
 
 const app = useAppSetting();
+const { getUser } = useAuthStore();
 
 async function onConversationClick(conv: IConversation) {
   await conversationStore.init(conv);
@@ -105,6 +106,6 @@ function onSelectAgent(agent: IAgent) {
         </div>
       </div>
     </div>
-    <UserInfor />
+    <UserInfor v-if="getUser().id" />
   </section>
 </template>
