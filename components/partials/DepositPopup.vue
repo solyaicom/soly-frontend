@@ -55,6 +55,9 @@ watch(
   () => props.open,
   () => {
     openQRCode.value = props.open;
+  },
+  {
+    immediate: true,
   }
 );
 

@@ -4,6 +4,7 @@ import Dialog from "../ui/dialog/Dialog.vue";
 import DialogContent from "../ui/dialog/DialogContent.vue";
 import DepositPopup from "./DepositPopup.vue";
 import WithdrawPopup from "./WithdrawPopup.vue";
+import SolyAssetModal from "./SolyAssetModal.vue";
 
 const props = defineProps<{
   address?: string;
@@ -18,6 +19,7 @@ const portfolio_view = ref<HTMLElement | null>(null);
 const portfolio_content = ref<HTMLElement | null>(null);
 const container = ref<HTMLElement | null>(null);
 const openWithdraw = ref(false);
+const openSolyAsset = ref(false);
 
 onClickOutside(container, () => (openPortfolio.value = false));
 const portfolio = ref<{ totalBalance: number; portfolio: { tokens: any[] } }>({
@@ -77,6 +79,11 @@ async function onOpenPortfolio(e: any) {
   }
   openPortfolio.value = true;
 }
+
+function onOpenSolyAsset() {
+  openPortfolio.value = false;
+  openSolyAsset.value = true;
+}
 </script>
 <template>
   <div ref="container">
@@ -105,6 +112,18 @@ async function onOpenPortfolio(e: any) {
           </div>
           <div class="px-4">
             <p class="text-[#fff] text-[28px] font-[600]">${{ formatNumber(portfolio.totalBalance, 2) }}</p>
+            <div class="row-center p-3 border border-[#4096FF] rounded-[6px] bg-[rgba(22,119,255,0.05)] mt-3">
+              <NuxtIcon name="icon-about" class="text-system-blue text-[22px]" />
+              <div class="ml-3">
+                <p class="text-app-text2">
+                  The balance displayed is for your new wallet, created by Privy. Your existing assets are safely stored in your old wallet.
+                </p>
+                <button class="row-center text-[#1677FF]" @click="onOpenSolyAsset">
+                  <p>Go to old wallet: {{ shortAddress(getUser().wallet.address) }}</p>
+                  <NuxtIcon name="icon-arrow-down" class="rotate-[-90deg]" />
+                </button>
+              </div>
+            </div>
             <div class="row-center justify-center mt-4 space-x-3">
               <div class="flex flex-col items-center bg-[#1a1a1a] rounded-[12px] p-4 flex-1 cursor-pointer" @click="onOpenDeposit">
                 <img src="/images/icon-deposit.svg" />
@@ -221,5 +240,6 @@ async function onOpenPortfolio(e: any) {
     </Dialog>
     <DepositPopup :open="openDeposit" :address="addressView" :onClose="() => (openDeposit = false)" />
     <WithdrawPopup :open="openWithdraw" :address="addressView" :onClose="() => (openWithdraw = false)" />
+    <SolyAssetModal v-if="openSolyAsset" :address="getUser().wallet.address" @close="() => (openSolyAsset = false)" />
   </div>
 </template>

@@ -63,6 +63,9 @@ watch(
     if (openPopup.value) {
       selectedAddress.value = portfolio.value.portfolio.tokens[0]?.mint || "";
     }
+  },
+  {
+    immediate: true,
   }
 );
 
