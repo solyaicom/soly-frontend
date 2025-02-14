@@ -42,6 +42,7 @@ onMounted(async () => {
       },
     };
   }
+  selectedAddress.value = portfolio.value.portfolio.tokens[0]?.mint || "";
 });
 const selectedToken = computed(() => {
   return portfolio.value.portfolio.tokens.find((t) => t.mint === selectedAddress.value);
@@ -152,7 +153,7 @@ async function startInit() {
 async function onContinueClick() {
   if (usdAmount.value < MINT_USD_TO_WITHDRAW) {
     toast({
-      description: "Amount must be greater than 1",
+      description: "Amount must be greater than $1",
       duration: 4000,
     });
     return;
