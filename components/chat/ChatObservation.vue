@@ -6,15 +6,17 @@ const props = defineProps<{ observations: IObservation[]; created_at: string; is
 
 const token = computed(() => {
   let findOutputToken = "";
+  let toolId = "" as any;
   props.observations.forEach((item) => {
     item.tools?.forEach((tool) => {
       if (tool.name.includes("dataset_")) {
+        toolId = tool.name;
         findOutputToken = tool.outputs;
       }
     });
   });
   if (!findOutputToken) return null;
-  const _token = convertToolOutput(findOutputToken);
+  const _token = convertToolOutput(findOutputToken, toolId);
   return _token.map((item: any) => ({
     ...item,
     imageUrl: item.icon,

@@ -11,7 +11,7 @@ const listOutToken = ref<IFullToken[]>([]);
 
 onMounted(async () => {
   if (props.output) {
-    const outputs = convertToolOutput(props.output).output;
+    const outputs = convertToolOutput(props.output);
     const _plans = outputs.plans || ([] as any[]);
     const mints = _plans.map((pl: any) => pl.output_mint);
     const tokens = await fetchTokenAssets([_plans[0].input_mint, ...mints]);
