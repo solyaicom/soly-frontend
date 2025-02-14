@@ -18,7 +18,7 @@ const conversationStore = useConversationStore();
 const app = useAppSetting();
 
 const currentConversation = computed(() => conversationStore.conv);
-const isChannel = computed(() => !!currentConversation.value?.is_readonly);
+const isChannel = computed(() => !!currentConversation.value?.id.endsWith("-channel"));
 
 function getMessageTime(item: IChatMessage): string {
   if (!isChannel.value) {

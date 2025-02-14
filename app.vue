@@ -27,7 +27,7 @@ onMounted(() => {
 });
 
 watch(
-  () => getUser().wallet.is_active,
+  () => getUser().wallet?.is_active,
   () => {
     solana.init(true);
   }
