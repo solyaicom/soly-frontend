@@ -88,9 +88,6 @@
         display: none;
     }
 
-    svg {
-        margin: 0 !important;
-    }
     button:hover {
         opacity: 0.87;
     }

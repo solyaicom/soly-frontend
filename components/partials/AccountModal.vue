@@ -4,6 +4,7 @@ import { getSolBalance } from "~/services/solana/utils";
 import DepositPopup from "./DepositPopup.vue";
 import WithdrawPopup from "./WithdrawPopup.vue";
 import SolyAssetModal from "./SolyAssetModal.vue";
+import { toast } from "../ui/toast";
 
 const { getUser } = useAuthStore();
 const openQRCode = ref(false);
@@ -93,7 +94,7 @@ function viewScanner(addr: string) {
             <p>{{ formatNumber(solana.balance) }} SOL</p>
           </div>
           <div class="grid grid-cols-2 md:grid-cols-4 mt-2 gap-y-2 gap-x-2">
-            <button class="bg-[#fff] rounded-[6px] p-2 row-center text-[#131313]" @click="openDepositPopup(solana.currentAddress)">
+            <button class="bg-[#fff] rounded-[6px] p-2 row-center text-[#131313]" @click="vuePrivy.request('deposit')">
               <NuxtIcon name="icon-deposit" class="text-[16px] mt-[1px]" />
               <span class="font-[600] ml-1">Deposit</span>
             </button>
@@ -101,13 +102,17 @@ function viewScanner(addr: string) {
               <NuxtIcon name="icon-deposit" class="text-[16px] mt-[1px] rotate-180" />
               <span class="font-[600] ml-1">Withdraw</span>
             </button>
-            <button class="bg-[#fff] rounded-[6px] p-2 row-center text-[#131313]">
+            <button class="bg-[#fff] rounded-[6px] p-2 row-center text-[#131313]" @click="vuePrivy.request('export')">
               <NuxtIcon name="icon-export" class="text-[16px] mt-[1px]" />
               <span class="font-[600] ml-1">Export</span>
             </button>
-            <button class="bg-[#fff] rounded-[6px] p-2 row-center text-[#131313]">
+            <button
+              class="bg-[#fff] rounded-[6px] p-2 row-center text-[#131313]"
+              :class="vuePrivy.user?.wallet?.delegated ? 'bg-app-red text-[#fff] ' : ''"
+              @click="vuePrivy.request(vuePrivy.user?.wallet?.delegated ? 'revoke_delegate' : 'delegate')"
+            >
               <NuxtIcon name="icon-delegate" class="text-[16px] mt-[1px]" />
-              <span class="font-[600] ml-1">Delegate</span>
+              <span class="ml-1">{{ vuePrivy.user?.wallet?.delegated ? "Revoke" : "Delegate" }}</span>
             </button>
           </div>
         </div>

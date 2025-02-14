@@ -22,11 +22,18 @@ export const useVuePrivy = defineStore("vue-privy-store", {
     user: {} as IPrivyUser,
   }),
   actions: {
-    setPrivyUser(user: any) {
+    setPrivyUser(user: IPrivyUser) {
       this.user = user;
     },
     setPrivyData(data: any) {
       this.privy = data;
+    },
+    request(method: "export" | "delegate" | "revoke_delegate" | "deposit", params?: any) {
+      window.postMessage({
+        origin: "request_privy",
+        method,
+        params,
+      });
     },
   },
 });

@@ -186,12 +186,15 @@ watch(
           <div class="w-full border-[1px] border-app-line1 rounded-[8px] overflow-hidden">
             <Select v-model="selectedAddress">
               <SelectTrigger class="w-full row-center bg-app-card1 rounded-[0] border-[0] h-[56px] outline-none px-3 py-2">
-                <img :src="selectedToken?.imageUrl" class="w-[28px] h-[28px] rounded-full" />
-                <div class="flex-1 ml-2">
-                  <p class="text-[16px]">{{ selectedToken?.name }}</p>
-                  <p class="text-app-text3">{{ selectedToken?.symbol }}</p>
+                <div v-if="selectedToken" class="row-center w-full">
+                  <img :src="selectedToken?.imageUrl" class="w-[28px] h-[28px] rounded-full" />
+                  <div class="flex-1 ml-2">
+                    <p class="text-[16px]">{{ selectedToken?.name }}</p>
+                    <p class="text-app-text3">{{ selectedToken?.symbol }}</p>
+                  </div>
+                  <p class="mr-2">{{ formatNumber(selectedToken?.balance, 3) }}</p>
                 </div>
-                <p class="mr-2">{{ formatNumber(selectedToken?.balance, 3) }}</p>
+                <div v-else><p class="text-[16px]">Select token</p></div>
               </SelectTrigger>
               <SelectContent class="p-0">
                 <SelectGroup class="space-y-2 p-0">

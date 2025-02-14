@@ -20,6 +20,12 @@ export default function ({ children }: { children: React.ReactNode }) {
                         createOnLogin: "users-without-wallets",
                     },
                 },
+                solanaClusters: [
+                    {
+                        name: "mainnet-beta",
+                        rpcUrl: "https://mainnet.helius-rpc.com/?api-key=c4d2bbb1-4ab8-4f88-bff2-f8863270aabd",
+                    },
+                ],
             }}
             children={children}
         />
