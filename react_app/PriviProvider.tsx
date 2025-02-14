@@ -1,6 +1,9 @@
 import React from "react";
 import { PrivyProvider } from "@privy-io/react-auth";
-
+import { toSolanaWalletConnectors } from "@privy-io/react-auth/solana";
+const solanaConnectors = toSolanaWalletConnectors({
+    shouldAutoConnect: false,
+});
 export default function ({ children }: { children: React.ReactNode }) {
     return (
         <PrivyProvider
@@ -14,6 +17,11 @@ export default function ({ children }: { children: React.ReactNode }) {
                     logo: "/favicon.png",
                 },
                 loginMethods: ["email", "google"],
+                externalWallets: {
+                    solana: {
+                        connectors: solanaConnectors,
+                    },
+                },
                 // Create embedded wallets for users who don't have a wallet
                 embeddedWallets: {
                     showWalletUIs: true,

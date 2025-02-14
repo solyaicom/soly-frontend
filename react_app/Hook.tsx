@@ -9,10 +9,6 @@ export default function () {
     const { fundWallet } = useFundWallet();
 
     useEffect(() => {
-        console.log("ready", ready);
-    }, [ready]);
-
-    useEffect(() => {
         window.postMessage(
             {
                 origin: "privy",
@@ -47,7 +43,6 @@ export default function () {
                     // TODO
                 }
                 if (event.data.method === "deposit") {
-                    console.log("user", user?.wallet?.address);
                     fundWallet(user?.wallet?.address || "");
 
                     // TODO

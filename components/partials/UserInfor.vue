@@ -47,7 +47,7 @@ function onViewAssets() {
               <img :src="getUser().avatar_url" class="w-full h-full" />
             </div>
             <div class="flex-1">
-              <p>{{ shortAddress(addressView) }}</p>
+              <p>{{ shortAddress(solana.currentAddress) }}</p>
               <div class="row-center">
                 <p class="w-full text-[12px] text-[#cacaca] overflow-hidden whitespace-nowrap text-ellipsis">
                   {{ formatNumber(solana.balance || balance, 3) }} SOL
@@ -68,7 +68,7 @@ function onViewAssets() {
                 <img :src="getUser()?.avatar_url" class="w-[40px] h-[40px] rounded-full" />
                 <div class="flex-1 ml-2">
                   <div class="row-center justify-between">
-                    <p class="text-[16px] text-[#fff] font-[600]">{{ shortAddress(addressView) }}</p>
+                    <p class="text-[16px] text-[#fff] font-[600]">{{ shortAddress(solana.currentAddress) }}</p>
                     <div class="px-1 cursor-pointer" @click="viewScanner">
                       <img src="/images/icon-arrow-up-right.svg" />
                     </div>

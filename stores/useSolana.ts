@@ -29,7 +29,7 @@ export const useSolana = defineStore("solana-store", {
         return;
       }
       const { getUser } = useAuthStore();
-      const address = localStorage.getItem("privy_address") || getUser().privy_wallet.address || "";
+      const address = getUser().wallet.is_active ? getUser().wallet.address : getUser().privy_wallet.address;
       if (!address) return;
       this.currentAddress = address;
       this.init_done = false;

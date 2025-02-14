@@ -28,7 +28,7 @@ const portfolio = ref<{ totalBalance: number; portfolio: { tokens: any[] } }>({
     tokens: [],
   },
 });
-const addressView = computed(() => props.address || localStorage.getItem("privy_address") || getUser().wallet.address);
+const addressView = computed(() => (getUser().wallet.is_active ? getUser().wallet.address : getUser().privy_wallet.address));
 
 watch(
   () => solana.portfolio.address,

@@ -7,6 +7,7 @@ export interface IAuthLimit {
 
 export interface IWalletInfor {
   address: string;
+  is_active: boolean;
 }
 
 export interface IUserProfile {

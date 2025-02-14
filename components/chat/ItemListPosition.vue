@@ -123,7 +123,7 @@ function onClaimfee(address: string) {
                   {{ objToken[item.pair.mint_x]?.symbol }}
                 </p>
                 <p v-if="Number(item.total_y_amount)">
-                  {{ formatNumber(Number(item.total_y_amount) / Math.pow(10, objToken[item.pair.mint_x]?.decimals)) }}
+                  {{ formatNumber(Number(item.total_y_amount) / Math.pow(10, objToken[item.pair.mint_y]?.decimals)) }}
                   {{ objToken[item.pair.mint_y]?.symbol }}
                 </p>
               </div>
@@ -136,7 +136,7 @@ function onClaimfee(address: string) {
                   {{ objToken[item.pair.mint_x]?.symbol }}
                 </p>
                 <p v-if="Number(item.fee_y)">
-                  {{ formatNumber(Number(item.fee_y) / Math.pow(10, objToken[item.pair.mint_x]?.decimals)) }}
+                  {{ formatNumber(Number(item.fee_y) / Math.pow(10, objToken[item.pair.mint_y]?.decimals)) }}
                   {{ objToken[item.pair.mint_y]?.symbol }}
                 </p>
               </div>

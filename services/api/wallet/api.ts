@@ -21,3 +21,14 @@ export async function postExecuteTransfer(body: { transfer_id: string }): Promis
     return null;
   }
 }
+
+export async function postActiveWallet(body: { address: string }): Promise<any> {
+  try {
+    await Fetch.post<{ data: any }>(`@api/wallets/active`, body);
+    return true;
+  } catch (error: any) {
+    console.error("postActiveWallet er", error);
+
+    return false;
+  }
+}

@@ -10,6 +10,8 @@ const PrivyHook = applyPureReactInVue(Hook);
 const app = useAppSetting();
 const colorMode = useColorMode();
 const vuePrivy = useVuePrivy();
+const { getUser } = useAuthStore();
+const solana = useSolana();
 onMounted(() => {
   colorMode.value = "dark";
   window.addEventListener("message", (e) => {
@@ -23,6 +25,14 @@ onMounted(() => {
     }
   });
 });
+
+watch(
+  () => getUser().wallet.is_active,
+  () => {
+    solana.init(true);
+  }
+);
+
 onBeforeUnmount(() => {
   window.removeEventListener("message", () => {});
 });
