@@ -397,7 +397,7 @@ function makeTransactionAction(action: "confirm" | "cancel") {
 
             <div
               v-if="
-                lastMsg.completed &&
+                lastMsg?.completed &&
                 !!findActionIdFromMessage(lastMsg) &&
                 !checkMessageExpired(lastMsg) &&
                 !actionExpired &&
