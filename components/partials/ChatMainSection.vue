@@ -396,7 +396,13 @@ function makeTransactionAction(action: "confirm" | "cancel") {
             <BalanceButton class="absolute top-[-60px] right-[0px] z-1" />
 
             <div
-              v-if="!!findActionIdFromMessage(lastMsg) && !checkMessageExpired(lastMsg) && !actionExpired && !conversationStore.hideChat"
+              v-if="
+                lastMsg.completed &&
+                !!findActionIdFromMessage(lastMsg) &&
+                !checkMessageExpired(lastMsg) &&
+                !actionExpired &&
+                !conversationStore.hideChat
+              "
               class="p-6 w-full bg-[#141414] flex flex-col items-center justify-center"
             >
               <p class="text-[#979797] text-[16px]">Do you want {{ currentAgent?.name || "SolyAI" }} make this action?</p>
