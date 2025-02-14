@@ -16,7 +16,8 @@ export function getQuote(message: IChatMessage, findTool?: boolean) {
     const lastTool = tools[tools.length - 1];
     if (!lastTool) return {};
     const findTradingQuote = tools.find((tool) => tool.name === "solyAiTradingQuoteAPIPost" || tool.name === "dlmmactionsinit_post");
-    if (!findTradingQuote) return {};
+    if (!findTradingQuote || !findTradingQuote.outputs) return {};
+
     const realOutput = findTradingQuote.outputs.split("tool response: ")[0];
     return JSON.parse(realOutput).output;
   } catch (error) {
