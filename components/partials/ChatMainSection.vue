@@ -328,7 +328,13 @@ function onKeyDown(e: any) {
 }
 
 function makeTransactionAction(action: "confirm" | "cancel") {
-  if (!lastMsg.value) return;
+  if (!lastMsg.value) {
+    toast({
+      description: "Something went wrong, refresh and try again",
+      duration: 5000,
+    });
+    return;
+  }
   const msg = lastMsg.value;
   if (checkMessageExpired(msg)) {
     actionExpired.value = true;

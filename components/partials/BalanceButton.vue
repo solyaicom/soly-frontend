@@ -23,40 +23,8 @@ const openWithdraw = ref(false);
 const openAccount = ref(false);
 
 onClickOutside(container, () => (openPortfolio.value = false));
-const portfolio = ref<{ totalBalance: number; portfolio: { tokens: any[] } }>({
-  totalBalance: 0,
-  portfolio: {
-    tokens: [],
-  },
-});
+
 const addressView = computed(() => (getUser().wallet.is_active ? getUser().wallet.address : getUser().privy_wallet.address));
-
-watch(
-  () => solana.portfolio.address,
-  () => {
-    if (!props.address) {
-      portfolio.value = {
-        totalBalance: solana.totalBalance,
-        portfolio: solana.portfolio,
-      };
-    }
-  },
-  {
-    immediate: true,
-  }
-);
-
-onMounted(async () => {
-  if (props.address) {
-    const res = await getWalletPortfolio(props.address);
-    portfolio.value = {
-      totalBalance: res.totalBalance,
-      portfolio: {
-        tokens: res.tokens,
-      },
-    };
-  }
-});
 
 function viewScanner() {
   window.open("https://solscan.io/address/" + addressView.value, "_blank");
@@ -76,6 +44,7 @@ watch(
   () => openPortfolio.value,
   () => {
     if (!portfolio_view.value || !portfolio_content.value) return;
+
     portfolio_view.value.style.top = -portfolio_content.value.clientHeight - 12 + "px";
     portfolio_view.value.style.maxHeight = openPortfolio.value ? "600px" : "0px";
   }
@@ -122,7 +91,7 @@ function onOpenSolyAsset() {
             </div>
           </div>
           <div class="px-4">
-            <p class="text-[#fff] text-[28px] font-[600]">${{ formatNumber(portfolio.totalBalance, 2) }}</p>
+            <p class="text-[#fff] text-[28px] font-[600]">${{ formatNumber(solana.totalBalance, 2) }}</p>
             <div v-if="getUser().privy_wallet.is_active" class="row-center p-3 border border-[#4096FF] rounded-[6px] bg-[rgba(22,119,255,0.05)] mt-3">
               <NuxtIcon name="icon-about" class="text-system-blue text-[22px]" />
               <div class="ml-3">
@@ -146,10 +115,10 @@ function onOpenSolyAsset() {
               </div>
             </div>
             <div class="mt-4">
-              <p class="text-[16px] font-[600] text-[#cacaca]">Token ({{ portfolio.portfolio.tokens.length }})</p>
+              <p class="text-[16px] font-[600] text-[#cacaca]">Token ({{ solana.portfolio.tokens.length }})</p>
 
               <div class="min-h-[150px]">
-                <div v-for="(token, idx) in portfolio.portfolio.tokens" :key="idx" class="mt-2">
+                <div v-for="(token, idx) in solana.portfolio.tokens" :key="token.mint" class="mt-2">
                   <div class="row-center justify-between">
                     <div class="row-center">
                       <a class="w-[28px] h-[28px] mr-2 rounded-full" :href="`https://solscan.io/token/${token.mint}`" target="_blank">
