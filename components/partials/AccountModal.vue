@@ -63,7 +63,7 @@ function viewScanner(addr: string) {
 
 <template>
   <div>
-    <Dialog v-model:open="openQRCode">
+    <Dialog :open="openQRCode">
       <DialogContent class="bg-[#141418] py-8 px-4 border-none flex flex-col">
         <DialogTitle class="text-[28px] font-[600] mt-2">Account</DialogTitle>
         <div class="line" />
