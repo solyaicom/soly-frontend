@@ -3,7 +3,7 @@ import { useSolanaWallets } from "@privy-io/react-auth/solana";
 import { useLogin, LoginModal, usePrivy, useDelegatedActions, useIdentityToken } from "@privy-io/react-auth";
 
 export default function ({ children, onSuccess }: { children: React.ReactNode; onSuccess: (id_token: string) => void }) {
-    const { user, login, getAccessToken } = usePrivy();
+    const { user, login, logout } = usePrivy();
     const { identityToken } = useIdentityToken();
 
     useEffect(() => {
@@ -14,7 +14,10 @@ export default function ({ children, onSuccess }: { children: React.ReactNode; o
     }, [identityToken, user]);
 
     async function onClick() {
-        if (!user) return login();
+        if (user) {
+            await logout();
+        }
+        return login();
     }
     return (
         <button
