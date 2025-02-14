@@ -72,7 +72,9 @@ function viewScanner(addr: string) {
           <p class="text-[#fff] text-[16px] font-[600]">Privy Embedded Wallet</p>
           <div class="mt-1 row-center gap-x-2">
             <div class="text-app-green text-[12px] px-2 rounded-[20px] border border-app-green">Active</div>
-            <div v-if="vuePrivy.user?.wallet?.delegated" class="text-app-text2 text-[12px] px-2 rounded-[20px] border border-app-text2">Delegate</div>
+            <div v-if="vuePrivy.user?.wallet?.delegated" class="text-app-text2 text-[12px] px-2 rounded-[20px] border border-app-text2">
+              Delegated
+            </div>
           </div>
         </div>
         <div class="border-[1px] border-app-line2 w-full rounded-[12px] p-4">
@@ -122,7 +124,7 @@ function viewScanner(addr: string) {
           <div class="mt-1 row-center">
             <div class="text-app-red text-[12px] px-2 rounded-[20px] border border-app-red">Inactive</div>
           </div>
-          <p class="mt-2 text-app-red">This wallet is no longer available for onchain transactions from Feb 10, 2024.</p>
+          <p class="mt-2 text-app-red">This wallet is no longer available for onchain transactions from Feb 14, 2024.</p>
           <div class="mt-2 border-[1px] border-app-line2 w-full rounded-[12px] p-4">
             <div class="row-center justify-between">
               <div class="row-center">
@@ -133,6 +135,9 @@ function viewScanner(addr: string) {
                 <p class="ml-2 font-[600]">{{ shortAddress(getUser().wallet.address) }}</p>
                 <button class="p-1 bg-app-card1 ml-1 rounded-[4px]" @click="onCopy(getUser().wallet.address)">
                   <NuxtIcon name="icon-copy" class="text-app-text2" />
+                </button>
+                <button class="p-1 bg-app-card1 ml-1 rounded-[4px]" @click="viewScanner(getUser().wallet.address)">
+                  <NuxtIcon name="icon-scanner" class="text-app-text2" />
                 </button>
               </div>
 

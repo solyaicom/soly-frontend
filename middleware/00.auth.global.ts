@@ -12,9 +12,13 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (getAccessToken()) {
     try {
       userInfo = await getUserInfo();
-
+      if (!userInfo.privy_wallet) {
+        throw new Error("");
+      }
       setUser(userInfo);
     } catch (error) {
+      localStorage.removeItem("access_token");
+
       return navigateTo("/auth/login");
     }
   } else if (to.name !== "index") {

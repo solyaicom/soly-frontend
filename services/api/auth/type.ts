@@ -16,6 +16,7 @@ export interface IUserProfile {
   username: string;
   wallet: IWalletInfor;
   avatar_url: string;
+  privy_wallet: IWalletInfor;
   subscription: {
     expire_at: string;
     data?: {

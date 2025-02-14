@@ -13,9 +13,10 @@ export default function ({ children, onSuccess }: { children: React.ReactNode; o
     }, [user]);
 
     async function onClick() {
+        localStorage.removeItem("access_token");
+        window.location.href = "/auth/login";
         if (user) {
             await logout();
-            window.location.href = "/auth/login";
         }
     }
     return (
