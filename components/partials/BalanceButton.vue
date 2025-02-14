@@ -28,15 +28,25 @@ const portfolio = ref<{ totalBalance: number; portfolio: { tokens: any[] } }>({
     tokens: [],
   },
 });
-const addressView = computed(() => localStorage.getItem("privy_address") || getUser().wallet.address);
+const addressView = computed(() => props.address || localStorage.getItem("privy_address") || getUser().wallet.address);
+
+watch(
+  () => solana.portfolio.address,
+  () => {
+    if (!props.address) {
+      portfolio.value = {
+        totalBalance: solana.totalBalance,
+        portfolio: solana.portfolio,
+      };
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 
 onMounted(async () => {
-  if (!props.address) {
-    portfolio.value = {
-      totalBalance: solana.totalBalance,
-      portfolio: solana.portfolio,
-    };
-  } else {
+  if (props.address) {
     const res = await getWalletPortfolio(props.address);
     portfolio.value = {
       totalBalance: res.totalBalance,

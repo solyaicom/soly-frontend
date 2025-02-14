@@ -146,6 +146,7 @@ async function onContinueClick() {
   }
   loading.value = true;
   const rs = await postInitNewTransfer({
+    from_address: props.address || solana.currentAddress,
     amount: Number(amount.value),
     mint: selectedAddress.value,
     to_address: withdrawAddress.value,

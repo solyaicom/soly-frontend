@@ -1,6 +1,6 @@
 import Fetch from "..";
 
-export async function postInitNewTransfer(body: { amount: number; mint: string; to_address: string }): Promise<any> {
+export async function postInitNewTransfer(body: { amount: number; mint: string; to_address: string; from_address: string }): Promise<any> {
   try {
     const { data } = await Fetch.post<{ data: any }>(`@api/wallets/init-transfer`, body);
     return data.data;

@@ -144,7 +144,7 @@ function viewScanner(addr: string) {
               <p>{{ formatNumber(solyBalance) }} SOL</p>
             </div>
             <div class="row-center mt-2 gap-y-2 gap-x-2">
-              <button class="bg-[#fff] rounded-[6px] p-2 row-center text-[#131313]" @click="openWithdrawPopup(getUser().wallet.address)">
+              <button class="bg-[#fff] rounded-[6px] p-2 row-center text-[#131313]" @click="openWithdrawPopup(solana.currentAddress)">
                 <NuxtIcon name="icon-deposit" class="text-[16px] mt-[1px] rotate-180" />
                 <span class="font-[600] ml-1">Withdraw</span>
               </button>

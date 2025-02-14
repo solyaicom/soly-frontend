@@ -42,7 +42,9 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    public: {},
+    public: {
+      privy_app_id: "",
+    },
   },
 
   app: {
