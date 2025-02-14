@@ -7,7 +7,7 @@ export default function ({ children, onSuccess }: { children: React.ReactNode; o
     const { identityToken } = useIdentityToken();
 
     useEffect(() => {
-        if (identityToken && user) {
+        if (identityToken && user && user.wallet) {
             localStorage.setItem("privy_address", user.wallet?.address || "");
             onSuccess(identityToken);
         }
