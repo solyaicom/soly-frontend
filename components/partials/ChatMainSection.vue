@@ -20,6 +20,7 @@ const app = useAppSetting();
 const currentContent = ref<string>("");
 const solana = useSolana();
 const actionExpired = ref(false);
+const { getUser } = useAuthStore();
 
 const botThinking = ref(false);
 const currentConversationID = computed(() => conversationStore.convID);
@@ -359,6 +360,14 @@ function makeTransactionAction(action: "confirm" | "cancel") {
     }, 6000);
   }
 }
+
+function onCheckDelegate() {
+  if (getUser().privy_wallet.is_active) {
+    showDelegate.value = true;
+    return;
+  }
+  makeTransactionAction("confirm");
+}
 </script>
 
 <template>
@@ -420,7 +429,7 @@ function makeTransactionAction(action: "confirm" | "cancel") {
                 <button
                   class="font-[600] text-[16px] py-3 px-10 bg-[#fff] rounded-[6px] text-[#131313] cursor-pointer"
                   :class="conversationStore.disableAction ? 'opacity-50' : ''"
-                  @click="showDelegate = true"
+                  @click="onCheckDelegate()"
                   :disabled="conversationStore.disableAction"
                 >
                   Confirm
