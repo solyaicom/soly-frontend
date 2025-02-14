@@ -44,7 +44,6 @@ watch(
 );
 
 function openWithdrawPopup(addr: string) {
-  openQRCode.value = false;
   addressView.value = addr;
   openWithdraw.value = true;
 }
@@ -73,6 +72,11 @@ async function updateActiveWallet(value: boolean, wallet_type: "privy" | "soly")
       posting.value = false;
     }
   }
+}
+
+function onOpenDeposit(addr: string) {
+  addressView.value = addr;
+  openDeposit.value = true;
 }
 </script>
 
@@ -118,11 +122,11 @@ async function updateActiveWallet(value: boolean, wallet_type: "privy" | "soly")
             <p>{{ formatNumber(privyBalance) }} SOL</p>
           </div>
           <div class="grid grid-cols-2 md:grid-cols-4 mt-2 gap-y-2 gap-x-2">
-            <button class="bg-[#fff] rounded-[6px] p-2 row-center text-[#131313]" @click="vuePrivy.request('deposit')">
+            <button class="bg-[#fff] rounded-[6px] p-2 row-center text-[#131313]" @click="onOpenDeposit(getUser().privy_wallet.address)">
               <NuxtIcon name="icon-deposit" class="text-[16px] mt-[1px]" />
               <span class="font-[600] ml-1">Deposit</span>
             </button>
-            <button class="bg-[#fff] rounded-[6px] p-2 row-center text-[#131313]" @click="openWithdrawPopup(solana.currentAddress)">
+            <button class="bg-[#fff] rounded-[6px] p-2 row-center text-[#131313]" @click="openWithdrawPopup(getUser().privy_wallet.address)">
               <NuxtIcon name="icon-deposit" class="text-[16px] mt-[1px] rotate-180" />
               <span class="font-[600] ml-1">Withdraw</span>
             </button>

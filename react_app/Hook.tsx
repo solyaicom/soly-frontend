@@ -43,7 +43,9 @@ export default function () {
                     // TODO
                 }
                 if (event.data.method === "deposit") {
-                    fundWallet(user?.wallet?.address || "");
+                    fundWallet(user?.wallet?.address || "", {
+                        amount: "100",
+                    });
 
                     // TODO
                 }
