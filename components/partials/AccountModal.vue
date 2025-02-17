@@ -103,7 +103,12 @@ function onOpenDeposit(addr: string) {
             />
           </div>
           <div class="mt-1 row-center gap-x-2">
-            <div v-if="getUser().privy_wallet.is_active" class="text-app-green text-[12px] px-2 rounded-[20px] border border-app-green">Active</div>
+            <div
+              v-if="getUser().privy_wallet.is_active && getUser().wallet"
+              class="text-app-green text-[12px] px-2 rounded-[20px] border border-app-green"
+            >
+              Active
+            </div>
             <div v-if="vuePrivy.user?.wallet?.delegated" class="text-app-text2 text-[12px] px-2 rounded-[20px] border border-app-text2">
               Delegated
             </div>
