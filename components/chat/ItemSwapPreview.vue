@@ -33,13 +33,13 @@ onMounted(async () => {
         <div class="row-center bg-[#1a1a1a] p-4 rounded-[12px] w-full justify-between">
           <p class="text-[20px] md:text-[24px] font-[600]">{{ plans[0].in_amount_float }} {{ inputToken?.symbol }}</p>
           <div class="w-[30px] md:w-[40px] rounded-full overflow-hidden">
-            <img :src="inputToken?.imageUrl" class="h-full w-full" />
+            <img :src="`https://dd.dexscreener.com/ds-data/tokens/solana/${inputToken.address}.png?size=lg`" class="h-full w-full" />
           </div>
         </div>
         <div class="row-center bg-[#1a1a1a] p-4 mt-3 rounded-[12px] w-full justify-between">
           <p class="text-[20px] md:text-[24px] font-[600]">{{ formatNumber(plans[plans.length - 1].out_amount_float) }} {{ outputToken?.symbol }}</p>
           <div class="w-[30px] md:w-[40px] rounded-full overflow-hidden">
-            <img :src="outputToken?.imageUrl" class="h-full w-full" />
+            <img :src="`https://dd.dexscreener.com/ds-data/tokens/solana/${outputToken.address}.png?size=lg`" class="h-full w-full" />
           </div>
         </div>
         <div class="absolute z-[1]">
