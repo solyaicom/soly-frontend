@@ -22,7 +22,7 @@ defineProps<{
         <div class="row-center">
           <a :href="getTokenSolscanLink(inputs.token_info?.address)" target="_blank">
             <div class="w-[32px] h-[32px] md:w-[48px] md:h-[48px] rounded-full overflow-hidden">
-              <img :src="`https://dd.dexscreener.com/ds-data/tokens/solana/${inputs.token_info?.address}.png?size=lg`" class="w-full" />
+              <img :src="getImageUrl(inputs.token_info?.logo, inputs.token_info?.address)" class="w-full" />
             </div>
           </a>
           <div class="ml-2">

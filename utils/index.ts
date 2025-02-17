@@ -177,3 +177,9 @@ export function getTokenExplorerLink(address: string) {
 export function getTokenSolscanLink(address: string) {
   return "https://solscan.io/token/" + address;
 }
+
+export function getImageUrl(imgUrl: string, address: string) {
+  if (!imgUrl) return "";
+  if (imgUrl.startsWith("https://cdn.mevx.io/")) return `https://dd.dexscreener.com/ds-data/tokens/solana/${address}.png?size=lg`;
+  return imgUrl;
+}

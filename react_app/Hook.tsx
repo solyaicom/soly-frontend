@@ -32,22 +32,15 @@ export default function () {
             if (event.data.origin === "request_privy") {
                 if (event.data.method === "export") {
                     onExportWallet();
-                    // TODO
                 }
                 if (event.data.method === "delegate") {
                     delegateWallet({ address: user?.wallet?.address || "", chainType: "solana" });
-                    // TODO
                 }
                 if (event.data.method === "revoke_delegate") {
                     revokeWallets();
-                    // TODO
                 }
                 if (event.data.method === "deposit") {
-                    fundWallet(user?.wallet?.address || "", {
-                        amount: "100",
-                    });
-
-                    // TODO
+                    fundWallet(user?.wallet?.address || "");
                 }
             }
         });
