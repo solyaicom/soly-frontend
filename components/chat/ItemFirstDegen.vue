@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
   inputs: any;
   created_at: any;
   isPreview?: boolean;

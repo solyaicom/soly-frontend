@@ -6,16 +6,13 @@ import ChatObservation from "./ChatObservation.vue";
 import ItemActions from "./ItemActions.vue";
 const md = useMarkdownIt();
 
-const openPreview = ref(false);
-
-const props = defineProps<{
+defineProps<{
   item: IChatMessage;
   thinking?: boolean;
   showPreDate?: boolean;
   isPreview?: boolean;
 }>();
 const conversationStore = useConversationStore();
-const app = useAppSetting();
 
 const currentConversation = computed(() => conversationStore.conv);
 const isChannel = computed(() => !!currentConversation.value?.id.endsWith("-channel"));

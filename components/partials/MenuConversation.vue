@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { PopoverClose } from "radix-vue";
-import { createNewConversation, fetchConversations } from "~/services/api/chat/api";
+
 import { IAgent, IConversation } from "~/services/api/chat/type";
 import { useConversationStore } from "~/stores/conversations";
 import UserInfor from "./UserInfor.vue";

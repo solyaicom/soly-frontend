@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { formatDate } from "@vueuse/shared";
 import { IChatMessage } from "~/services/api/chat/type";
-import ItemFindPool from "./ItemFindPool.vue";
-import ItemPoolDetail from "./ItemPoolDetail.vue";
-import ItemDeposit from "./ItemDeposit.vue";
 
 defineProps<{
   messages: IChatMessage[];

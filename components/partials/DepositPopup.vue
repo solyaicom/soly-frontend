@@ -16,7 +16,7 @@ const props = defineProps<{
 const phantomBalance = ref(0);
 const loading = ref(false);
 
-const addressView = computed(() => props.address || getUser().wallet.address);
+const addressView = computed(() => props.address || getUser().privy_wallet.address || getUser().wallet?.address);
 
 async function onPhantomChange(address?: string) {
   phantomBalance.value = await getSolBalance(address || "");
@@ -31,7 +31,7 @@ async function onDeposit() {
       const transaction = new Transaction().add(
         SystemProgram.transfer({
           fromPubkey: publicKey.value,
-          toPubkey: new PublicKey(getUser().wallet.address),
+          toPubkey: new PublicKey(addressView),
           lamports: amount.value * 1e9,
         })
       );

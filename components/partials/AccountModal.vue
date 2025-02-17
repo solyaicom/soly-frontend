@@ -23,11 +23,11 @@ const privyBalance = ref(0);
 const posting = ref(false);
 
 onMounted(async () => {
-  solyBalance.value = await getSolBalance(getUser().wallet.address);
+  solyBalance.value = getUser().wallet ? await getSolBalance(getUser().wallet.address) : 0;
   privyBalance.value = await getSolBalance(getUser().privy_wallet.address);
 });
 
-const addressView = ref(props.address || getUser().wallet.address);
+const addressView = ref(props.address || solana.currentAddress || getUser().wallet?.address);
 
 watch(
   () => props.open,
@@ -59,7 +59,7 @@ function viewScanner(addr: string) {
 async function updateActiveWallet(value: boolean, wallet_type: "privy" | "soly") {
   if (value) {
     posting.value = true;
-    const address = wallet_type === "privy" ? getUser().privy_wallet.address : getUser().wallet.address;
+    const address = wallet_type === "privy" ? getUser().privy_wallet.address : getUser().wallet?.address;
     const res = await postActiveWallet({
       address,
     });
@@ -67,7 +67,8 @@ async function updateActiveWallet(value: boolean, wallet_type: "privy" | "soly")
       if (wallet_type === "privy") {
         setUser({ ...getUser(), privy_wallet: { ...getUser().privy_wallet, is_active: true }, wallet: { ...getUser().wallet, is_active: false } });
       } else {
-        setUser({ ...getUser(), wallet: { ...getUser().wallet, is_active: true }, privy_wallet: { ...getUser().privy_wallet, is_active: false } });
+        getUser().wallet &&
+          setUser({ ...getUser(), wallet: { ...getUser().wallet, is_active: true }, privy_wallet: { ...getUser().privy_wallet, is_active: false } });
       }
       posting.value = false;
     }
@@ -145,7 +146,7 @@ function onOpenDeposit(addr: string) {
           </div>
         </div>
         <div class="line" />
-        <div>
+        <div v-if="getUser().wallet">
           <div class="row-center justify-between w-full">
             <p class="text-[#fff] text-[16px] font-[600]">SolyAI Wallet</p>
 

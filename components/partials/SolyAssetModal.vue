@@ -20,7 +20,7 @@ const portfolio = ref<{ totalBalance: number; portfolio: { tokens: any[] } }>({
     tokens: [],
   },
 });
-const addressView = computed(() => props.address || getUser().wallet.address);
+const addressView = computed(() => props.address || getUser().wallet?.address);
 
 onMounted(async () => {
   const res = await getWalletPortfolio(props.address);

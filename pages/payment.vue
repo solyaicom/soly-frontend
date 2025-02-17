@@ -27,6 +27,8 @@ const readed = ref(false);
 const processed = ref(getUser().subscription.status === "pending");
 const openLeftMenu = ref(false);
 const txhash = ref(getUser().subscription.data?.tx_signature || "");
+const solana = useSolana();
+
 onMounted(() => {
   checkActive();
 });
@@ -50,7 +52,7 @@ const insufficient = computed(() => {
 });
 
 onMounted(async () => {
-  const [_sub, _balance] = await Promise.all([getSubscriptionPrice(), getSolBalance(getUser().wallet.address)]);
+  const [_sub, _balance] = await Promise.all([getSubscriptionPrice(), getSolBalance(solana.currentAddress)]);
   subscription.value = _sub;
   balance.value = _balance;
 });

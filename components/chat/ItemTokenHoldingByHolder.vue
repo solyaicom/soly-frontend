@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{ output: string }>();
 const data = convertToolOutput(props.output);
-console.log("data", data);
 </script>
 
 <template>

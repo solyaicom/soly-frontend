@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const props = defineProps<{ output: string }>();
 
-const { getUser } = useAuthStore();
 const solana = useSolana();
 const data = convertToolOutput(props.output);
 function findBalanceUSD(address: string) {
@@ -13,12 +12,10 @@ function findBalanceUSD(address: string) {
 <template>
   <div>
     <div class="bg-[#141414] p-3">
-      <div class="row-center justify-between cursor-pointer" @click="copyToClipboard(getUser()?.wallet.address)">
+      <div class="row-center justify-between cursor-pointer" @click="copyToClipboard(solana.currentAddress)">
         <div class="row-center">
           <img src="/images/icon-wallet.svg" />
-          <p class="ml-1 text-[#979797]">
-            <span class="font-[600] text-[#cacaca]">Wallet Address:</span> {{ shortAddress(getUser()?.wallet.address) }}
-          </p>
+          <p class="ml-1 text-[#979797]"><span class="font-[600] text-[#cacaca]">Wallet Address:</span> {{ shortAddress(solana.currentAddress) }}</p>
         </div>
         <NuxtIcon name="icon-copy" class="text-[20px] text-[#979797]" />
       </div>

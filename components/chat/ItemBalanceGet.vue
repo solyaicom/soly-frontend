@@ -6,8 +6,8 @@ import { IFullToken } from "~/services/solana/type";
 const props = defineProps<{ inputs: any; output: any }>();
 
 const token = ref<IFullToken | null>(null);
-const { getUser } = useAuthStore();
 const amount = ref(0);
+const solana = useSolana();
 
 onMounted(async () => {
   if (props.inputs?.mint) {
@@ -22,12 +22,10 @@ onMounted(async () => {
 <template>
   <div>
     <div class="bg-[#141414] p-3">
-      <div class="row-center justify-between cursor-pointer" @click="copyToClipboard(getUser()?.wallet.address)">
+      <div class="row-center justify-between cursor-pointer" @click="copyToClipboard(solana.currentAddress)">
         <div class="row-center">
           <img src="/images/icon-wallet.svg" />
-          <p class="ml-1 text-[#979797]">
-            <span class="font-[600] text-[#cacaca]">Wallet Address:</span> {{ shortAddress(getUser()?.wallet.address) }}
-          </p>
+          <p class="ml-1 text-[#979797]"><span class="font-[600] text-[#cacaca]">Wallet Address:</span> {{ shortAddress(solana.currentAddress) }}</p>
         </div>
         <NuxtIcon name="icon-copy" class="text-[20px] text-[#979797]" />
       </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PublicKey, SystemProgram, Transaction } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 import { toast } from "../ui/toast";
 import { postExecuteTransfer, postInitNewTransfer } from "~/services/api/wallet/api";
 import { getWalletPortfolio } from "~/services/solana/utils";

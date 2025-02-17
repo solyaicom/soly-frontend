@@ -2,7 +2,6 @@
 import { APP_DATA_LINK } from "~/constants";
 
 const authStore = useAuthStore();
-const { balance } = useSolana();
 
 const menu = ref([
   // { label: "Github", icon: "", url: APP_DATA_LINK.github },
@@ -10,6 +9,7 @@ const menu = ref([
   { label: "Twitter", icon: "x", url: APP_DATA_LINK.x },
   { label: "Telegram", icon: "telegram", url: APP_DATA_LINK.telegram },
 ]);
+const solana = useSolana();
 
 const user = computed(() => authStore.user);
 </script>
@@ -33,8 +33,8 @@ const user = computed(() => authStore.user);
         <NuxtLink v-else to="/c" class="border border-white/10 rounded-full btn__solid gap-2 h-12 pl-2 pr-4">
           <img v-if="user.avatar_url" :src="user.avatar_url" alt="avt" class="w-8 h-8 rounded-full object-cover" />
           <div class="text-left">
-            <p class="text-sm">{{ user.wallet.address ? shortAddress(user.wallet.address) : user.name }}</p>
-            <p class="text-xs text-home-neutral-400">{{ formatNumber(balance, 3) }} SOL</p>
+            <p class="text-sm">{{ solana.currentAddress ? shortAddress(solana.currentAddress) : user.name }}</p>
+            <p class="text-xs text-home-neutral-400">{{ formatNumber(solana.balance, 3) }} SOL</p>
           </div>
         </NuxtLink>
       </li>

@@ -5,7 +5,7 @@ import { IFullToken } from "~/services/solana/type";
 const props = defineProps<{ output: string; error?: boolean }>();
 const inputToken = ref<IFullToken | null>(null);
 const outputToken = ref<IFullToken | null>(null);
-const quoteId = ref<string>("");
+
 const plans = ref<any[]>([]);
 const listOutToken = ref<IFullToken[]>([]);
 

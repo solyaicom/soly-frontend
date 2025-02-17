@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getSolBalance } from "~/services/solana/utils";
-import DepositPopup from "./DepositPopup.vue";
+
 import PrivyLogout from "~/react_app/LogoutButton";
 
 import { applyPureReactInVue } from "veaury";
@@ -13,7 +13,7 @@ const openPopup = ref(false);
 const openAccount = ref(false);
 const solana = useSolana();
 const openSolyAssets = ref(false);
-const addressView = computed(() => localStorage.getItem("privy_address") || getUser().wallet.address);
+const addressView = computed(() => solana.currentAddress || getUser().privy_wallet.address || getUser().wallet?.address);
 
 const balance = ref(0);
 
@@ -83,7 +83,7 @@ function onViewAssets() {
               <div class="py-2 px-3 font-[500] cursor-pointer row-center hover:bg-[#232323]" @click="onOpenAccount">
                 <span class="flex-1">Account</span> <img src="/images/icon-chevron-right-light.svg" class="w-[20px]" />
               </div>
-              <div class="py-2 px-3 font-[500] cursor-pointer row-center hover:bg-[#232323]" @click="onViewAssets">
+              <div v-if="getUser().wallet?.address" class="py-2 px-3 font-[500] cursor-pointer row-center hover:bg-[#232323]" @click="onViewAssets">
                 <span class="flex-1">View Soly Assets</span> <img src="/images/icon-chevron-right-light.svg" class="w-[20px]" />
               </div>
               <LogoutButton />
@@ -92,7 +92,7 @@ function onViewAssets() {
         </div>
       </PopoverContent>
     </Popover>
-    <AccountModal :address="getUser()?.wallet.address" :open="openAccount" @close="() => (openAccount = false)" />
-    <PartialsSolyAssetModal :address="getUser()?.wallet.address" v-if="openSolyAssets" @close="() => (openSolyAssets = false)" />
+    <AccountModal :address="getUser()?.wallet?.address" :open="openAccount" @close="() => (openAccount = false)" />
+    <PartialsSolyAssetModal :address="getUser()?.wallet?.address" v-if="openSolyAssets" @close="() => (openSolyAssets = false)" />
   </div>
 </template>

@@ -24,7 +24,7 @@ const openAccount = ref(false);
 
 onClickOutside(container, () => (openPortfolio.value = false));
 
-const addressView = computed(() => (getUser().wallet.is_active ? getUser().wallet.address : getUser().privy_wallet.address));
+const addressView = computed(() => solana.currentAddress);
 
 function viewScanner() {
   window.open("https://solscan.io/address/" + addressView.value, "_blank");
@@ -219,7 +219,7 @@ function onOpenSolyAsset() {
       </DialogContent>
     </Dialog>
     <DepositPopup :open="openDeposit" :address="addressView" :onClose="() => (openDeposit = false)" />
-    <WithdrawPopup :open="openWithdraw" :address="addressView" :onClose="() => (openWithdraw = false)" />
-    <AccountModal :open="openAccount" :address="getUser().wallet.address" @close="() => (openAccount = false)" />
+    <WithdrawPopup v-if="openWithdraw" :open="openWithdraw" :address="addressView" :onClose="() => (openWithdraw = false)" />
+    <AccountModal :open="openAccount" :address="getUser().wallet?.address" @close="() => (openAccount = false)" />
   </div>
 </template>
