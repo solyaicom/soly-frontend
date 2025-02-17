@@ -92,7 +92,10 @@ function onOpenSolyAsset() {
           </div>
           <div class="px-4">
             <p class="text-[#fff] text-[28px] font-[600]">${{ formatNumber(solana.totalBalance, 2) }}</p>
-            <div v-if="getUser().privy_wallet.is_active" class="row-center p-3 border border-[#4096FF] rounded-[6px] bg-[rgba(22,119,255,0.05)] mt-3">
+            <div
+              v-if="getUser().privy_wallet.is_active && !!getUser().wallet"
+              class="row-center p-3 border border-[#4096FF] rounded-[6px] bg-[rgba(22,119,255,0.05)] mt-3"
+            >
               <NuxtIcon name="icon-about" class="text-system-blue text-[22px]" />
               <div class="ml-3">
                 <p class="text-app-text2">

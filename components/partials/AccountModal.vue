@@ -95,7 +95,12 @@ function onOpenDeposit(addr: string) {
         <div class="flex flex-col items-start">
           <div class="row-center justify-between w-full">
             <p class="text-[#fff] text-[16px] font-[600]">Privy Embedded Wallet</p>
-            <Switch :disabled="posting" :checked="getUser().privy_wallet.is_active" @update:checked="(v) => updateActiveWallet(v, 'privy')" />
+            <Switch
+              v-if="!!getUser().wallet"
+              :disabled="posting"
+              :checked="getUser().privy_wallet.is_active"
+              @update:checked="(v) => updateActiveWallet(v, 'privy')"
+            />
           </div>
           <div class="mt-1 row-center gap-x-2">
             <div v-if="getUser().privy_wallet.is_active" class="text-app-green text-[12px] px-2 rounded-[20px] border border-app-green">Active</div>
@@ -145,7 +150,7 @@ function onOpenDeposit(addr: string) {
             </button>
           </div>
         </div>
-        <div class="line" />
+        <div v-if="getUser().wallet" class="line" />
         <div v-if="getUser().wallet">
           <div class="row-center justify-between w-full">
             <p class="text-[#fff] text-[16px] font-[600]">SolyAI Wallet</p>
